@@ -9,7 +9,7 @@ const Navbar = () => {
                         className="rounded-full hidden md:block"
                     />
                 </div>
-                <p>name</p>
+                <p>Adam Sandler</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -19,7 +19,7 @@ const Navbar = () => {
                         className=" hidden md:block"
                     />
                 </div>
-                <p>name</p>
+                <p>The NewYork T</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -28,7 +28,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>name</p>
+                <p>The Independ</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -37,7 +37,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>name</p>
+                <p>Anonyms</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -46,7 +46,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>name</p>
+                <p>Alexandra</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -55,7 +55,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>name</p>
+                <p>Peter</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -64,7 +64,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>name</p>
+                <p>Pewdiwpie</p>
             </div>
         </div>
     );
