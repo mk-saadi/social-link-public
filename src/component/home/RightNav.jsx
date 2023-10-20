@@ -1,6 +1,6 @@
 const RightNav = () => {
     return (
-        <div>
+        <div className="my-3 py-4">
             <div className="flex justify-around items-center">
                 <div className="flex justify-center items-center mt-4">
                     <div className="avatar">
@@ -12,7 +12,7 @@ const RightNav = () => {
                         </div>
                     </div>
                     <div className="ml-4 ">
-                        <p className="text-gray-100 text-2xl">alissa_blair88</p>
+                        <p className="text-gray-700 text-2xl">alissa_blair88</p>
                         <p className="text-lg text-gray-400">Alissa Blair</p>
                     </div>
                 </div>
@@ -20,9 +20,9 @@ const RightNav = () => {
             </div>
 
             <div className="mt-12">
-                <p className="text-2xl text-gray-200 ml-4">People you may know</p>
+                <p className="text-2xl text-gray-700 ml-4">People you may know</p>
 
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                     <div className="flex justify-center items-center">
                         <div className="col-span-3 flex justify-center items-center mt-4">
                             <div className="avatar">
@@ -58,8 +58,9 @@ const RightNav = () => {
                         </div>
                         <p className="text-sky-400 font-semibold text-xl">Follow</p>
                     </div>
-                    <div className="flex justify-around items-center">
-                        <div className="flex justify-center items-center mt-4">
+
+                    <div className="flex justify-center items-center">
+                        <div className="col-span-3 flex justify-center items-center mt-4">
                             <div className="avatar">
                                 <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                     <img
@@ -68,15 +69,16 @@ const RightNav = () => {
                                     />
                                 </div>
                             </div>
-                            <div className="ml-4 ">
+                            <div className="ml-4 mr-4">
                                 <p className="text-gray-100 text-2xl">marquess_shapiro45</p>
                                 <p className="text-lg text-gray-400">Marquess Shapiro</p>
                             </div>
                         </div>
-                        <p className="text-sky-400 font-semibold text-xl">Switch</p>
+                        <p className="text-sky-400 font-semibold text-xl ">Follow</p>
                     </div>
-                    <div className="flex justify-around items-center">
-                        <div className="flex justify-center items-center mt-4">
+
+                    <div className="flex justify-center items-center">
+                        <div className="col-span-3 flex justify-center items-center mt-4">
                             <div className="avatar">
                                 <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                     <img
@@ -85,31 +87,94 @@ const RightNav = () => {
                                     />
                                 </div>
                             </div>
-                            <div className="ml-4 ">
+                            <div className="ml-4 mr-4">
                                 <p className="text-gray-100 text-2xl">alissa_blair88</p>
                                 <p className="text-lg text-gray-400">Alissa Blair</p>
                             </div>
                         </div>
-                        <p className="text-sky-400 font-semibold text-xl">Switch</p>
+                        <p className="text-sky-400 font-semibold text-xl ">Follow</p>
                     </div>
-                    <div className="flex justify-around items-center">
-                        <div className="flex justify-center items-center mt-4">
-                            <div className="avatar">
-                                <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                    <img
-                                        src="https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg?size=626&ext=jpg&ga=GA1.1.448863966.1693684736&semt=sph"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                            <div className="ml-4 ">
-                                <p className="text-gray-100 text-2xl">alissa_blair88</p>
-                                <p className="text-lg text-gray-400">Alissa Blair</p>
+
+                    
+                </div> */}
+
+
+                <div className="flex flex-col sm:flex-row">
+                    {/* User 1 */}
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <div className="avatar">
+                            <div className="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img
+                                    src="https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436191.jpg?size=626&ext=jpg&ga=GA1.1.448863966.1693684736&semt=sph"
+                                    alt=""
+                                />
                             </div>
                         </div>
-                        <p className="text-sky-400 font-semibold text-xl">Switch</p>
+                    </div>
+
+                    <div className="flex flex-col justify-center sm:w-1/3 mt-4">
+                        <div className="text-left">
+                            <p className="text-gray-700 text-2xl">susan_atkinson5</p>
+                            <p className="text-lg text-gray-700">Susan Atkinson</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <p className="text-sky-400 font-semibold text-xl">Follow</p>
                     </div>
                 </div>
+
+                <div className="flex flex-col sm:flex-row">
+                    {/* User 2 */}
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <div className="avatar">
+                            <div className="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img
+                                    src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg?size=626&ext=jpg&ga=GA1.1.448863966.1693684736&semt=sph"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col justify-center sm:w-1/3 mt-4">
+                        <div className="text-left">
+                            <p className="text-gray-700 text-2xl">benWoods</p>
+                            <p className="text-lg text-gray-700">Ben Woods</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <p className="text-sky-400 font-semibold text-xl">Follow</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row">
+                    {/* User 3 */}
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <div className="avatar">
+                            <div className="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img
+                                    src="https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611710.jpg?size=626&ext=jpg&ga=GA1.1.448863966.1693684736&semt=sph"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col justify-center sm:w-1/3 mt-4">
+                        <div className="text-left">
+                            <p className="text-gray-700 text-2xl">marquess_shapiro45</p>
+                            <p className="text-lg text-gray-400">Marquess Shapiro</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center sm:w-1/3 mt-4">
+                        <p className="text-sky-400 font-semibold text-xl">Follow</p>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     );
