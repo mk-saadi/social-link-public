@@ -1,6 +1,6 @@
 const Navbar = () => {
     return (
-        <div className="text-center flex justify-center items-center gap-8">
+        <div className="text-center flex justify-center items-center gap-8 text-gray-700">
             <div>
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img
@@ -9,7 +9,7 @@ const Navbar = () => {
                         className="rounded-full hidden md:block"
                     />
                 </div>
-                <p>Adam Sandler</p>
+                <p className="pt-2">Adam Sandler</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -19,7 +19,7 @@ const Navbar = () => {
                         className=" hidden md:block"
                     />
                 </div>
-                <p>The NewYork T</p>
+                <p className="pt-2">The NewYork T</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -28,7 +28,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>The Independ</p>
+                <p className="pt-2">The Independ</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -37,7 +37,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>Anonyms</p>
+                <p className="pt-2">Anonyms</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -46,7 +46,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>Alexandra</p>
+                <p className="pt-2">Alexandra</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -55,7 +55,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>Peter</p>
+                <p className="pt-2">Peter</p>
             </div>
             <div className="avatar flex flex-col justify-center items-center">
                 <div className="w-10 lg:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -64,7 +64,7 @@ const Navbar = () => {
                         alt=""
                     />
                 </div>
-                <p>Pewdiwpie</p>
+                <p className="pt-2">Pewdiwpie</p>
             </div>
         </div>
     );
