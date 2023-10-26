@@ -1,51 +1,245 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import axios from "axios";
+import imageCompression from "browser-image-compression";
+import { Link, useNavigate } from "react-router-dom";
 
-const Register = () => {
-    return (
-        <div className="bg-[#ede6d7] pb-44  px-8 md:px-0">
-            <h1 className="text-[#32308E] text-3xl font-medium py-20 text-center">Social <span className="text-[#6A67FF]">Link</span></h1>
-            <div className="flex justify-center md:w-4/5 lg:w-4/12 mx-auto bg-white rounded ">
-                <div className=" shadow-md px-10 w-full pb-8">
-                    <h1 className="text-center text-[#6A67FF] text-2xl font-medium pt-12">SIGN UP</h1>
-                    <div>
-                        <div className="my-4">
-                            <h1 className="">User Name</h1>
-                            <input className="bg-gray-100 w-full p-2 rounded" placeholder="Enter your name" type="name" />
-                        </div>
-                        <div className="my-4">
-                            <h1 className="">Photo URL</h1>
-                            <input className="bg-gray-100 w-full p-2 rounded" placeholder="Enter your name" type="file" />
-                        </div>
-                        <div className="my-4">
-                            <h1 className="">Email</h1>
-                            <input className="bg-gray-100 w-full p-2 rounded" placeholder="Enter Email" type="name" />
-                        </div>
-                        <div className="my-4">
-                            <h1 className="">Password</h1>
-                            <input className="bg-gray-100 w-full p-2 rounded" placeholder="Enter Password" type="password" />
-                        </div>
-                        <div className="my-4">
-                            <h1 className="">Confirm Password</h1>
-                            <input className="bg-gray-100 w-full p-2 rounded" placeholder="Enter Password" type="password" />
-                        </div>
-                        <button className="bg-[#6A67FF] mt-10 text-white p-2 rounded w-full">SIGN UP</button>
-                        <p className="text-center my-2">Already have account? Please <Link className="text-[#6A67FF]" to="/login">Log in</Link></p>
-                        <div className="flex justify-center items-center">
-                            <hr className="w-full" />
-                            <h3 className="mx-5">or</h3>
-                            <hr className="w-full" />
-                        </div>
-                        <div className="flex mt-3 justify-center items-center gap-5">
-                            <img className="w-12" src="/src/assets/Group 1.png" alt="" />
-                            <img className="w-12" src="/src/assets/Group 2.png" alt="" />
-                        </div>
+const SignUp = () => {
+	const navigate = useNavigate();
+	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
+	console.log(imgbbApiKey);
 
-                    </div>
-                </div>
-            </div>
+	const [passwordShow, setPasswordShow] = useState(false);
 
-        </div>
-    );
+	const handlePasswordShow = () => {
+		setPasswordShow(!passwordShow);
+	};
+
+	const [formData, setFormData] = useState({
+		name: "",
+		image: null,
+		email: "",
+		password: "",
+		confirmPassword: "",
+	});
+
+	const handleChange = async (event) => {
+		if (event.target.name === "image") {
+			const selectedFile = event.target.files[0];
+
+			const options = {
+				maxSizeMB: 0.3,
+				maxWidthOrHeight: 800,
+			};
+
+			try {
+				const compressedFile = await imageCompression(
+					selectedFile,
+					options
+				);
+				setFormData({ ...formData, image: compressedFile });
+			} catch (error) {
+				alert("Error compressing image please try again");
+			}
+		} else {
+			setFormData({
+				...formData,
+				[event.target.name]: event.target.value,
+			});
+		}
+	};
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+
+		if (formData.password !== formData.confirmPassword) {
+			alert("Password and confirm password do not match.");
+
+			return;
+		}
+
+		const imgbbFormData = new FormData();
+		imgbbFormData.append("image", formData.image);
+
+		axios
+			.post(
+				`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+				imgbbFormData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			)
+			.then((imgbbResponse) => {
+				if (imgbbResponse.data.status === 200) {
+					const imageUrl = imgbbResponse.data.data.url;
+
+					formData.image = imageUrl;
+					formData.isVerified = false;
+
+					axios
+						.post(
+							"https://social-link-server-liard.vercel.app/users",
+							formData
+						)
+						.then((response) => {
+							const responseData = JSON.parse(
+								response.config.data
+							);
+							const userEmail = responseData.email;
+							localStorage.setItem("email", userEmail);
+							alert("Registration successful");
+
+							console.log("Registration successful:", userEmail);
+							window.Location.reload();
+						})
+						.catch((registrationError) => {
+							console.error(
+								"Registration failed:",
+								registrationError
+							);
+							// alert("Registration failed please try again");
+						});
+				} else {
+					alert("Please try again");
+					console.error(
+						"Image upload to ImgBB failed:",
+						imgbbResponse.data
+					);
+				}
+			})
+			.catch((imgbbError) => {
+				console.error("Image upload to ImgBB failed:", imgbbError);
+			});
+	};
+
+	axios
+		.get("https://social-link-server-liard.vercel.app/users")
+		.then((response) => {
+			const userEmail = localStorage.getItem("email");
+
+			const matchingUser = response.data.find(
+				(user) => user.email === userEmail
+			);
+
+			if (matchingUser) {
+				localStorage.setItem("email", matchingUser.email);
+				localStorage.setItem("name", matchingUser.name);
+				localStorage.setItem("image", matchingUser.image);
+				localStorage.setItem("isVerified", matchingUser.isVerified);
+				navigate("/home");
+			} else {
+				console.log("No matching user found.");
+			}
+		})
+		.catch((error) => {
+			console.error("Error fetching user data:", error);
+		});
+
+	return (
+		<div className='container grid grid-cols-1 justify-center items-center mx-auto min-h-screen'>
+			<div className='flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg'>
+				<h3 className='text-5xl text-center font-bold  text-[#32308E] opacity-40'>
+					Social<span className='underline text-[#2a295f]'>Link</span>
+				</h3>
+
+				<form
+					onSubmit={handleSubmit}
+					className='flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold'
+				>
+					<input
+						label='Name'
+						onChange={handleChange}
+						type='text'
+						required
+						name='name'
+						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0'
+						placeholder='type your name'
+					/>
+					<input
+						onChange={handleChange}
+						type='file'
+						required
+						name='image'
+						accept='image/*'
+						placeholder='Photo'
+						className='px-2 py-4 border rounded-md cursor-pointer'
+					/>
+					<input
+						label='Email'
+						onChange={handleChange}
+						type='email'
+						required
+						name='email'
+						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0'
+						placeholder='type your email'
+					/>
+					<div className='relative'>
+						<input
+							label='Password'
+							onChange={handleChange}
+							type={passwordShow ? `text` : `password`}
+							name='password'
+							required
+							className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full'
+							placeholder='type password'
+						/>
+						{passwordShow ? (
+							<VisibilityIcon
+								onClick={() => handlePasswordShow()}
+								className='absolute right-5 top-4 cursor-pointer'
+							/>
+						) : (
+							<VisibilityOffIcon
+								onClick={() => handlePasswordShow()}
+								className='absolute right-5 top-4 cursor-pointer'
+							/>
+						)}
+					</div>
+					<div className='relative'>
+						<input
+							label='Confirm Password'
+							onChange={handleChange}
+							type={passwordShow ? `text` : `password`}
+							name='confirmPassword'
+							required
+							className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full'
+							placeholder='confirm password'
+						/>
+						{passwordShow ? (
+							<VisibilityIcon
+								onClick={() => handlePasswordShow()}
+								className='absolute right-5 top-4 cursor-pointer'
+							/>
+						) : (
+							<VisibilityOffIcon
+								onClick={() => handlePasswordShow()}
+								className='absolute right-5 top-4 cursor-pointer'
+							/>
+						)}
+					</div>
+					<input
+						type='submit'
+						value={"Register"}
+						className='bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300'
+					/>
+				</form>
+				<div>
+					<p className='text-center'>
+						Already have an account? Please{" "}
+						<Link
+							to='/login'
+							className='text-[#6A67FF] underline font-semibold'
+						>
+							Login
+						</Link>
+					</p>
+				</div>
+			</div>
+		</div>
+	);
 };
 
-export default Register;
+export default SignUp;
