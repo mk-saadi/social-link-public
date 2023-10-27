@@ -2,6 +2,7 @@ import Navbar from "../shared/Navbar";
 import LeftNav from "./home-component/LeftNav";
 import RightNav from "./home-component/RightNav";
 import NewsFeed from "./home-component/NewsFeed";
+import { Divider } from "@mui/material";
 
 const Home = () => {
 	return (
@@ -10,7 +11,6 @@ const Home = () => {
 				<div className='lg:col-span-2 col-span-12'>
 					<LeftNav />
 				</div>
-
 				<section className='col-span-4 mt-4'>
 					<div className='hidden lg:block'>
 						<Navbar />

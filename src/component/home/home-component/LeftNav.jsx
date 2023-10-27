@@ -93,7 +93,7 @@ const LeftNav = () => {
                         <p className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><AddBoxIcon className="bg-transparent" /> Create Post</p></li></p>
                         <p to={'/message'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><TextsmsIcon className="bg-transparent" /> Message</p></li></p>
                         <p to={'/notification'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><NotificationsIcon className="bg-transparent" />Notification</p></li></p>
-                        <p to={'/profile'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><AccountCircleIcon className="bg-transparent" /> Profile</p></li></p>
+                        <NavLink to={'/profile'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><AccountCircleIcon className="bg-transparent" /> Profile</p></li></NavLink>
                         <p to={'/settings'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><SettingsIcon className="bg-transparent" /> Settings</p></li></p>
                         <p onClick={handleLogout} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><LogoutIcon className="bg-transparent" /> Logout</p></li></p>
                         <p to={'/more'} className=' rounded-md text-2xl font-semibold text-[#32308E]'><li><p><MenuIcon className="bg-transparent" /></p></li></p>
