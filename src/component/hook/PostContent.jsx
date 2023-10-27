@@ -1,6 +1,5 @@
 import { useState } from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -21,7 +20,7 @@ const PostContent = ({ content }) => {
 	return (
 		<div className='relative '>
 			<ReactMarkdown
-				className='whitespace-pre-line markdown prose text-gray-300 break-words text-sm md:text-base'
+				className='whitespace-pre-line markdown prose text-gray-700 break-words text-sm md:text-base bg-transparent'
 				remarkPlugins={[remarkGfm]}
 			>
 				{displayContent}
@@ -33,9 +32,9 @@ const PostContent = ({ content }) => {
 						className='text-accent cursor-pointer text-2xl'
 					>
 						{showFullContent ? (
-							<KeyboardArrowUpIcon />
+							<AiFillCaretUp />
 						) : (
-							<KeyboardArrowDownIcon />
+							<AiFillCaretDown />
 						)}
 					</button>
 				</div>

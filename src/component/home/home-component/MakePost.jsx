@@ -1,4 +1,4 @@
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+// import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -152,39 +152,6 @@ const MakePost = () => {
 							placeholder='Photo'
 							className='px-2 py-4 border rounded-md cursor-pointer'
 						/>
-						{/* <input
-							type='file'
-							onChange={handleImageChange}
-							multiple
-							required
-							name='uploadedImages'
-							accept='image/*'
-							className='hidden'
-							id='image-input'
-						/> */}
-						<label
-							htmlFor='image-input'
-							className='border rounded-md cursor-pointer'
-						>
-							Upload Image(s)
-							<AddPhotoAlternateIcon />
-						</label>
-
-						{/* <div className='flex flex-col md:flex-row flex-wrap gap-2 justify-center items-center max-h-[400px] overflow-y-auto'>
-							{imagePreviews.map((preview, index) => (
-								<img
-									key={index}
-									src={preview}
-									alt={`Preview ${index}`}
-									style={{
-										height: "200px",
-										width: "auto",
-										borderRadius: "7px",
-									}}
-									className='mb-2'
-								/>
-							))}
-						</div> */}
 					</div>
 
 					<br />

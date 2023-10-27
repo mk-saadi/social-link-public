@@ -6,9 +6,12 @@
 	background-color: #ede6d7;
 }
 
-
-.menu .active{
-	color: #6A67FF;
+.menu .active {
+	color: #6a67ff;
 
 	border: 2px solid;
+}
+
+.markdown > * {
+	all: revert;
 }
