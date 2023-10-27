@@ -7,7 +7,7 @@ const Home = () => {
 	return (
 		<>
 			<div className='grid lg:grid-cols-8 min-h-screen overflow-x-hidden'>
-				<div className='lg:col-span-2 hidden md:block '>
+				<div className='lg:col-span-2 col-span-12'>
 					<LeftNav />
 				</div>
 
