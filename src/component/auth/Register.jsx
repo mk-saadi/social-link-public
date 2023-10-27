@@ -4,9 +4,12 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const SignUp = () => {
 	const navigate = useNavigate();
+	const location = new useLocation();
+
 	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
 	console.log(imgbbApiKey);
 
@@ -23,6 +26,7 @@ const SignUp = () => {
 		password: "",
 		confirmPassword: "",
 	});
+	console.log(formData);
 
 	const handleChange = async (event) => {
 		if (event.target.name === "image") {
@@ -93,7 +97,7 @@ const SignUp = () => {
 							alert("Registration successful");
 
 							console.log("Registration successful:", userEmail);
-							window.Location.reload();
+							location.reload();
 						})
 						.catch((registrationError) => {
 							console.error(

@@ -2,8 +2,10 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import imageCompression from "browser-image-compression";
 
 const MakePost = () => {
+	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
 	const quotes = [
 		"Got a brilliant idea?",
 		"What is on your mind?",
@@ -12,6 +14,10 @@ const MakePost = () => {
 		"Share a thought.",
 	];
 
+	const email = localStorage.getItem("email");
+	const uploaderName = localStorage.getItem("name");
+	const uploaderImage = localStorage.getItem("image");
+
 	const [randomQuote, setRandomQuote] = useState("");
 
 	useEffect(() => {
@@ -19,56 +25,93 @@ const MakePost = () => {
 		setRandomQuote(quotes[randomIndex]);
 	}, []);
 
-	// const [imagePreview, setImagePreview] = useState(null);
+	const [formData, setFormData] = useState({
+		name: "",
+		image: null,
+	});
 
-	// const handleImageChange = (e) => {
-	// 	const file = e.target.files[0];
-	// 	if (file) {
-	// 		const reader = new FileReader();
+	const handleChange = async (event) => {
+		if (event.target.name === "image") {
+			const selectedFile = event.target.files[0];
 
-	// 		reader.onload = (e) => {
-	// 			setImagePreview(e.target.result);
-	// 		};
+			const options = {
+				maxSizeMB: 0.6,
+				maxWidthOrHeight: 1200,
+			};
 
-	// 		reader.readAsDataURL(file);
-	// 	}
-	// };
-
-	const [imagePreviews, setImagePreviews] = useState([]);
-
-	const handleImageChange = (e) => {
-		const files = e.target.files;
-		if (files) {
-			const previews = Array.from(files).map((file) => {
-				return URL.createObjectURL(file);
+			try {
+				const compressedFile = await imageCompression(
+					selectedFile,
+					options
+				);
+				setFormData({ ...formData, image: compressedFile });
+			} catch (error) {
+				alert("Error compressing image, please try again");
+			}
+		} else {
+			setFormData({
+				...formData,
+				[event.target.name]: event.target.value,
 			});
-			setImagePreviews([...imagePreviews, ...previews]);
 		}
 	};
 
 	const handlePost = (event) => {
 		event.preventDefault();
 
-		const form = event.target;
-		const uploadedImage = form.uploadedImage.value;
-		const body = form.body.value;
-
-		const postDoc = {
-			uploadedImage: uploadedImage,
-			body: body,
-		};
+		const imgbbFormData = new FormData();
+		imgbbFormData.append("image", formData.image);
 
 		axios
-			.post("http://localhost:7000/posts", postDoc)
-			.then((response) => {
-				console.log("Posted:", response.data);
-				window.location.reload();
+			.post(
+				`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+				imgbbFormData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			)
+			.then((imgbbResponse) => {
+				if (imgbbResponse.data.status === 200) {
+					const imageUrl = imgbbResponse.data.data.url;
+
+					formData.image = imageUrl;
+					formData.isVerified = false;
+					formData.email = email;
+					formData.uploaderName = uploaderName;
+					formData.uploaderImage = uploaderImage;
+
+					axios
+						.post(
+							"https://social-link-server-liard.vercel.app/posts",
+							formData
+						)
+						.then((response) => {
+							const responseData = JSON.parse(
+								response.config.data
+							);
+							const userEmail = responseData.email;
+							localStorage.setItem("email", userEmail);
+							alert("Post successful");
+
+							console.log("Post successful:", userEmail);
+							window.location.reload();
+						})
+						.catch((postError) => {
+							console.error("Post failed:", postError);
+							// alert("Post failed please try again");
+						});
+				} else {
+					alert("Please try again");
+					console.error(
+						"Image upload to ImgBB failed:",
+						imgbbResponse.data
+					);
+				}
 			})
-			.catch((error) => {
-				console.log(
-					"Error storing post details in the database:",
-					error
-				);
+			.catch((imgbbError) => {
+				console.error("Image upload to ImgBB failed:", imgbbError);
 			});
 	};
 
@@ -90,15 +133,26 @@ const MakePost = () => {
 						Create a post
 					</p>
 					<hr className='bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl' />
-					<div className='px-2 md:px-10'>
+					<div className='text-gray-700 mx-4 mt-4 md:px-10'>
 						<textarea
 							type='text'
 							required
-							placeholder='type post text here'
-							className='bg-transparent border-none textarea w-full input-bordered rounded-sm'
-							name='body'
+							placeholder='type post text'
+							onChange={handleChange}
+							className='bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full'
+							name='name'
 						></textarea>
+						<br />
 						<input
+							onChange={handleChange}
+							type='file'
+							required
+							name='image'
+							accept='image/*'
+							placeholder='Photo'
+							className='px-2 py-4 border rounded-md cursor-pointer'
+						/>
+						{/* <input
 							type='file'
 							onChange={handleImageChange}
 							multiple
@@ -107,16 +161,16 @@ const MakePost = () => {
 							accept='image/*'
 							className='hidden'
 							id='image-input'
-						/>
+						/> */}
 						<label
 							htmlFor='image-input'
-							className='px-2 py-4 border rounded-md cursor-pointer'
+							className='border rounded-md cursor-pointer'
 						>
 							Upload Image(s)
 							<AddPhotoAlternateIcon />
 						</label>
 
-						<div className='flex flex-col md:flex-row flex-wrap justify-center items-center max-h-[400px] overflow-y-auto'>
+						{/* <div className='flex flex-col md:flex-row flex-wrap gap-2 justify-center items-center max-h-[400px] overflow-y-auto'>
 							{imagePreviews.map((preview, index) => (
 								<img
 									key={index}
@@ -130,7 +184,7 @@ const MakePost = () => {
 									className='mb-2'
 								/>
 							))}
-						</div>
+						</div> */}
 					</div>
 
 					<br />
