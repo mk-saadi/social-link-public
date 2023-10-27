@@ -8,6 +8,7 @@ import Login from "./component/auth/Login";
 import Register from "./component/auth/Register";
 import PrivateRoute from "./component/route/PrivateRoute";
 import Landing from "./component/intro/Landing";
+import UserProfile from "./component/home/userprofile/userprofile";
 
 const router = createBrowserRouter([
 	{
@@ -29,8 +30,8 @@ const router = createBrowserRouter([
 		element: <Landing />,
 	},
 	{
-		path: "/userprofile",
-		element: <Login />,
+		path: "/profile",
+		element: <UserProfile/>
 	},
 	{
 		path: "/login",
