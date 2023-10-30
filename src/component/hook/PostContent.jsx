@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -10,34 +9,25 @@ const PostContent = ({ content }) => {
 		setShowFullContent(!showFullContent);
 	};
 
-	const words = content?.split(/\s+/);
-	const maxWords = 30;
-
-	const displayContent = showFullContent
-		? words.join(" ")
-		: words.slice(0, maxWords).join(" ");
+	const lines = content?.split("\n");
+	const displayedLines = showFullContent ? lines : lines?.slice(0, 3);
+	const displayContent = displayedLines?.join("\n");
 
 	return (
-		<div className='relative '>
+		<div className="relative">
 			<ReactMarkdown
-				className='whitespace-pre-line markdown prose text-gray-700 break-words text-sm md:text-base bg-transparent'
+				className="whitespace-pre-line markdown prose text-gray-700 font-semibold break-words text-sm md:text-xl "
 				remarkPlugins={[remarkGfm]}
 			>
 				{displayContent}
 			</ReactMarkdown>
-			{words.length > maxWords && (
-				<div className='flex justify-end'>
-					<button
-						onClick={toggleContentDisplay}
-						className='text-accent cursor-pointer text-2xl'
-					>
-						{showFullContent ? (
-							<AiFillCaretUp />
-						) : (
-							<AiFillCaretDown />
-						)}
-					</button>
-				</div>
+			{lines?.length > 3 && (
+				<button
+					onClick={toggleContentDisplay}
+					className="text-accent font-medium mt-2 cursor-pointer hover:underline"
+				>
+					{showFullContent ? "Show Less" : "Show More"}
+				</button>
 			)}
 		</div>
 	);

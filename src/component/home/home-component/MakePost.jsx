@@ -37,6 +37,7 @@ const MakePost = () => {
 			const options = {
 				maxSizeMB: 0.6,
 				maxWidthOrHeight: 1200,
+				disableGIFConversion: true,
 			};
 
 			try {
@@ -55,6 +56,7 @@ const MakePost = () => {
 			});
 		}
 	};
+	console.log(formData);
 
 	const handlePost = (event) => {
 		event.preventDefault();
@@ -96,7 +98,7 @@ const MakePost = () => {
 							alert("Post successful");
 
 							console.log("Post successful:", userEmail);
-							window.location.reload();
+							location.reload();
 						})
 						.catch((postError) => {
 							console.error("Post failed:", postError);
@@ -117,62 +119,62 @@ const MakePost = () => {
 
 	return (
 		<div>
-			<div className='text-center text-gray-700 text-lg py-1 pl-4 w-full font-semibold'>
-				<a href='#post-modal'>{randomQuote}</a>
+			<div className="text-center text-gray-700 text-lg py-1 pl-4 w-full font-semibold">
+				<a href="#post-modal">{randomQuote}</a>
 			</div>
 
 			<div
-				id='post-modal'
-				className='modal overflow-auto'
+				id="post-modal"
+				className="modal overflow-auto"
 			>
 				<form
-					className=' bg-[#ede6d7] shadow-xl drop-shadow-xl border border-[rgba(63,63,63,0.64)] rounded-xl py-6 w-[95%] md:w-[60%]'
+					className=" bg-[#ede6d7] shadow-xl drop-shadow-xl border border-[rgba(63,63,63,0.64)] rounded-xl py-6 w-[95%] md:w-[60%]"
 					onSubmit={handlePost}
 				>
-					<p className='text-center text-2xl font-semibold text-gray-700 mb-2'>
+					<p className="text-center text-2xl font-semibold text-gray-700 mb-2">
 						Create a post
 					</p>
-					<hr className='bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl' />
-					<div className='text-gray-700 mx-4 mt-4 md:px-10'>
+					<hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl" />
+					<div className="text-gray-700 mx-4 mt-4 md:px-10">
 						<textarea
-							type='text'
+							type="text"
 							required
-							placeholder='type post text'
+							placeholder="type post text"
 							onChange={handleChange}
-							className='bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full'
-							name='name'
+							className="bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full"
+							name="name"
 						></textarea>
 						<br />
 						<input
 							onChange={handleChange}
-							type='file'
+							type="file"
 							required
-							name='image'
-							accept='image/*'
-							placeholder='Photo'
-							className='px-2 py-4 border rounded-md cursor-pointer'
+							name="image"
+							accept="image/*"
+							placeholder="Photo"
+							className="px-2 py-4 border rounded-md cursor-pointer"
 						/>
 					</div>
 
 					<br />
-					<div className='flex justify-end'>
+					<div className="flex justify-end">
 						<input
-							className='bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 w-full mx-4'
-							type='submit'
-							value='Post'
+							className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 w-full mx-4"
+							type="submit"
+							value="Post"
 						/>
 					</div>
-					<div className='modal-action absolute top-0 right-6 hover:underline text-rose-400'>
+					<div className="modal-action absolute top-0 right-6 hover:underline text-rose-400">
 						<a
-							href='#'
-							className='modal__close flex justify-center items-center text-2xl'
+							href="#"
+							className="modal__close flex justify-center items-center text-2xl"
 						>
 							<AiOutlineClose />
 						</a>
 					</div>
 				</form>
 			</div>
-			<hr className='bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[7px] drop-shadow-md shadow-md rounded-3xl mx-4' />
+			<hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[7px] drop-shadow-md shadow-md rounded-3xl mx-4" />
 		</div>
 	);
 };

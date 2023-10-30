@@ -159,7 +159,7 @@ const SignUp = () => {
 						type='text'
 						required
 						name='name'
-						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0'
+						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-transparent'
 						placeholder='type your name'
 					/>
 					<input

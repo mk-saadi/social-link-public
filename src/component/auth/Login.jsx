@@ -37,7 +37,7 @@ const Login = () => {
 				const userEmail = responseData.email;
 
 				localStorage.setItem("email", userEmail);
-				// window.Location.reload();
+				location.reload();
 
 				console.log("Login successful:", userEmail);
 			})
@@ -60,7 +60,7 @@ const Login = () => {
 				localStorage.setItem("name", matchingUser.name);
 				localStorage.setItem("image", matchingUser.image);
 				localStorage.setItem("isVerified", matchingUser.isVerified);
-				navigate("/home");
+				navigate("/");
 
 				console.log(
 					"Data of matching user stored in localStorage:",
