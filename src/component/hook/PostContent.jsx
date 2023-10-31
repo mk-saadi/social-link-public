@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -22,12 +23,18 @@ const PostContent = ({ content }) => {
 				{displayContent}
 			</ReactMarkdown>
 			{lines?.length > 3 && (
-				<button
-					onClick={toggleContentDisplay}
-					className="text-accent font-medium mt-2 cursor-pointer hover:underline"
-				>
-					{showFullContent ? "Show Less" : "Show More"}
-				</button>
+				<div className="flex justify-end">
+					<button
+						onClick={toggleContentDisplay}
+						className="text-[#32308E] text-xl cursor-pointer hover:underline"
+					>
+						{showFullContent ? (
+							<AiFillCaretUp />
+						) : (
+							<AiFillCaretDown className="mt-5" />
+						)}
+					</button>
+				</div>
 			)}
 		</div>
 	);

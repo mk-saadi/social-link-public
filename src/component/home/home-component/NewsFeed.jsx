@@ -61,7 +61,7 @@ const NewsFeed = () => {
 		<div>
 			{posts.map((po) => (
 				<div key={po._id}>
-					<div className="bg-[#d3ccbe] m-4 mt-12  shadow-md rounded-lg py-4">
+					<div className="bg-[#d3ccbe]  my-4 mx-12  mt-12 shadow-md rounded-lg py-4">
 						{/* top bar */}
 						<div className="flex justify-between items-center mx-4">
 							<div className="flex justify-center items-center bg-transparent">
@@ -69,7 +69,7 @@ const NewsFeed = () => {
 									<img
 										src={po?.uploaderImage}
 										alt=""
-										className="rounded-full hidden md:block"
+										className="rounded-full"
 									/>
 								</div>
 								<div className="flex flex-col ml-4 bg-transparent">

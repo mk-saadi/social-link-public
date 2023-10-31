@@ -20,9 +20,8 @@ const MakePost = () => {
 			const selectedFile = event.target.files[0];
 
 			const options = {
-				maxSizeMB: 0.6,
-				maxWidthOrHeight: 1200,
-				disableGIFConversion: true,
+				maxSizeMB: 1,
+				maxWidthOrHeight: 1800,
 			};
 
 			try {
@@ -141,7 +140,7 @@ const MakePost = () => {
 							required
 							placeholder="type post text"
 							onChange={handleChange}
-							className="bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full"
+							className="bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full h-[200px]"
 							name="name"
 						></textarea>
 						<br />
