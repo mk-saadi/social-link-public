@@ -59,66 +59,63 @@ const NewsFeed = () => {
 
 	return (
 		<div>
-			<MakePost />
-			<div>
-				{posts.map((po) => (
-					<div key={po._id}>
-						<div className="bg-[#d3ccbe] border-2 m-8 mt-16 border-gray-300 shadow-md rounded-lg">
-							{/* top bar */}
-							<div className="flex justify-between items-center mx-4 mt-4 bg-transparent">
-								<div className="flex justify-center items-center bg-transparent">
-									<div className="w-10 lg:w-16 rounded-full ">
-										<img
-											src={po?.uploaderImage}
-											alt=""
-											className="rounded-full hidden md:block"
-										/>
-									</div>
-									<div className="flex flex-col ml-4 bg-transparent">
-										<p className="text-2xl text-gray-700  font-semibold cursor-pointer bg-transparent">
-											{po?.uploaderName}
-										</p>
-										<p className="text-lg text-gray-500 bg-transparent">
-											{po.timeDifference}
-										</p>
-									</div>
-								</div>
-
-								<CiMenuKebab className="text-3xl text-gray-700 ml-2 font-semibold cursor-pointer bg-transparent" />
-							</div>
-							{/* top bar */}
-
-							{/* body */}
-							<div className="mx-4 mt-8  bg-transparent">
-								<PostContent content={po?.name} />
-
-								<img
-									src={po?.image}
-									alt="post image"
-									className="my-6 w-full rounded-md"
-									loading="lazy"
-								/>
-							</div>
-							<div className="flex justify-around items-center">
-								<div className="flex justify-start items-center gap-8 w-full mx-4 mr-16">
-									<AiFillHeart className="button-11" />
-									{/* <LikeButton /> */}
-
-									<FaComment className="text-gray-700 text-5xl" />
-									<input
-										type="text"
-										placeholder="comment"
-										className="input input-bordered border-gray-400 w-full focus:outline-0 bg-transparent rounded-md"
+			{posts.map((po) => (
+				<div key={po._id}>
+					<div className="bg-[#d3ccbe] m-4 mt-12  shadow-md rounded-lg py-4">
+						{/* top bar */}
+						<div className="flex justify-between items-center mx-4">
+							<div className="flex justify-center items-center bg-transparent">
+								<div className="w-10 lg:w-16 rounded-full z-10">
+									<img
+										src={po?.uploaderImage}
+										alt=""
+										className="rounded-full hidden md:block"
 									/>
 								</div>
-								<div className="flex justify-center items-center gap-8 mr-4">
-									<FaShare className="text-gray-700 text-4xl" />
+								<div className="flex flex-col ml-4 bg-transparent">
+									<p className="text-2xl text-gray-700  font-semibold cursor-pointer bg-transparent">
+										{po?.uploaderName}
+									</p>
+									<p className="text-lg text-gray-500">
+										{po.timeDifference}
+									</p>
 								</div>
+							</div>
+
+							<CiMenuKebab className="text-3xl text-gray-700 ml-2 font-semibold cursor-pointer bg-transparent" />
+						</div>
+						{/* top bar */}
+
+						{/* body */}
+						<div className="mx-4 mt-8  bg-transparent">
+							<PostContent content={po?.name} />
+
+							<img
+								src={po?.image}
+								alt="post image"
+								className="my-6 w-full rounded-md"
+								loading="lazy"
+							/>
+						</div>
+						<div className="flex justify-around items-center">
+							<div className="flex justify-start items-center gap-8 w-full mx-4 mr-16">
+								<AiFillHeart className="button-11" />
+								{/* <LikeButton /> */}
+
+								<FaComment className="text-gray-700 text-5xl" />
+								<input
+									type="text"
+									placeholder="comment"
+									className="input input-bordered border-gray-400 w-full focus:outline-0 bg-transparent rounded-md"
+								/>
+							</div>
+							<div className="flex justify-center items-center gap-8 mr-4">
+								<FaShare className="text-gray-700 text-4xl" />
 							</div>
 						</div>
 					</div>
-				))}
-			</div>
+				</div>
+			))}
 		</div>
 	);
 };

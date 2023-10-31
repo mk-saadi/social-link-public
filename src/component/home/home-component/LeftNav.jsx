@@ -7,105 +7,82 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { NavLink } from "react-router-dom";
+import MakePost from "./MakePost";
 
 const LeftNav = () => {
 	const handleLogout = () => {
-		localStorage.removeItem("email");
-		localStorage.removeItem("name");
-		localStorage.removeItem("image");
-		localStorage.removeItem("isVerified");
+		localStorage.removeItem("social_id");
 		window.location.reload();
 	};
 
 	return (
-		<div className='lg:fixed lg:min-h-screen lg:w-auto w-full block'>
-			<h1 className='text-[#32308E] text-5xl font-bold p-5 text-center'>
-				Social <span className='text-[#6A67FF]'>Link</span>
+		<div className="lg:fixed lg:min-h-screen lg:w-auto w-full block">
+			<h1 className="text-[#32308E] text-5xl font-bold p-5 text-center">
+				Social<span className="text-[#6A67FF]">Link</span>
 			</h1>
 			<div>
-				<nav className='px-5 lg:mt-24'>
-					<ul className='menu flex lg:flex-col flex-row gap-2 '>
-						<NavLink
-							to={"/"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+				<nav className="px-5 lg:mt-24">
+					<ul className="menu flex lg:flex-col flex-row gap-2 text-xl text-[#32308E] font-semibold">
+						<NavLink to={"/"}>
 							<li>
 								<p>
-									<HomeIcon className='bg-transparent' />
+									<HomeIcon className="bg-transparent" />
 									Home
 								</p>
 							</li>
 						</NavLink>
-						<p className=' rounded-md text-2xl font-semibold text-[#32308E]'>
+						<p>
 							<li>
 								<p>
-									<AddBoxIcon className='bg-transparent' />{" "}
-									Create Post
+									<AddBoxIcon className="bg-transparent" />{" "}
+									<MakePost />
 								</p>
 							</li>
 						</p>
-						<p
-							to={"/message"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<p to={"/message"}>
 							<li>
 								<p>
-									<TextsmsIcon className='bg-transparent' />{" "}
+									<TextsmsIcon className="bg-transparent" />{" "}
 									Message
 								</p>
 							</li>
 						</p>
-						<p
-							to={"/notification"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<p to={"/notification"}>
 							<li>
 								<p>
-									<NotificationsIcon className='bg-transparent' />
+									<NotificationsIcon className="bg-transparent" />
 									Notification
 								</p>
 							</li>
 						</p>
-						<NavLink
-							to={"/profile"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<NavLink to={"/profile"}>
 							<li>
 								<p>
-									<AccountCircleIcon className='bg-transparent' />{" "}
+									<AccountCircleIcon className="bg-transparent" />{" "}
 									Profile
 								</p>
 							</li>
 						</NavLink>
-						<p
-							to={"/settings"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<p to={"/settings"}>
 							<li>
 								<p>
-									<SettingsIcon className='bg-transparent' />{" "}
+									<SettingsIcon className="bg-transparent" />{" "}
 									Settings
 								</p>
 							</li>
 						</p>
-						<p
-							onClick={handleLogout}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<p onClick={handleLogout}>
 							<li>
 								<p>
-									<LogoutIcon className='bg-transparent' />{" "}
+									<LogoutIcon className="bg-transparent" />{" "}
 									Logout
 								</p>
 							</li>
 						</p>
-						<p
-							to={"/more"}
-							className=' rounded-md text-2xl font-semibold text-[#32308E]'
-						>
+						<p to={"/more"}>
 							<li>
 								<p>
-									<MenuIcon className='bg-transparent' />
+									<MenuIcon className="bg-transparent" />
 								</p>
 							</li>
 						</p>

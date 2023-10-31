@@ -5,17 +5,17 @@
 
 // const PrivateRoute = () => {
 // 	const navigate = useNavigate();
-// 	const email = localStorage.getItem("email");
+// 	const social_id = localStorage.getItem("social_id");
 
 // 	useEffect(() => {
-// 		if (email) {
+// 		if (social_id) {
 // 			Promise.resolve().then(() => {
 // 				navigate("/");
 // 			});
 // 		}
-// 	}, [email, navigate]);
+// 	}, [social_id, navigate]);
 
-// 	if (email) {
+// 	if (social_id) {
 // 		return <Home />;
 // 	}
 // 	return <Landing />;
@@ -28,8 +28,9 @@ import { Navigate, useLocation } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
 	const [loading, setLoading] = useState(true); // Initialize the loading state variable to true
-	const email = localStorage.getItem("email");
+	const social_id = localStorage.getItem("social_id");
 	const location = useLocation();
+	console.log("social_id", social_id);
 
 	useEffect(() => {
 		setLoading(false);
@@ -37,18 +38,18 @@ const PrivateRoute = ({ children }) => {
 
 	if (loading) {
 		return (
-			<div className='flex items-center justify-center h-screen'>
-				<span className='loading loading-ring h-32 w-32'></span>
+			<div className="flex items-center justify-center h-screen">
+				<span className="loading loading-ring h-32 w-32"></span>
 			</div>
 		);
 	}
 
-	if (!email) {
-		// Redirect the user to the login page if their email address does not exist
+	if (!social_id) {
+		// Redirect the user to the login page if their social_id address does not exist
 		return (
 			<Navigate
 				state={{ from: location }}
-				to='/login'
+				to="/login"
 				replace
 			></Navigate>
 		);

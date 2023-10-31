@@ -6,24 +6,9 @@ import imageCompression from "browser-image-compression";
 
 const MakePost = () => {
 	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
-	const quotes = [
-		"Got a brilliant idea?",
-		"What is on your mind?",
-		"What are you thinking?",
-		"What's happening?",
-		"Share a thought.",
-	];
 
-	const email = localStorage.getItem("email");
-	const uploaderName = localStorage.getItem("name");
-	const uploaderImage = localStorage.getItem("image");
-
-	const [randomQuote, setRandomQuote] = useState("");
-
-	useEffect(() => {
-		const randomIndex = Math.floor(Math.random() * quotes.length);
-		setRandomQuote(quotes[randomIndex]);
-	}, []);
+	const social_id = localStorage.getItem("social_id");
+	const [user, setUser] = useState();
 
 	const [formData, setFormData] = useState({
 		name: "",
@@ -56,7 +41,21 @@ const MakePost = () => {
 			});
 		}
 	};
-	console.log(formData);
+
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/users")
+			.then((res) => res.data)
+			.then((data) => {
+				console.log("data", data);
+				const filteredUser = data.filter((us) => us._id === social_id);
+
+				setUser(filteredUser);
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
+	}, [social_id]);
 
 	const handlePost = (event) => {
 		event.preventDefault();
@@ -79,10 +78,12 @@ const MakePost = () => {
 					const imageUrl = imgbbResponse.data.data.url;
 
 					formData.image = imageUrl;
-					formData.isVerified = false;
-					formData.email = email;
-					formData.uploaderName = uploaderName;
-					formData.uploaderImage = uploaderImage;
+					formData.uploaderId = social_id;
+					formData.uploaderImage = user.map((us) => us?.image);
+					formData.uploaderIsVerified = user.map(
+						(us) => us?.isVerified
+					);
+					formData.uploaderName = user.map((us) => us?.name);
 
 					axios
 						.post(
@@ -102,7 +103,6 @@ const MakePost = () => {
 						})
 						.catch((postError) => {
 							console.error("Post failed:", postError);
-							// alert("Post failed please try again");
 						});
 				} else {
 					alert("Please try again");
@@ -119,8 +119,8 @@ const MakePost = () => {
 
 	return (
 		<div>
-			<div className="text-center text-gray-700 text-lg py-1 pl-4 w-full font-semibold">
-				<a href="#post-modal">{randomQuote}</a>
+			<div>
+				<a href="#post-modal">make a post</a>
 			</div>
 
 			<div
@@ -174,7 +174,7 @@ const MakePost = () => {
 					</div>
 				</form>
 			</div>
-			<hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[7px] drop-shadow-md shadow-md rounded-3xl mx-4" />
+			{/* <hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[7px] drop-shadow-md shadow-md rounded-3xl mx-4" /> */}
 		</div>
 	);
 };

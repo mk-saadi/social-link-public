@@ -56,11 +56,11 @@ const Login = () => {
 			);
 
 			if (matchingUser) {
-				localStorage.setItem("email", matchingUser.email);
-				localStorage.setItem("name", matchingUser.name);
-				localStorage.setItem("image", matchingUser.image);
-				localStorage.setItem("isVerified", matchingUser.isVerified);
+				localStorage.setItem("social_id", matchingUser._id);
+				console.log("social_id", matchingUser._id);
+
 				navigate("/");
+				// localStorage.removeItem("email");
 
 				console.log(
 					"Data of matching user stored in localStorage:",
@@ -75,59 +75,59 @@ const Login = () => {
 		});
 
 	return (
-		<div className='container grid grid-cols-1 justify-center items-center mx-auto min-h-screen'>
-			<div className='flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg'>
-				<h3 className='text-5xl text-center font-bold  text-[#32308E] opacity-40'>
-					Social<span className='underline text-[#2a295f]'>Link</span>
+		<div className="container grid grid-cols-1 justify-center items-center mx-auto min-h-screen">
+			<div className="flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg">
+				<h3 className="text-5xl text-center font-bold  text-[#32308E] opacity-40">
+					Social<span className="underline text-[#2a295f]">Link</span>
 				</h3>
 
 				<form
 					onSubmit={handleSubmit}
-					className='flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold'
+					className="flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold"
 				>
 					<input
-						label='Email'
+						label="Email"
 						value={formData.email}
 						onChange={handleChange}
-						type='email'
-						name='email'
-						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0'
-						placeholder='your email'
+						type="email"
+						name="email"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0"
+						placeholder="your email"
 					/>
-					<div className='relative'>
+					<div className="relative">
 						<input
-							label='Password'
+							label="Password"
 							value={formData.password}
 							onChange={handleChange}
 							type={passwordShow ? `text` : `password`}
-							name='password'
-							className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full'
-							placeholder='your password'
+							name="password"
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							placeholder="your password"
 						/>
 						{passwordShow ? (
 							<VisibilityIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						) : (
 							<VisibilityOffIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						)}
 					</div>
 					<input
-						type='submit'
+						type="submit"
 						value={"Login"}
-						className='bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300'
+						className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300"
 					/>
 				</form>
 				<div>
-					<p className='text-center'>
+					<p className="text-center">
 						Don't have't your account please{" "}
 						<Link
-							to='/register'
-							className='text-[#6A67FF]  underline font-semibold'
+							to="/register"
+							className="text-[#6A67FF]  underline font-semibold"
 						>
 							Register
 						</Link>

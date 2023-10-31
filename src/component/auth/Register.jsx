@@ -19,6 +19,37 @@ const SignUp = () => {
 		setPasswordShow(!passwordShow);
 	};
 
+	// const generateRandomUsername = (name) => {
+	// 	const nameTokens = name.split(" ");
+
+	// 	if (nameTokens.length === 1) {
+	// 		const randomNumber = Math.floor(Math.random() * 1000);
+	// 		return nameTokens[0] + randomNumber;
+	// 	}
+
+	// 	const combinedName = nameTokens.join("_");
+	// 	const randomNumber = Math.floor(Math.random() * 1000);
+
+	// 	return combinedName + randomNumber;
+	// };
+
+	const generateRandomUsername = (name) => {
+		// Convert the name to lowercase.
+		name = name.toLowerCase();
+
+		const nameTokens = name.split(" ");
+
+		if (nameTokens.length === 1) {
+			const randomNumber = Math.floor(Math.random() * 1000);
+			return nameTokens[0] + randomNumber;
+		}
+
+		const combinedName = nameTokens.join("_");
+		const randomNumber = Math.floor(Math.random() * 1000);
+
+		return combinedName + randomNumber;
+	};
+
 	const [formData, setFormData] = useState({
 		name: "",
 		image: null,
@@ -26,7 +57,6 @@ const SignUp = () => {
 		password: "",
 		confirmPassword: "",
 	});
-	console.log(formData);
 
 	const handleChange = async (event) => {
 		if (event.target.name === "image") {
@@ -42,6 +72,7 @@ const SignUp = () => {
 					selectedFile,
 					options
 				);
+
 				setFormData({ ...formData, image: compressedFile });
 			} catch (error) {
 				alert("Error compressing image please try again");
@@ -53,6 +84,40 @@ const SignUp = () => {
 			});
 		}
 	};
+	// const [formData, setFormData] = useState({
+	// 	name: "",
+	// 	image: null,
+	// 	email: "",
+	// 	password: "",
+	// 	confirmPassword: "",
+	// });
+	// console.log(formData);
+
+	// const handleChange = async (event) => {
+	// 	if (event.target.name === "image") {
+	// 		const selectedFile = event.target.files[0];
+
+	// 		const options = {
+	// 			maxSizeMB: 0.3,
+	// 			maxWidthOrHeight: 800,
+	// 		};
+
+	// 		try {
+	// 			const compressedFile = await imageCompression(
+	// 				selectedFile,
+	// 				options
+	// 			);
+	// 			setFormData({ ...formData, image: compressedFile });
+	// 		} catch (error) {
+	// 			alert("Error compressing image please try again");
+	// 		}
+	// 	} else {
+	// 		setFormData({
+	// 			...formData,
+	// 			[event.target.name]: event.target.value,
+	// 		});
+	// 	}
+	// };
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -62,6 +127,13 @@ const SignUp = () => {
 
 			return;
 		}
+
+		const name = formData.name;
+
+		// Generate a random username for the user.
+		const userName = generateRandomUsername(name);
+		formData.userName = userName;
+		console.log(userName);
 
 		const imgbbFormData = new FormData();
 		imgbbFormData.append("image", formData.image);
@@ -129,11 +201,16 @@ const SignUp = () => {
 			);
 
 			if (matchingUser) {
-				localStorage.setItem("email", matchingUser.email);
-				localStorage.setItem("name", matchingUser.name);
-				localStorage.setItem("image", matchingUser.image);
-				localStorage.setItem("isVerified", matchingUser.isVerified);
-				navigate("/home");
+				localStorage.setItem("social_id", matchingUser._id);
+				console.log("social_id", matchingUser._id);
+
+				navigate("/");
+				// localStorage.removeItem("email");
+
+				console.log(
+					"Data of matching user stored in localStorage:",
+					matchingUser
+				);
 			} else {
 				console.log("No matching user found.");
 			}
@@ -143,99 +220,99 @@ const SignUp = () => {
 		});
 
 	return (
-		<div className='container grid grid-cols-1 justify-center items-center mx-auto min-h-screen'>
-			<div className='flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg'>
-				<h3 className='text-5xl text-center font-bold  text-[#32308E] opacity-40'>
-					Social<span className='underline text-[#2a295f]'>Link</span>
+		<div className="container grid grid-cols-1 justify-center items-center mx-auto min-h-screen">
+			<div className="flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg">
+				<h3 className="text-5xl text-center font-bold  text-[#32308E] opacity-40">
+					Social<span className="underline text-[#2a295f]">Link</span>
 				</h3>
 
 				<form
 					onSubmit={handleSubmit}
-					className='flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold'
+					className="flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold"
 				>
 					<input
-						label='Name'
+						label="Name"
 						onChange={handleChange}
-						type='text'
+						type="text"
 						required
-						name='name'
-						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-transparent'
-						placeholder='type your name'
+						name="name"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-transparent"
+						placeholder="type your name"
 					/>
 					<input
 						onChange={handleChange}
-						type='file'
+						type="file"
 						required
-						name='image'
-						accept='image/*'
-						placeholder='Photo'
-						className='px-2 py-4 border rounded-md cursor-pointer'
+						name="image"
+						accept="image/*"
+						placeholder="Photo"
+						className="px-2 py-4 border rounded-md cursor-pointer"
 					/>
 					<input
-						label='Email'
+						label="Email"
 						onChange={handleChange}
-						type='email'
+						type="email"
 						required
-						name='email'
-						className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0'
-						placeholder='type your email'
+						name="email"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0"
+						placeholder="type your email"
 					/>
-					<div className='relative'>
+					<div className="relative">
 						<input
-							label='Password'
+							label="Password"
 							onChange={handleChange}
 							type={passwordShow ? `text` : `password`}
-							name='password'
+							name="password"
 							required
-							className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full'
-							placeholder='type password'
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							placeholder="type password"
 						/>
 						{passwordShow ? (
 							<VisibilityIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						) : (
 							<VisibilityOffIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						)}
 					</div>
-					<div className='relative'>
+					<div className="relative">
 						<input
-							label='Confirm Password'
+							label="Confirm Password"
 							onChange={handleChange}
 							type={passwordShow ? `text` : `password`}
-							name='confirmPassword'
+							name="confirmPassword"
 							required
-							className='border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full'
-							placeholder='confirm password'
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							placeholder="confirm password"
 						/>
 						{passwordShow ? (
 							<VisibilityIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						) : (
 							<VisibilityOffIcon
 								onClick={() => handlePasswordShow()}
-								className='absolute right-5 top-4 cursor-pointer'
+								className="absolute right-5 top-4 cursor-pointer"
 							/>
 						)}
 					</div>
 					<input
-						type='submit'
+						type="submit"
 						value={"Register"}
-						className='bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300'
+						className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300"
 					/>
 				</form>
 				<div>
-					<p className='text-center'>
+					<p className="text-center">
 						Already have an account? Please{" "}
 						<Link
-							to='/login'
-							className='text-[#6A67FF] underline font-semibold'
+							to="/login"
+							className="text-[#6A67FF] underline font-semibold"
 						>
 							Login
 						</Link>
