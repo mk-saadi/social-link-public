@@ -58,15 +58,15 @@ const LeftNav = () => {
 	}, []);
 
 	return (
-		<div className=" bg-rose-100 shadow-md rounded-lg ">
+		<div className="bg-white shadow-md rounded-lg ">
 			{/* <h1 className="text-[#32308E] text-5xl font-bold p-5 text-center">
 				Social<span className="text-[#6A67FF]">Link</span>
 			</h1> */}
 			<div className="flex flex-col">
 				<div className="relative flex flex-col text-center justify-center items-center gap-2">
-					<div className="absolute rounded-t-lg top-0 bg-orange-400 h-14 w-full"></div>
+					<div className="absolute rounded-t-lg top-0 bg-[#6A67FF] h-14 w-full"></div>
 					<div className="avatar">
-						<div className="w-20 md:w-28 rounded-xl mt-4 border-4 border-[#ede6d7] shadow-md">
+						<div className="w-20 md:w-28 rounded-xl mt-4 border-white border-4 shadow-md">
 							<img
 								src={matchedUser?.image}
 								onError={(e) => {
