@@ -28,59 +28,20 @@ const RightNav = () => {
 		.sort(() => Math.random() - 0.5)
 		.slice(0, 5);
 
-	// const handleFollow = async (followedUserId) => {
-	// 	console.log("followedUserId", followedUserId);
-	// 	try {
-	// 		await axios.patch(`http://localhost:7000/users/${userId}`, {
-	// 			followedUserId,
-	// 		});
-	// 		console.log(
-	// 			`User with ID ${userId} followed user with ID ${followedUserId}`
-	// 		);
-	// 		// Fetch the users again to update the state after following
-	// 		const updatedUsers = await getUsers();
-	// 		setUsers(updatedUsers);
-	// 	} catch (error) {
-	// 		console.error("Error following user:", error);
-	// 	}
-	// };
-	// const handleFollow = async (followedUserId) => {
-	// 	console.log(followedUserId);
-	// 	try {
-	// 		const response = await axios.patch(
-	// 			`http://localhost:7000/users/${userId}`,
-	// 			{ followedUserId }
-	// 		);
+	/* ------------------------------ follow -------------------------------- */
+	const handleFollow = async (id) => {
+		const followData = {
+			followerId: userId,
+			followingIds: [id],
+		};
 
-	// 		console.log(userId);
+		const response = await axios.post(
+			"http://localhost:7000/follow",
+			followData
+		);
 
-	// 		console.log(response.data); // You can handle the response as needed
-	// 	} catch (error) {
-	// 		console.error("Error following user:", error);
-	// 	}
-	// };
-
-	const handleFollow = (userId) => {
-		axios
-			.patch(`http://localhost:7000/users/follow/${userId}`, {
-				// user: {
-				// 	follow: user.displayName,
-				// },
-			})
-			.then(() => {
-				// Update the like count in the state
-				// setClickedButtons((prevState) => ({
-				// 	...prevState,
-				// 	[postId]: true,
-				// }));
-				// // Update the like count in the state
-				// setAPostLikeTrigger(!aPostLikeTrigger);
-
-				console.log("successful");
-			})
-			.catch((error) => {
-				console.error("Error incrementing likes:", error);
-			});
+		console.log("follow successful:", response);
+		console.log("data success", response.data.success);
 	};
 
 	return (
