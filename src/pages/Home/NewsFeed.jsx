@@ -22,7 +22,6 @@ const NewsFeed = () => {
 					...post,
 					timeDifference: getTimeDifference(post.createdAt),
 				}));
-
 				// Reverse the array to display new posts first
 				const reversedPosts = postsWithTimeDifference.reverse();
 
