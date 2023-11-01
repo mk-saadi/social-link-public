@@ -1,7 +1,7 @@
 import { Chip, Divider } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
-import LeftNav from "../home-component/LeftNav";
+import LeftNav from "../Home/LeftNav";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";

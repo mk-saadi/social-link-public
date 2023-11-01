@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
+import TopNavbar from "../component/shared/TopNavbar";
 
 const Layout = () => {
 	return (
-		<div className="bg-[#ede6d7]">
+		<div className="bg-[#EFF3F8]">
+			<TopNavbar />
 			<Outlet />
 		</div>
 	);
