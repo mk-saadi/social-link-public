@@ -169,7 +169,8 @@ const SignUp = () => {
 							alert("Registration successful");
 
 							console.log("Registration successful:", userEmail);
-							location.reload();
+							// location.reload();
+							window.location.reload(true);
 						})
 						.catch((registrationError) => {
 							console.error(

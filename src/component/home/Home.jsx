@@ -11,12 +11,14 @@ const Home = () => {
 		<>
 			<div className="grid lg:grid-cols-8 min-h-screen overflow-x-hidden">
 				<div
-					className="lg:col-span-2 col-span-12"
+					className="lg:col-span-2  mx-8    w-full my-4"
 					style={{ zIndex: 10 }}
 				>
-					<LeftNav />
+					<div className="lg:fixed top-0 block">
+						<LeftNav />
+					</div>
 				</div>
-				<section className="col-span-4 mt-4">
+				<section className="lg:col-span-4 mt-4">
 					{/* <div className='hidden lg:block'>
 						<Navbar />
 					</div> */}

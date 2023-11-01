@@ -37,7 +37,7 @@ const Login = () => {
 				const userEmail = responseData.email;
 
 				localStorage.setItem("email", userEmail);
-				location.reload();
+				window.location.reload(true);
 
 				console.log("Login successful:", userEmail);
 			})
