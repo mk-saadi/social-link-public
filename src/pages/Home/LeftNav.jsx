@@ -87,7 +87,7 @@ const LeftNav = () => {
 	};
 
 	return (
-		<div className="bg-white shadow-md rounded-lg">
+		<div className="bg-white shadow-md rounded-lg w-[340px]">
 			<div className="flex flex-col">
 				<div className="relative px-4 flex flex-col text-center justify-center items-center gap-2">
 					<div className="absolute rounded-t-lg top-0 bg-[#6A67FF] h-16 w-full"></div>

@@ -3,9 +3,16 @@ import TopNavbar from "../component/shared/TopNavbar";
 
 const Layout = () => {
 	return (
-		<div className="bg-[#EFF3F8]">
-			<TopNavbar />
-			<Outlet />
+		<div className="bg-[#EFF3F8] max-w-[1920px] mx-auto">
+			<div
+				className="w-full fixed top-0 mx-auto max-w-[1920px]"
+				style={{ zIndex: 10 }}
+			>
+				<TopNavbar />
+			</div>
+			<div className="">
+				<Outlet />
+			</div>
 		</div>
 	);
 };
