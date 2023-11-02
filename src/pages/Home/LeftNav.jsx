@@ -14,6 +14,8 @@ import axios from "axios";
 const LeftNav = () => {
 	const [users, setUsers] = useState([]);
 	const [posts, setPosts] = useState([]);
+	const [follow, setFollow] = useState([]);
+	const [following, setFollowing] = useState([]);
 	const [loading, setLoading] = useState(true);
 
 	const userId = localStorage.getItem("social_id");
@@ -55,23 +57,49 @@ const LeftNav = () => {
 			.catch((err) => {
 				console.log(err.message);
 			});
-	}, []);
+	}, [userId]);
+
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/follow")
+			.then((res) => res.data)
+			.then((data) => {
+				const filteredAndMappedPosts = data.filter(
+					(post) => post.followerId === userId
+				);
+				setFollow(filteredAndMappedPosts);
+
+				const followers = data.filter((item) =>
+					item.followingIds.includes(userId)
+				);
+
+				setFollowing(followers);
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
+	}, [userId]);
+
+	const getFollowerCount = (following) => {
+		const followerIds = following.map((fo) => fo?.followerId);
+		const uniqueFollowerIds = new Set(followerIds);
+		return uniqueFollowerIds.size;
+	};
 
 	return (
-		<div className="bg-white shadow-md rounded-lg ">
-			{/* <h1 className="text-[#32308E] text-5xl font-bold p-5 text-center">
-				Social<span className="text-[#6A67FF]">Link</span>
-			</h1> */}
+		<div className="bg-white shadow-md rounded-lg">
 			<div className="flex flex-col">
-				<div className="relative flex flex-col text-center justify-center items-center gap-2">
-					<div className="absolute rounded-t-lg top-0 bg-[#6A67FF] h-14 w-full"></div>
+				<div className="relative px-4 flex flex-col text-center justify-center items-center gap-2">
+					<div className="absolute rounded-t-lg top-0 bg-[#6A67FF] h-16 w-full"></div>
 					<div className="avatar">
 						<div className="w-20 md:w-28 rounded-xl mt-4 border-white border-4 shadow-md">
 							<img
 								src={matchedUser?.image}
 								onError={(e) => {
-									e.target.src = "";
+									e.target.src =
+										"https://hpsnf.com/wp-content/uploads/2021/04/avatar.jpg";
 								}}
+								alt="avatar"
 							/>
 						</div>
 					</div>
@@ -93,12 +121,16 @@ const LeftNav = () => {
 								posts
 							</p>
 							<p className="cursor-pointer font-semibold">
-								<span>0</span>
+								<span>{getFollowerCount(following)}</span>
 								<br />
 								Followers
 							</p>
 							<p className="cursor-pointer font-semibold">
-								<span>0</span>
+								<span>
+									{follow.map(
+										(fo) => fo?.followingIds.length
+									)}
+								</span>
 								<br />
 								Following
 							</p>
@@ -106,6 +138,7 @@ const LeftNav = () => {
 					</div>
 				</div>
 				<hr className="bg-gray-400 border-0 h-[1px] my-3" />
+
 				<div>
 					<nav className="">
 						<ul className="menu flex lg:flex-col flex-row gap-2 text-xl text-[#32308E] font-semibold">

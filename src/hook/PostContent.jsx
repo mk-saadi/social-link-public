@@ -17,7 +17,7 @@ const PostContent = ({ content }) => {
 	return (
 		<div className="relative">
 			<ReactMarkdown
-				className="whitespace-pre-line markdown prose text-gray-700 font-semibold break-words text-sm md:text-lg"
+				className="whitespace-pre-line markdown prose text-gray-600 font-semibold break-words text-sm md:text-lg"
 				remarkPlugins={[remarkGfm]}
 			>
 				{displayContent}

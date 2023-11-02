@@ -4,11 +4,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 const SignUp = () => {
 	const navigate = useNavigate();
-	const location = new useLocation();
 
 	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
 	console.log(imgbbApiKey);
@@ -18,20 +16,6 @@ const SignUp = () => {
 	const handlePasswordShow = () => {
 		setPasswordShow(!passwordShow);
 	};
-
-	// const generateRandomUsername = (name) => {
-	// 	const nameTokens = name.split(" ");
-
-	// 	if (nameTokens.length === 1) {
-	// 		const randomNumber = Math.floor(Math.random() * 1000);
-	// 		return nameTokens[0] + randomNumber;
-	// 	}
-
-	// 	const combinedName = nameTokens.join("_");
-	// 	const randomNumber = Math.floor(Math.random() * 1000);
-
-	// 	return combinedName + randomNumber;
-	// };
 
 	const generateRandomUsername = (name) => {
 		// Convert the name to lowercase.

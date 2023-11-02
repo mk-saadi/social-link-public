@@ -1,4 +1,4 @@
-import { CiMenuKebab } from "react-icons/ci";
+import { TiThMenu } from "react-icons/ti";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment, FaShare } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -62,33 +62,38 @@ const NewsFeed = () => {
 			<div>
 				{posts.map((po) => (
 					<div key={po._id}>
-						<div className="bg-[#d3ccbe] border-2 m-8 mt-16 border-gray-300 shadow-md rounded-lg">
+						<div className="bg-[#fff] mx-2 md:m-8 mt-6  shadow-md rounded-lg py-4">
 							{/* top bar */}
-							<div className="flex justify-between items-center mx-4 mt-4 bg-transparent">
+							<div className="px-4 flex justify-between items-center  bg-transparent">
 								<div className="flex justify-center items-center bg-transparent">
-									<div className="w-10 lg:w-16 rounded-full ">
-										<img
-											src={po?.uploaderImage}
-											alt=""
-											className="rounded-full hidden md:block"
-										/>
+									<div className="avatar">
+										<div className="w-12 lg:w-16  rounded-full drop-shadow-md">
+											<img
+												src={po?.uploaderImage}
+												onError={(e) => {
+													e.target.src =
+														"https://hpsnf.com/wp-content/uploads/2021/04/avatar.jpg";
+												}}
+												alt="avatar"
+											/>{" "}
+										</div>
 									</div>
 									<div className="flex flex-col ml-4 bg-transparent">
-										<p className="text-2xl text-gray-700  font-semibold cursor-pointer bg-transparent">
+										<p className="text-xl md:text-2xl text-gray-700  font-semibold cursor-pointer bg-transparent">
 											{po?.uploaderName}
 										</p>
-										<p className="text-lg text-gray-500 bg-transparent">
+										<p className="text-sm md:text-lg text-gray-500 bg-transparent">
 											{po.timeDifference}
 										</p>
 									</div>
 								</div>
 
-								<CiMenuKebab className="text-3xl text-gray-700 ml-2 font-semibold cursor-pointer bg-transparent" />
+								<TiThMenu className="text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent " />
 							</div>
 							{/* top bar */}
 
 							{/* body */}
-							<div className="mx-4 mt-8  bg-transparent">
+							<div className="px-4">
 								<PostContent content={po?.name} />
 
 								<img
@@ -96,10 +101,14 @@ const NewsFeed = () => {
 									alt="post image"
 									className="my-6 w-full rounded-md"
 									loading="lazy"
+									style={{
+										display: po?.image ? "block" : "none",
+									}}
 								/>
 							</div>
-							<div className="flex justify-around items-center">
-								<div className="flex justify-start items-center gap-8 w-full mx-4 mr-16">
+							<hr className="bg-gray-500 border-0 h-[1px] my-2" />
+							<div className="px-4 flex justify-around items-center">
+								<div className="flex justify-start items-center gap-8 w-full  mr-16">
 									<AiFillHeart className="button-11" />
 									{/* <LikeButton /> */}
 

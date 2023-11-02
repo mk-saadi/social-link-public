@@ -87,12 +87,12 @@ const UserProfile = () => {
 	console.log(matchedUser);
 	return (
 		<div className="grid lg:grid-cols-8 min-h-screen">
-			<div
+			{/* <div
 				className="col-span-2 xl:block lg:hidden md:hidden"
 				style={{ zIndex: 10 }}
 			>
 				<LeftNav />
-			</div>
+			</div> */}
 			<div className="col-span-6 w-full mx-auto py-10">
 				{matchedUser && (
 					<div className="flex lg:flex-row flex-col justify-start items-center lg:gap-10 gap-6 py-10">

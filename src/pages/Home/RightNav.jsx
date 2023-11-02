@@ -36,7 +36,7 @@ const RightNav = () => {
 		};
 
 		const response = await axios.post(
-			"http://localhost:7000/follow",
+			"https://social-link-server-liard.vercel.app/follow",
 			followData
 		);
 
@@ -45,8 +45,51 @@ const RightNav = () => {
 	};
 
 	return (
-		<div className="pt-10">
-			<div className="flex gap-4 items-center">
+		<div className="bg-white shadow-md rounded-lg w-[340px]">
+			<div className="flex flex-col">
+				<p className="text-xl font-bold p-4 text-gray-700">
+					People you may know
+				</p>
+
+				<div>
+					{randomUsers
+						.filter((user) => user._id !== userId)
+						.map((user) => (
+							<div
+								key={user._id}
+								className="flex justify-between gap-2 items-center mx-4 text-lg font-semibold"
+							>
+								<Link className="flex justify-center items-center gap-3 my-2">
+									<div className="avatar">
+										<div className="w-14 rounded-full object-cover">
+											<img
+												src={user?.image || ""}
+												alt="person"
+											/>
+										</div>
+									</div>
+									<h1 className="text-gray-700 hover:underline">
+										{user?.name}
+									</h1>
+								</Link>
+								<div
+									className="text-[#32308E] font-semibold hover:underline cursor-pointer"
+									onClick={() => handleFollow(user?._id)}
+								>
+									<p>Follow</p>
+								</div>
+							</div>
+						))}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default RightNav;
+
+{
+	/* <div className="flex gap-4 items-center">
 				{matchedUser && (
 					<>
 						<img
@@ -61,44 +104,5 @@ const RightNav = () => {
 						</div>
 					</>
 				)}
-			</div>
-
-			<p className="text-xl font-bold py-6 text-gray-700">
-				People you may know
-			</p>
-
-			<div>
-				{randomUsers
-					.filter((user) => user._id !== userId)
-					.map((user) => (
-						<div
-							key={user._id}
-							className="flex justify-between gap-2 items-center mx-5 text-lg font-semibold"
-						>
-							<Link className="flex justify-center items-center gap-3 my-2">
-								<div className="avatar">
-									<div className="w-14 rounded-full object-cover">
-										<img
-											src={user?.image || ""}
-											alt="person"
-										/>
-									</div>
-								</div>
-								<h1 className="text-gray-700 hover:underline">
-									{user?.name}
-								</h1>
-							</Link>
-							<div
-								className="text-[#32308E] font-semibold hover:underline cursor-pointer"
-								onClick={() => handleFollow(user?._id)}
-							>
-								<p>Follow</p>
-							</div>
-						</div>
-					))}
-			</div>
-		</div>
-	);
-};
-
-export default RightNav;
+			</div> */
+}

@@ -56,63 +56,127 @@ const MakePost = () => {
 			});
 	}, [social_id]);
 
+	// const handlePost = (event) => {
+	// 	event.preventDefault();
+
+	// 	const imgbbFormData = new FormData();
+	// 	imgbbFormData.append("image", formData.image);
+
+	// 	axios
+	// 		.post(
+	// 			`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+	// 			imgbbFormData,
+	// 			{
+	// 				headers: {
+	// 					"Content-Type": "multipart/form-data",
+	// 				},
+	// 			}
+	// 		)
+	// 		.then((imgbbResponse) => {
+	// 			if (imgbbResponse.data.status === 200) {
+	// 				const imageUrl = imgbbResponse.data.data.url;
+
+	// 				formData.image = imageUrl;
+	// 				formData.uploaderId = social_id;
+	// 				formData.uploaderImage = user.map((us) => us?.image);
+	// 				formData.uploaderIsVerified = user.map(
+	// 					(us) => us?.isVerified
+	// 				);
+	// 				formData.uploaderName = user.map((us) => us?.name);
+
+	// 				axios
+	// 					.post(
+	// 						"https://social-link-server-liard.vercel.app/posts",
+	// 						formData
+	// 					)
+	// 					.then((response) => {
+	// 						const responseData = JSON.parse(
+	// 							response.config.data
+	// 						);
+	// 						const userEmail = responseData.email;
+	// 						localStorage.setItem("email", userEmail);
+	// 						alert("Post successful");
+
+	// 						console.log("Post successful:", userEmail);
+	// 						location.reload();
+	// 					})
+	// 					.catch((postError) => {
+	// 						console.error("Post failed:", postError);
+	// 					});
+	// 			} else {
+	// 				alert("Please try again");
+	// 				console.error(
+	// 					"Image upload to ImgBB failed:",
+	// 					imgbbResponse.data
+	// 				);
+	// 			}
+	// 		})
+	// 		.catch((imgbbError) => {
+	// 			console.error("Image upload to ImgBB failed:", imgbbError);
+	// 		});
+	// };
+
 	const handlePost = (event) => {
 		event.preventDefault();
 
-		const imgbbFormData = new FormData();
-		imgbbFormData.append("image", formData.image);
+		if (formData.image) {
+			// Image is selected, proceed with image upload
+			const imgbbFormData = new FormData();
+			imgbbFormData.append("image", formData.image);
+
+			axios
+				.post(
+					`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+					imgbbFormData,
+					{
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+					}
+				)
+				.then((imgbbResponse) => {
+					if (imgbbResponse.data.status === 200) {
+						// Handle successful image upload
+						const imageUrl = imgbbResponse.data.data.url;
+						formData.image = imageUrl;
+						// Continue with the rest of the post creation process
+						createPost();
+					} else {
+						alert("Please try again");
+						console.error(
+							"Image upload to ImgBB failed:",
+							imgbbResponse.data
+						);
+					}
+				})
+				.catch((imgbbError) => {
+					console.error("Image upload to ImgBB failed:", imgbbError);
+				});
+		} else {
+			// No image selected, create the post without an image
+			createPost();
+		}
+	};
+
+	// Function to create a post without uploading an image
+	const createPost = () => {
+		formData.uploaderId = social_id;
+		formData.uploaderImage = user.map((us) => us?.image);
+		formData.uploaderIsVerified = user.map((us) => us?.isVerified);
+		formData.uploaderName = user.map((us) => us?.name);
 
 		axios
-			.post(
-				`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
-				imgbbFormData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			)
-			.then((imgbbResponse) => {
-				if (imgbbResponse.data.status === 200) {
-					const imageUrl = imgbbResponse.data.data.url;
-
-					formData.image = imageUrl;
-					formData.uploaderId = social_id;
-					formData.uploaderImage = user.map((us) => us?.image);
-					formData.uploaderIsVerified = user.map(
-						(us) => us?.isVerified
-					);
-					formData.uploaderName = user.map((us) => us?.name);
-
-					axios
-						.post(
-							"https://social-link-server-liard.vercel.app/posts",
-							formData
-						)
-						.then((response) => {
-							const responseData = JSON.parse(
-								response.config.data
-							);
-							const userEmail = responseData.email;
-							localStorage.setItem("email", userEmail);
-							alert("Post successful");
-
-							console.log("Post successful:", userEmail);
-							location.reload();
-						})
-						.catch((postError) => {
-							console.error("Post failed:", postError);
-						});
-				} else {
-					alert("Please try again");
-					console.error(
-						"Image upload to ImgBB failed:",
-						imgbbResponse.data
-					);
-				}
+			.post("https://social-link-server-liard.vercel.app/posts", formData)
+			.then((response) => {
+				const responseData = JSON.parse(response.config.data);
+				const userEmail = responseData.email;
+				localStorage.setItem("email", userEmail);
+				alert("Post successful");
+				console.log("Post successful:", userEmail);
+				location.reload();
 			})
-			.catch((imgbbError) => {
-				console.error("Image upload to ImgBB failed:", imgbbError);
+			.catch((postError) => {
+				console.error("Post failed:", postError);
 			});
 	};
 
@@ -147,7 +211,6 @@ const MakePost = () => {
 						<input
 							onChange={handleChange}
 							type="file"
-							required
 							name="image"
 							accept="image/*"
 							placeholder="Photo"
