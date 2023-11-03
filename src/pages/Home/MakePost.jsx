@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import imageCompression from "browser-image-compression";
 
 const MakePost = () => {
-	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
+	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
+	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
 
 	const social_id = localStorage.getItem("social_id");
 	const [user, setUser] = useState();

@@ -91,7 +91,7 @@ const Login = () => {
 						onChange={handleChange}
 						type="email"
 						name="email"
-						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-[#e5e7eb]"
 						placeholder="your email"
 					/>
 					<div className="relative">
@@ -101,7 +101,7 @@ const Login = () => {
 							onChange={handleChange}
 							type={passwordShow ? `text` : `password`}
 							name="password"
-							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full bg-[#e5e7eb]"
 							placeholder="your password"
 						/>
 						{passwordShow ? (

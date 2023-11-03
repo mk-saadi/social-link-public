@@ -57,7 +57,7 @@ const RightNav = () => {
 						.map((user) => (
 							<div
 								key={user._id}
-								className="flex justify-between gap-2 items-center mx-4 text-lg font-semibold"
+								className="flex justify-between gap-2 items-center mx-4 text-base font-semibold"
 							>
 								<Link className="flex justify-center items-center gap-3 my-2">
 									<div className="avatar">
@@ -68,9 +68,14 @@ const RightNav = () => {
 											/>
 										</div>
 									</div>
-									<h1 className="text-gray-700 hover:underline">
-										{user?.name}
-									</h1>
+									<div>
+										<p className="text-gray-700 hover:underline">
+											{user?.name}
+										</p>
+										<p className="text-xs text-gray-500 font-semibold">
+											{user?.userName}
+										</p>
+									</div>
 								</Link>
 								<div
 									className="text-[#32308E] font-semibold hover:underline cursor-pointer"

@@ -8,7 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {
 	const navigate = useNavigate();
 
-	const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
+	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
+	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
 	console.log(imgbbApiKey);
 
 	const [passwordShow, setPasswordShow] = useState(false);
@@ -47,8 +48,8 @@ const SignUp = () => {
 			const selectedFile = event.target.files[0];
 
 			const options = {
-				maxSizeMB: 0.3,
-				maxWidthOrHeight: 800,
+				maxSizeMB: 0.2,
+				maxWidthOrHeight: 600,
 			};
 
 			try {
@@ -118,6 +119,11 @@ const SignUp = () => {
 		const userName = generateRandomUsername(name);
 		formData.userName = userName;
 		console.log(userName);
+
+		if (userName === null) {
+			alert("Registration failed, please try again.");
+			return;
+		}
 
 		const imgbbFormData = new FormData();
 		imgbbFormData.append("image", formData.image);
@@ -221,7 +227,7 @@ const SignUp = () => {
 						type="text"
 						required
 						name="name"
-						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-transparent"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-[#e5e7eb]"
 						placeholder="type your name"
 					/>
 					<input
@@ -239,7 +245,7 @@ const SignUp = () => {
 						type="email"
 						required
 						name="email"
-						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0"
+						className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-[#e5e7eb]"
 						placeholder="type your email"
 					/>
 					<div className="relative">
@@ -249,7 +255,7 @@ const SignUp = () => {
 							type={passwordShow ? `text` : `password`}
 							name="password"
 							required
-							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full bg-[#e5e7eb]"
 							placeholder="type password"
 						/>
 						{passwordShow ? (
@@ -271,7 +277,7 @@ const SignUp = () => {
 							type={passwordShow ? `text` : `password`}
 							name="confirmPassword"
 							required
-							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full"
+							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 w-full bg-[#e5e7eb]"
 							placeholder="confirm password"
 						/>
 						{passwordShow ? (

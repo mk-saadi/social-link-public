@@ -141,70 +141,64 @@ const LeftNav = () => {
 
 				<div>
 					<nav className="">
-						<ul className="menu flex lg:flex-col flex-row gap-2 text-xl text-[#32308E] font-semibold">
+						<ul className="flex justify-start flex-col text-lg text-[#32308E] font-semibold">
 							<NavLink to={"/"}>
-								<li>
-									<p>
-										<HomeIcon className="bg-transparent" />
-										Home
-									</p>
+								<li className="flex justify-start items-center gap-3">
+									<HomeIcon className="text-indigo-700" />
+									Home
 								</li>
 							</NavLink>
-							<p>
-								<li>
-									<p>
-										<AddBoxIcon className="bg-transparent" />{" "}
-										<MakePost />
-									</p>
-								</li>
-							</p>
-							<p to={"/message"}>
-								<li>
-									<p>
-										<TextsmsIcon className="bg-transparent" />{" "}
-										Message
-									</p>
-								</li>
-							</p>
-							<p to={"/notification"}>
-								<li>
-									<p>
-										<NotificationsIcon className="bg-transparent" />
-										Notification
-									</p>
-								</li>
-							</p>
+
+							<li className="flex justify-start items-center gap-3">
+								<AddBoxIcon className="text-indigo-700" />
+								<MakePost />
+							</li>
+
+							<li
+								className="flex justify-start items-center gap-3"
+								to={"/message"}
+							>
+								<TextsmsIcon className="text-indigo-700" />{" "}
+								Message
+							</li>
+
+							<li
+								className="flex justify-start items-center gap-3"
+								to={"/notification"}
+							>
+								<NotificationsIcon className="text-indigo-700" />
+								Notification
+							</li>
+
 							<NavLink to={"/profile"}>
-								<li>
-									<p>
-										<AccountCircleIcon className="bg-transparent" />{" "}
-										Profile
-									</p>
+								<li className="flex justify-start items-center gap-3">
+									<AccountCircleIcon className="text-indigo-700" />{" "}
+									Profile
 								</li>
 							</NavLink>
-							<p to={"/settings"}>
-								<li>
-									<p>
-										<SettingsIcon className="bg-transparent" />{" "}
-										Settings
-									</p>
-								</li>
-							</p>
-							<p onClick={handleLogout}>
-								<li>
-									<p>
-										<LogoutIcon className="bg-transparent" />{" "}
-										Logout
-									</p>
-								</li>
-							</p>
-							<p to={"/more"}>
-								<li>
-									<p>
-										<MenuIcon className="bg-transparent" />
-									</p>
-								</li>
-							</p>
+
+							<li
+								className="flex justify-start items-center gap-3"
+								to={"/settings"}
+							>
+								<SettingsIcon className="text-indigo-700" />{" "}
+								Settings
+							</li>
+
+							<li
+								className="flex justify-start items-center gap-3"
+								onClick={handleLogout}
+							>
+								<LogoutIcon className="text-indigo-700" />{" "}
+								Logout
+							</li>
+
+							<li
+								className="flex justify-start items-center gap-3"
+								to={"/more"}
+							>
+								<MenuIcon className="text-indigo-700" />
+							</li>
 						</ul>
 					</nav>
 				</div>

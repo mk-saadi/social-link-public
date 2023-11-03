@@ -3,10 +3,10 @@ import TopNavbar from "../component/shared/TopNavbar";
 
 const Layout = () => {
 	return (
-		<div className="bg-[#EFF3F8] max-w-[1920px] mx-auto">
+		<div className="bg-[#e7e7e7] max-w-[1920px] mx-auto">
 			<div
 				className="w-full fixed top-0 mx-auto max-w-[1920px]"
-				style={{ zIndex: 10 }}
+				style={{ zIndex: "99999" }}
 			>
 				<TopNavbar />
 			</div>
