@@ -8,12 +8,9 @@ body {
 	background-color: #e7e7e7;
 }
 
-.menu .active {
-	/* color: #6a67ff; */
+/* .menu .active {
 	color: #242424;
-
-	/* border: 2px solid; */
-}
+} */
 
 /* react-markdown below */
 .markdown > * {
@@ -62,10 +59,12 @@ body {
 .markdown h1 {
 	color: #374151;
 	margin: -12px 0px;
+	font-size: 2rem;
 }
 
 .markdown h2 {
 	margin: -10px 0px;
+	font-size: 1.7rem;
 }
 
 .markdown h3 {

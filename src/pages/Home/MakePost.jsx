@@ -165,6 +165,7 @@ const MakePost = () => {
 		formData.uploaderImage = user.map((us) => us?.image);
 		formData.uploaderIsVerified = user.map((us) => us?.isVerified);
 		formData.uploaderName = user.map((us) => us?.name);
+		formData.userName = user.map((us) => us?.userName);
 
 		axios
 			.post("https://social-link-server-liard.vercel.app/posts", formData)
@@ -183,60 +184,51 @@ const MakePost = () => {
 
 	return (
 		<div>
-			<div>
-				<a href="#post-modal">make a post</a>
-			</div>
-
-			<div
-				id="post-modal"
-				className="modal overflow-auto"
+			<form
+				className=" bg-white shadow-md rounded-lg pb-6 w-full"
+				onSubmit={handlePost}
 			>
-				<form
-					className=" bg-[#ede6d7] shadow-xl drop-shadow-xl border border-[rgba(63,63,63,0.64)] rounded-xl py-6 w-[95%] md:w-[60%]"
-					onSubmit={handlePost}
-				>
-					<p className="text-center text-2xl font-semibold text-gray-700 mb-2">
-						Create a post
-					</p>
-					<hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl" />
-					<div className="text-gray-700 mx-4 mt-4 md:px-10">
-						<textarea
-							type="text"
-							required
-							placeholder="type post text"
-							onChange={handleChange}
-							className="bg-[#dbd2bd] border-none textarea input-bordered rounded-md w-full h-[200px]"
-							name="name"
-						></textarea>
-						<br />
-						<input
-							onChange={handleChange}
-							type="file"
-							name="image"
-							accept="image/*"
-							placeholder="Photo"
-							className="px-2 py-4 border rounded-md cursor-pointer"
-						/>
-					</div>
+				{/* <hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl" /> */}
+				<hr className="bg-gray-400 border-0 h-[1px]" />
 
-					<br />
-					<div className="flex justify-end">
+				<div className="text-gray-600">
+					<textarea
+						type="text"
+						required
+						placeholder="Create a new most"
+						onChange={handleChange}
+						className="bg-[#e5e7eb] text-xl border-none textarea input-bordered w-full h-[100px] placeholder:text-lg focus:outline-none rounded-none"
+						name="name"
+					></textarea>
+				</div>
+				<div className="flex justify-between items-center gap-3">
+					<input
+						onChange={handleChange}
+						type="file"
+						name="image"
+						accept="image/*"
+						placeholder="Photo"
+						className="file-input file-input-ghost bg-transparent w-full max-w-xs focus:bg-transparent focus:outline-none rounded"
+					/>
+					<div>
 						<input
-							className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 w-full mx-4"
+							className="text-gray-600 hover:bg-[#e5e7eb] py-2 px-3 cursor-pointer text-xl font-semibold  hover:bg-opacity-80 duration-300 w-full"
 							type="submit"
-							value="Post"
+							value="Submit post"
 						/>
 					</div>
-					<div className="modal-action absolute top-0 right-6 hover:underline text-rose-400">
+				</div>
+
+				{/* <div className="modal-action absolute top-0 right-6 hover:underline text-rose-400">
 						<a
-							href="#"
+					
 							className="modal__close flex justify-center items-center text-2xl"
 						>
 							<AiOutlineClose />
 						</a>
-					</div>
-				</form>
-			</div>
+					</div> */}
+			</form>
+
 			{/* <hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[7px] drop-shadow-md shadow-md rounded-3xl mx-4" /> */}
 		</div>
 	);

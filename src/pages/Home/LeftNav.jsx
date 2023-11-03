@@ -10,6 +10,7 @@ import { NavLink } from "react-router-dom";
 import MakePost from "./MakePost";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ActiveLink from "../../hook/ActiveLink";
 
 const LeftNav = () => {
 	const [users, setUsers] = useState([]);
@@ -104,101 +105,108 @@ const LeftNav = () => {
 						</div>
 					</div>
 					<div>
-						<p className="font-semibold text-xl">
+						<p className="text-gray-600 font-semibold text-xl">
 							{matchedUser?.name}
 						</p>
 						{matchedUser?.userName && (
-							<p className="text-sm text-gray-500 font-semibold mb-3">
+							<p className="text-sm text-gray-400 font-semibold mb-3">
 								@{matchedUser.userName}
 							</p>
 						)}
 					</div>
-					<div>
-						<div className="flex gap-6 mt-6 mx-2">
-							<p className="font-semibold">
-								<span>{posts?.length}</span>
-								<br />
-								posts
-							</p>
-							<p className="cursor-pointer font-semibold">
-								<span>{getFollowerCount(following)}</span>
-								<br />
-								Followers
-							</p>
-							<p className="cursor-pointer font-semibold">
-								<span>
-									{follow.map(
-										(fo) => fo?.followingIds.length
-									)}
-								</span>
-								<br />
-								Following
-							</p>
-						</div>
+
+					<div className="flex justify-around items-center mt-6 mx-2 text-sm text-gray-400 w-full">
+						<p className="font-semibold">
+							<span className="text-gray-600 text-xl font-semibold">
+								{posts?.length}
+							</span>
+							<br />
+							posts
+						</p>
+						<p className="cursor-pointer font-semibold">
+							<span className="text-gray-600 text-xl font-semibold">
+								{getFollowerCount(following)}
+							</span>
+							<br />
+							Followers
+						</p>
+						<p className="cursor-pointer font-semibold">
+							<span className="text-gray-600 text-xl font-semibold">
+								{follow.map((fo) => fo?.followingIds.length)}
+							</span>
+							<br />
+							Following
+						</p>
 					</div>
 				</div>
-				<hr className="bg-gray-400 border-0 h-[1px] my-3" />
+				<hr className="bg-gray-400 border-0 h-[1px] mt-2" />
 
 				<div>
-					<nav className="">
-						<ul className="flex justify-start flex-col text-lg text-[#32308E] font-semibold">
-							<NavLink to={"/"}>
-								<li className="flex justify-start items-center gap-3">
-									<HomeIcon className="text-indigo-700" />
-									Home
+					<nav className="ml-5 my-2">
+						<ul className="flex lg:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
+							<ActiveLink to={"/"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<HomeIcon className="bg-transparent" />
+										Home
+									</p>
 								</li>
-							</NavLink>
-
-							<li className="flex justify-start items-center gap-3">
-								<AddBoxIcon className="text-indigo-700" />
-								<MakePost />
-							</li>
-
-							<li
-								className="flex justify-start items-center gap-3"
-								to={"/message"}
-							>
-								<TextsmsIcon className="text-indigo-700" />{" "}
-								Message
-							</li>
-
-							<li
-								className="flex justify-start items-center gap-3"
-								to={"/notification"}
-							>
-								<NotificationsIcon className="text-indigo-700" />
-								Notification
-							</li>
-
-							<NavLink to={"/profile"}>
-								<li className="flex justify-start items-center gap-3">
-									<AccountCircleIcon className="text-indigo-700" />{" "}
-									Profile
+							</ActiveLink>
+							{/* <p>
+								<li>
+									<p>
+										<AddBoxIcon className="bg-transparent" />{" "}
+										<MakePost />
+									</p>
 								</li>
-							</NavLink>
-
-							<li
-								className="flex justify-start items-center gap-3"
-								to={"/settings"}
-							>
-								<SettingsIcon className="text-indigo-700" />{" "}
-								Settings
-							</li>
-
-							<li
-								className="flex justify-start items-center gap-3"
-								onClick={handleLogout}
-							>
-								<LogoutIcon className="text-indigo-700" />{" "}
-								Logout
-							</li>
-
-							<li
-								className="flex justify-start items-center gap-3"
-								to={"/more"}
-							>
-								<MenuIcon className="text-indigo-700" />
-							</li>
+							</p> */}
+							<p to={"/message"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<TextsmsIcon className="bg-transparent" />{" "}
+										Message
+									</p>
+								</li>
+							</p>
+							<p to={"/notification"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<NotificationsIcon className="bg-transparent" />
+										Notification
+									</p>
+								</li>
+							</p>
+							<ActiveLink to={"/profile"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<AccountCircleIcon className="bg-transparent" />{" "}
+										Profile
+									</p>
+								</li>
+							</ActiveLink>
+							<p to={"/settings"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<SettingsIcon className="bg-transparent" />{" "}
+										Settings
+									</p>
+								</li>
+							</p>
+							<p onClick={handleLogout}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<LogoutIcon className="bg-transparent" />{" "}
+										Logout
+									</p>
+								</li>
+							</p>
+							<p to={"/more"}>
+								<li>
+									<p className="flex justify-start items-center gap-3">
+										<MenuIcon className="bg-transparent" />
+									</p>
+								</li>
+							</p>
 						</ul>
 					</nav>
 				</div>

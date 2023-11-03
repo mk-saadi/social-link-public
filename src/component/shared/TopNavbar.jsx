@@ -49,68 +49,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 		transition: theme.transitions.create("width"),
 		width: "100%",
 		[theme.breakpoints.up("sm")]: {
-			width: "24ch",
-			"&:focus": {
-				width: "34ch",
-			},
+			width: "26ch",
+			// "&:focus": {
+			// 	width: "34ch",
+			// },
 		},
 	},
 }));
-
-// export default function SearchAppBar() {
-// 	return (
-// 		<Box
-// 			sx={{
-// 				flexGrow: 1,
-// 			}}
-// 		>
-// 			<AppBar
-// 				position="static"
-// 				sx={{
-// 					backgroundColor: "#fff",
-// 					boxShadow:
-// 						"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-// 				}}
-// 			>
-// 				<Toolbar>
-// 					<h3 className="text-2xl text-center font-bold  text-[#32308E] opacity-80">
-// 						Social
-// 						<span className="underline text-[#2a295f]">Link</span>
-// 					</h3>
-// 					<Search>
-// 						<SearchIconWrapper>
-// 							<SearchIcon sx={{ color: "#6b7280" }} />
-// 						</SearchIconWrapper>
-// 						<StyledInputBase
-// 							placeholder="search user"
-// 							inputProps={{ "aria-label": "search" }}
-// 						/>
-// 					</Search>
-// 					<IconButton
-// 						size="large"
-// 						edge="start"
-// 						color="inherit"
-// 						aria-label="open drawer"
-// 						sx={{ mr: 2 }}
-// 					>
-// 						<MenuIcon />
-// 					</IconButton>
-// 					<Typography
-// 						variant="h6"
-// 						noWrap
-// 						component="div"
-// 						sx={{
-// 							flexGrow: 1,
-// 							display: { xs: "none", sm: "block" },
-// 						}}
-// 					>
-// 						MUI
-// 					</Typography>
-// 				</Toolbar>
-// 			</AppBar>
-// 		</Box>
-// 	);
-// }
 
 const TopNavbar = () => {
 	const [user, setUser] = useState([]);
@@ -144,9 +89,14 @@ const TopNavbar = () => {
 			setSearchResults([]);
 		} else {
 			const searchResults = users.filter((user) => {
-				return user.name
-					.toLowerCase()
-					.includes(searchInputValue.toLowerCase());
+				return (
+					user.name
+						.toLowerCase()
+						.includes(searchInputValue.toLowerCase()) ||
+					user.userName
+						.toLowerCase()
+						.includes(searchInputValue.toLowerCase())
+				);
 			});
 
 			setSearchResults(searchResults);
@@ -156,9 +106,12 @@ const TopNavbar = () => {
 	return (
 		<div className="bg-white shadow-md flex px-7">
 			<div className=" flex justify-start items-center gap-4 flex-1">
-				<h3 className="text-2xl text-center font-bold  text-[#32308E] opacity-80 hidden md:block">
+				<Link
+					to="/"
+					className="text-2xl text-center font-bold  text-[#32308E] opacity-80 hidden md:block"
+				>
 					Social<span className="text-[#2a295f]">Link</span>
-				</h3>
+				</Link>
 			</div>
 
 			<div className="relative flex-none gap-2">
@@ -168,6 +121,7 @@ const TopNavbar = () => {
 							<SearchIcon sx={{ color: "#6b7280" }} />
 						</SearchIconWrapper>
 						<StyledInputBase
+							sx={{ fontSize: "15px" }}
 							placeholder="search user"
 							inputProps={{ "aria-label": "search" }}
 						/>

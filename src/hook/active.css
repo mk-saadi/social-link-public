@@ -1,0 +1,8 @@
+.active {
+	color: #444444;
+	transition: 0.2s ease-in-out;
+	/* text-decoration: underline; */
+	/* background-color: #0fd8ac;*/
+	/* border-bottom: 2px solid #353535; */
+	/* border-top: 2px solid #009473; */
+}

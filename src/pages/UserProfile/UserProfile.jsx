@@ -108,7 +108,7 @@ const UserProfile = () => {
 							orientation="vertical"
 							flexItem
 						></Divider>
-						<div className="text-gray-700">
+						<div className="text-gray-600">
 							<h2 className="lg:text-4xl text-2xl font-semibold">
 								{matchedUser?.name}
 							</h2>
@@ -202,7 +202,7 @@ const UserProfile = () => {
 					<div className="md:grid md:grid-cols-6 overflow-y-auto">
 						{posts?.length === 0 ? (
 							<div className="md:col-span-6  text-white text-center flex justify-center items-center h-80">
-								<div className="text-gray-700 text-2xl text-center font-semibold mx-4">
+								<div className="text-gray-600 text-2xl text-center font-semibold mx-4">
 									<p className="text-7xl flex justify-center items-center mb-3">
 										<BsCardImage />
 									</p>
@@ -236,7 +236,7 @@ const UserProfile = () => {
 														/>
 													</div>
 													<div className="flex flex-col ml-4 bg-transparent">
-														<p className="text-xl md:text-2xl text-gray-700  font-semibold cursor-pointer bg-transparent">
+														<p className="text-xl md:text-2xl text-gray-600  font-semibold cursor-pointer bg-transparent">
 															{po?.uploaderName}
 														</p>
 														<p className="text-sm md:text-lg text-gray-500 bg-transparent">
@@ -245,7 +245,7 @@ const UserProfile = () => {
 													</div>
 												</div>
 
-												<CiMenuKebab className="text-3xl text-gray-700 ml-2 font-semibold cursor-pointer bg-transparent" />
+												<CiMenuKebab className="text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent" />
 											</div>
 											{/* top bar */}
 
@@ -267,7 +267,7 @@ const UserProfile = () => {
 													<AiFillHeart className="button-11" />
 													{/* <LikeButton /> */}
 
-													<FaComment className="text-gray-700 text-5xl" />
+													<FaComment className="text-gray-600 text-5xl" />
 													<input
 														type="text"
 														placeholder="comment"
@@ -275,7 +275,7 @@ const UserProfile = () => {
 													/>
 												</div>
 												<div className="flex justify-center items-center gap-8 mr-4">
-													<FaShare className="text-gray-700 text-4xl" />
+													<FaShare className="text-gray-600 text-4xl" />
 												</div>
 											</div>
 										</div>

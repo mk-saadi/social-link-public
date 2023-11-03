@@ -83,7 +83,7 @@ const Login = () => {
 
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-col justify-center gap-4 mt-10 text-gray-700 font-semibold"
+					className="flex flex-col justify-center gap-4 mt-10 text-gray-600 font-semibold"
 				>
 					<input
 						label="Email"
