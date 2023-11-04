@@ -143,20 +143,20 @@ import PostContent from "../../hook/PostContent";
 import { Link } from "react-router-dom";
 import MakePost from "./MakePost";
 import StoryNav from "./StoryNav";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 // import LikeButton from "../../button/LikeButton";
 
 const NewsFeed = () => {
+	// const [like, setLike] = useState(true);
 	const [comments, setComments] = useState([]);
 	const [postsId, setPostsId] = useState("");
-	// const [like, setLike] = useState(true);
 	const [show, setShow] = useState(false);
 	const [showId, setShowId] = useState(false);
 	const [posts, setPosts] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [include, setInclude] = useState([]);
-	const userId = localStorage.getItem("social_id");
-
 	const [recom, setRecom] = useState("");
+	const userId = localStorage.getItem("social_id");
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
@@ -192,26 +192,84 @@ const NewsFeed = () => {
 	};
 
 	//>>  main fetch code
+	// useEffect(() => {
+	// 	// setLoading(true);
+	// 	axios
+	// 		.get("https://social-link-server-liard.vercel.app/posts")
+	// 		.then((res) => res.data)
+	// 		.then((data) => {
+	// 			const postsWithTimeDifference = data.map((post) => ({
+	// 				...post,
+	// 				timeDifference: getTimeDifference(post.createdAt),
+	// 			}));
+
+	// 			const reversedPosts = postsWithTimeDifference.reverse();
+
+	// 			setPosts(reversedPosts);
+	// 			// setLoading(false);
+	// 		})
+	// 		.catch((err) => {
+	// 			// console.log(err.message);
+	// 		});
+	// }, []);
+
+	// >> fetches post without reloading the page
+	// useEffect(() => {
+	// 	const interval = setInterval(() => {
+	// 		axios
+	// 			.get("https://social-link-server-liard.vercel.app/posts")
+	// 			.then((res) => res.data)
+	// 			.then((data) => {
+	// 				const postsWithTimeDifference = data.map((post) => ({
+	// 					...post,
+	// 					timeDifference: getTimeDifference(post.createdAt),
+	// 				}));
+
+	// 				const reversedPosts = postsWithTimeDifference.reverse();
+
+	// 				setPosts(reversedPosts);
+	// 			})
+	// 			.catch((err) => {
+	// 				// console.log(err.message);
+	// 			});
+	// 	}, 5000); // Fetches new posts every 5 seconds
+
+	// 	return () => clearInterval(interval); // Clean up on component unmount
+	// }, []);
+
+	const [newPostsAvailable, setNewPostsAvailable] = useState(false);
+
 	useEffect(() => {
-		// setLoading(true);
-		axios
-			.get("https://social-link-server-liard.vercel.app/posts")
-			.then((res) => res.data)
-			.then((data) => {
-				const postsWithTimeDifference = data.map((post) => ({
-					...post,
-					timeDifference: getTimeDifference(post.createdAt),
-				}));
+		const interval = setInterval(() => {
+			axios
+				.get("https://social-link-server-liard.vercel.app/posts")
+				.then((res) => res.data)
+				.then((data) => {
+					const postsWithTimeDifference = data.map((post) => ({
+						...post,
+						timeDifference: getTimeDifference(post.createdAt),
+					}));
 
-				const reversedPosts = postsWithTimeDifference.reverse();
+					const reversedPosts = postsWithTimeDifference.reverse();
 
-				setPosts(reversedPosts);
-				// setLoading(false);
-			})
-			.catch((err) => {
-				// console.log(err.message);
-			});
-	}, []);
+					if (reversedPosts.length > posts.length) {
+						setNewPostsAvailable(true);
+						setPosts(reversedPosts);
+					}
+				})
+				.catch((err) => {
+					// Handle the error here
+					console.error(err);
+				});
+		}, 10000); // Fetches new posts every 10 seconds
+
+		return () => clearInterval(interval); // Clean up on component unmount
+	}, [posts]);
+
+	const handleButtonClick = () => {
+		setNewPostsAvailable(false);
+		// Add functionality to navigate to the new post section, e.g., using history.push('/newpost');
+	};
 
 	useEffect(() => {
 		axios("https://social-link-server-liard.vercel.app/comments").then(
@@ -248,10 +306,6 @@ const NewsFeed = () => {
 				setInclude(followingId);
 			});
 	}, [userId]);
-
-	// const filteredPosts = posts.filter((post) =>
-	// 	include?.includes(post.uploaderId)
-	// );
 
 	const filteredPosts = posts.filter((post) => {
 		return include?.concat(userId).includes(post.uploaderId);
@@ -303,11 +357,44 @@ const NewsFeed = () => {
 		}
 	}
 
+	const [scrollPosition, setScrollPosition] = useState(0);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrollPosition(window.pageYOffset);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
+
 	return (
-		<div>
+		<div className="relative">
 			<div className="mb-4 mx-4 md:mx-8">
 				<StoryNav />
 			</div>
+
+			{newPostsAvailable && scrollPosition > 0 && (
+				<div className="fixed top-16 text-rose-400">
+					<div className="toast toast-top toast-center mt-12 lg:mt-0 lg:toast-bottom lg:toast-start">
+						<div className="alert bg-white text-gray-600 font-semibold rounded-md shadow-md border-0 ml-[10px]">
+							<p className="flex justify-center items-center">
+								New post arrived.{" "}
+								<span>
+									<CloseRoundedIcon
+										onClick={handleButtonClick}
+										className="text-xl"
+									/>
+								</span>
+							</p>
+						</div>
+					</div>
+				</div>
+			)}
+
 			<div className="my-4 mt-12 mx-4 md:mx-8">
 				<MakePost />
 			</div>

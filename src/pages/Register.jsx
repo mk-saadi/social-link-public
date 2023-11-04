@@ -43,6 +43,7 @@ const SignUp = () => {
 		confirmPassword: "",
 	});
 
+	// >> good code
 	const handleChange = async (event) => {
 		if (event.target.name === "image") {
 			const selectedFile = event.target.files[0];
@@ -69,6 +70,7 @@ const SignUp = () => {
 			});
 		}
 	};
+
 	// const [formData, setFormData] = useState({
 	// 	name: "",
 	// 	image: null,

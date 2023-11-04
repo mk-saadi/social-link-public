@@ -173,7 +173,7 @@ const MakePost = () => {
 				const userEmail = responseData.email;
 				localStorage.setItem("email", userEmail);
 				alert("Post successful");
-				location.reload();
+				// location.reload();
 			})
 			.catch((postError) => {
 				console.error("Post failed:", postError);
