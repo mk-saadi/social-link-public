@@ -147,24 +147,18 @@ import StoryNav from "./StoryNav";
 
 const NewsFeed = () => {
 	const [comments, setComments] = useState([]);
-	// console.log("🚀 ~ file: NewsFeed.jsx:12 ~ NewsFeed ~ comments:", comments);
 	const [postsId, setPostsId] = useState("");
 	// const [like, setLike] = useState(true);
 	const [show, setShow] = useState(false);
 	const [showId, setShowId] = useState(false);
 	const [posts, setPosts] = useState([]);
-	// console.log("🚀 ~ file: NewsFeed.jsx:18 ~ NewsFeed ~ posts:", posts);
 	const [users, setUsers] = useState([]);
-	// const [loading, setLoading] = useState(true);
+	const [include, setInclude] = useState([]);
 	const userId = localStorage.getItem("social_id");
 
 	const [recom, setRecom] = useState("");
 
 	const matchedUser = users.find((user) => user?._id === userId);
-	// console.log(
-	// 	"🚀 ~ file: NewsFeed.jsx:20 ~ NewsFeed ~ matchedUser:",
-	// 	matchedUser
-	// );
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -197,19 +191,18 @@ const NewsFeed = () => {
 			});
 	};
 
+	//>>  main fetch code
 	useEffect(() => {
 		// setLoading(true);
 		axios
 			.get("https://social-link-server-liard.vercel.app/posts")
 			.then((res) => res.data)
 			.then((data) => {
-				// console.log("data", data);
 				const postsWithTimeDifference = data.map((post) => ({
 					...post,
 					timeDifference: getTimeDifference(post.createdAt),
 				}));
 
-				// Reverse the array to display new posts first
 				const reversedPosts = postsWithTimeDifference.reverse();
 
 				setPosts(reversedPosts);
@@ -243,6 +236,26 @@ const NewsFeed = () => {
 			}
 		);
 	}, []);
+
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/follow")
+			.then((res) => {
+				const includeUser = res.data.find(
+					(re) => re.followerId === userId
+				);
+				const followingId = includeUser?.followingIds;
+				setInclude(followingId);
+			});
+	}, [userId]);
+
+	// const filteredPosts = posts.filter((post) =>
+	// 	include?.includes(post.uploaderId)
+	// );
+
+	const filteredPosts = posts.filter((post) => {
+		return include?.concat(userId).includes(post.uploaderId);
+	});
 
 	// for post
 	function getTimeDifference(timestamp) {
@@ -298,7 +311,7 @@ const NewsFeed = () => {
 			<div className="my-4 mt-12 mx-4 md:mx-8">
 				<MakePost />
 			</div>
-			{posts.map((po) => (
+			{filteredPosts.map((po) => (
 				<div key={po._id}>
 					<div className="bg-white  my-4 mx-4 md:mx-8  shadow-md rounded-lg py-4">
 						{/* top bar */}

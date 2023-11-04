@@ -127,7 +127,7 @@ const RightNav = () => {
 													{user?.name}
 												</p>
 												<p className="text-sm text-gray-500 font-semibold">
-													{user?.userName}
+													@{user?.userName}
 												</p>
 											</div>
 										</Link>
