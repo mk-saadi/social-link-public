@@ -6,6 +6,7 @@ const RightNav = () => {
 	const [users, setUsers] = useState([]);
 	const userId = localStorage.getItem("social_id");
 	const [followingState, setFollowingState] = useState({});
+	const [exclude, setExclude] = useState([]);
 
 	const getUsers = async () => {
 		const response = await axios.get(
@@ -34,33 +35,36 @@ const RightNav = () => {
 				followData
 			);
 
-			console.log("follow successful:", response);
-
 			setFollowingState((prev) => ({
 				...prev,
 				[id]: true,
 			}));
-			// const users = users.filter(
-			// 	(user) => !followingIds.includes(user._id)
-			// );
-
-			// // Set the users state variable to the filtered list of users.
-			// setUsers(users);
 		} catch (error) {
 			console.error("Error following user:", error);
 		}
 	};
 
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/follow")
+			.then((res) => {
+				const exclude = res.data.find((re) => re.followerId === userId);
+				const followingId = exclude?.followingIds;
+				setExclude(followingId);
+			});
+	}, [userId]);
+
 	return (
 		<div className="bg-white shadow-md rounded-lg w-[340px]">
 			<div className="flex flex-col">
-				<p className="text-xl font-bold p-4 text-gray-600">
+				<p className="text-xl font-semibold p-4 text-gray-600">
 					People you may know
 				</p>
 
 				<div>
 					{users
-						.filter((user) => user._id !== userId) // Exclude current user
+						.filter((user) => user._id !== userId) // exclude current user
+						.filter((user) => !exclude.includes(user._id)) // exclude users the current user is already following
 						.map((user) => (
 							<div
 								key={user._id}
@@ -104,22 +108,3 @@ const RightNav = () => {
 };
 
 export default RightNav;
-
-{
-	/* <div className="flex gap-4 items-center">
-				{matchedUser && (
-					<>
-						<img
-							className="w-14 rounded-full"
-							src={matchedUser?.image || ""}
-							alt="person"
-						/>
-						<div>
-							<h1 className="text-xl font-bold text-gray-500">
-								{matchedUser?.name}
-							</h1>
-						</div>
-					</>
-				)}
-			</div> */
-}

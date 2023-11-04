@@ -146,13 +146,13 @@ import MakePost from "./MakePost";
 
 const NewsFeed = () => {
 	const [comments, setComments] = useState([]);
-	console.log("🚀 ~ file: NewsFeed.jsx:12 ~ NewsFeed ~ comments:", comments);
+	// console.log("🚀 ~ file: NewsFeed.jsx:12 ~ NewsFeed ~ comments:", comments);
 	const [postsId, setPostsId] = useState("");
 	// const [like, setLike] = useState(true);
 	const [show, setShow] = useState(false);
 	const [showId, setShowId] = useState(false);
 	const [posts, setPosts] = useState([]);
-	console.log("🚀 ~ file: NewsFeed.jsx:18 ~ NewsFeed ~ posts:", posts);
+	// console.log("🚀 ~ file: NewsFeed.jsx:18 ~ NewsFeed ~ posts:", posts);
 	const [users, setUsers] = useState([]);
 	// const [loading, setLoading] = useState(true);
 	const userId = localStorage.getItem("social_id");
@@ -160,10 +160,10 @@ const NewsFeed = () => {
 	const [recom, setRecom] = useState("");
 
 	const matchedUser = users.find((user) => user?._id === userId);
-	console.log(
-		"🚀 ~ file: NewsFeed.jsx:20 ~ NewsFeed ~ matchedUser:",
-		matchedUser
-	);
+	// console.log(
+	// 	"🚀 ~ file: NewsFeed.jsx:20 ~ NewsFeed ~ matchedUser:",
+	// 	matchedUser
+	// );
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -192,7 +192,7 @@ const NewsFeed = () => {
 				}
 			})
 			.catch((err) => {
-				console.log(err);
+				// console.log(err);
 			});
 	};
 
@@ -215,7 +215,7 @@ const NewsFeed = () => {
 				// setLoading(false);
 			})
 			.catch((err) => {
-				console.log(err.message);
+				// console.log(err.message);
 			});
 	}, []);
 
@@ -362,7 +362,7 @@ const NewsFeed = () => {
 												.then((res) => res.json())
 												.then((data) => {
 													// setLike(false);
-													console.log(data);
+													// console.log(data);
 												});
 										}}
 									>

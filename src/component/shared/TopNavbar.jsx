@@ -77,10 +77,10 @@ const TopNavbar = () => {
 				setUsers(data);
 			})
 			.catch((err) => {
-				console.log(err.message);
+				// console.log(err.message);
 			});
 	}, [userId]);
-	console.log("top navbar", user);
+	// console.log("top navbar", user);
 
 	const handleSearch = (event) => {
 		const searchInputValue = event.target.value;
