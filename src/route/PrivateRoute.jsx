@@ -38,8 +38,9 @@ const PrivateRoute = ({ children }) => {
 
 	if (loading) {
 		return (
-			<div className="flex items-center justify-center h-screen">
-				<span className="loading loading-ring h-32 w-32"></span>
+			<div className="flex flex-col items-center justify-center h-screen">
+				<span className="loading loading-spinner h-32 w-32"></span>
+				<p className="text-5xl">Please wait...</p>
 			</div>
 		);
 	}

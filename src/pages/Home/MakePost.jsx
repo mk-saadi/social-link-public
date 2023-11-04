@@ -47,7 +47,6 @@ const MakePost = () => {
 			.get("https://social-link-server-liard.vercel.app/users")
 			.then((res) => res.data)
 			.then((data) => {
-				console.log("data", data);
 				const filteredUser = data.filter((us) => us._id === social_id);
 
 				setUser(filteredUser);
@@ -174,7 +173,6 @@ const MakePost = () => {
 				const userEmail = responseData.email;
 				localStorage.setItem("email", userEmail);
 				alert("Post successful");
-				console.log("Post successful:", userEmail);
 				location.reload();
 			})
 			.catch((postError) => {

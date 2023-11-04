@@ -142,6 +142,7 @@ import axios from "axios";
 import PostContent from "../../hook/PostContent";
 import { Link } from "react-router-dom";
 import MakePost from "./MakePost";
+import StoryNav from "./StoryNav";
 // import LikeButton from "../../button/LikeButton";
 
 const NewsFeed = () => {
@@ -291,7 +292,10 @@ const NewsFeed = () => {
 
 	return (
 		<div>
-			<div className="my-4 mt-12 mx-4 md:mx-8 ">
+			<div className="mb-4 mx-4 md:mx-8">
+				<StoryNav />
+			</div>
+			<div className="my-4 mt-12 mx-4 md:mx-8">
 				<MakePost />
 			</div>
 			{posts.map((po) => (

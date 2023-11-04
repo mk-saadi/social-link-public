@@ -7,6 +7,7 @@ const RightNav = () => {
 	const userId = localStorage.getItem("social_id");
 	const [followingState, setFollowingState] = useState({});
 	const [exclude, setExclude] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const getUsers = async () => {
 		const response = await axios.get(
@@ -19,6 +20,7 @@ const RightNav = () => {
 		const fetchUsers = async () => {
 			const users = await getUsers();
 			setUsers(users);
+			setIsLoading(false);
 		};
 		fetchUsers();
 	}, []);
@@ -54,6 +56,10 @@ const RightNav = () => {
 			});
 	}, [userId]);
 
+	// if (isLoading) {
+	// 	return <div>Loading...</div>;
+	// }
+
 	return (
 		<div className="bg-white shadow-md rounded-lg w-[340px]">
 			<div className="flex flex-col">
@@ -62,45 +68,83 @@ const RightNav = () => {
 				</p>
 
 				<div>
-					{users
-						.filter((user) => user._id !== userId) // exclude current user
-						.filter((user) => !exclude.includes(user._id)) // exclude users the current user is already following
-						.map((user) => (
-							<div
-								key={user._id}
-								className="flex justify-between gap-2 items-center mx-4 text-base font-semibold"
-							>
-								<Link
-									className="flex justify-center items-center gap-3 my-2"
-									to={`/profilePage/${user?.userName}`}
-								>
-									<div className="avatar">
-										<div className="w-14 rounded-full object-cover">
-											<img
-												src={user?.image || ""}
-												alt="person"
-											/>
+					{isLoading ? ( // Check loading state to show loading indicator
+						<div className="container">
+							<div className="post">
+								<div className="avatar"></div>
+								<div className="line"></div>
+								<div className="line"></div>
+							</div>
+
+							<div className="post">
+								<div className="avatar"></div>
+								<div className="line"></div>
+								<div className="line"></div>
+							</div>
+
+							<div className="post">
+								<div className="avatar"></div>
+								<div className="line"></div>
+								<div className="line"></div>
+							</div>
+
+							<div className="post">
+								<div className="avatar"></div>
+								<div className="line"></div>
+								<div className="line"></div>
+							</div>
+
+							<div className="post">
+								<div className="avatar"></div>
+								<div className="line"></div>
+								<div className="line"></div>
+							</div>
+						</div>
+					) : (
+						<>
+							{users
+								.filter((user) => user._id !== userId) // exclude current user
+								.filter((user) => !exclude.includes(user._id)) // exclude users the current user is already following
+								.map((user) => (
+									<div
+										key={user._id}
+										className="flex justify-between gap-2 items-center mx-4 text-base font-semibold"
+									>
+										<Link
+											className="flex justify-center items-center gap-3 my-2"
+											to={`/profilePage/${user?.userName}`}
+										>
+											<div className="avatar">
+												<div className="w-14 rounded-full object-cover">
+													<img
+														src={user?.image || ""}
+														alt="person"
+													/>
+												</div>
+											</div>
+											<div>
+												<p className="text-gray-600 hover:underline">
+													{user?.name}
+												</p>
+												<p className="text-sm text-gray-500 font-semibold">
+													{user?.userName}
+												</p>
+											</div>
+										</Link>
+										<div
+											className="text-[#32308E] font-semibold hover:underline cursor-pointer"
+											onClick={() =>
+												handleFollow(user?._id)
+											}
+										>
+											{followingState[user?._id]
+												? "Following"
+												: "Follow"}
 										</div>
 									</div>
-									<div>
-										<p className="text-gray-600 hover:underline">
-											{user?.name}
-										</p>
-										<p className="text-sm text-gray-500 font-semibold">
-											{user?.userName}
-										</p>
-									</div>
-								</Link>
-								<div
-									className="text-[#32308E] font-semibold hover:underline cursor-pointer"
-									onClick={() => handleFollow(user?._id)}
-								>
-									{followingState[user?._id]
-										? "Following"
-										: "Follow"}
-								</div>
-							</div>
-						))}
+								))}
+						</>
+					)}
 				</div>
 			</div>
 		</div>
