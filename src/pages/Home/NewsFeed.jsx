@@ -157,6 +157,8 @@ const NewsFeed = () => {
 	const [include, setInclude] = useState([]);
 	const [recom, setRecom] = useState("");
 	const userId = localStorage.getItem("social_id");
+	const [newPostsAvailable, setNewPostsAvailable] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
@@ -185,6 +187,7 @@ const NewsFeed = () => {
 					// alert("comment added");
 					setRecom(recom + 1);
 				}
+				form.reset();
 			})
 			.catch((err) => {
 				// console.log(err);
@@ -214,30 +217,28 @@ const NewsFeed = () => {
 	// }, []);
 
 	// >> fetches post without reloading the page
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		axios
-	// 			.get("https://social-link-server-liard.vercel.app/posts")
-	// 			.then((res) => res.data)
-	// 			.then((data) => {
-	// 				const postsWithTimeDifference = data.map((post) => ({
-	// 					...post,
-	// 					timeDifference: getTimeDifference(post.createdAt),
-	// 				}));
+	useEffect(() => {
+		const interval = setInterval(() => {
+			axios
+				.get("https://social-link-server-liard.vercel.app/posts")
+				.then((res) => res.data)
+				.then((data) => {
+					const postsWithTimeDifference = data.map((post) => ({
+						...post,
+						timeDifference: getTimeDifference(post.createdAt),
+					}));
 
-	// 				const reversedPosts = postsWithTimeDifference.reverse();
+					const reversedPosts = postsWithTimeDifference.reverse();
 
-	// 				setPosts(reversedPosts);
-	// 			})
-	// 			.catch((err) => {
-	// 				// console.log(err.message);
-	// 			});
-	// 	}, 5000); // Fetches new posts every 5 seconds
+					setPosts(reversedPosts);
+				})
+				.catch((err) => {
+					// console.log(err.message);
+				});
+		}, 1000); // Fetches new posts every 5 seconds
 
-	// 	return () => clearInterval(interval); // Clean up on component unmount
-	// }, []);
-
-	const [newPostsAvailable, setNewPostsAvailable] = useState(false);
+		return () => clearInterval(interval); // Clean up on component unmount
+	}, []);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -258,12 +259,11 @@ const NewsFeed = () => {
 					}
 				})
 				.catch((err) => {
-					// Handle the error here
 					console.error(err);
 				});
-		}, 10000); // Fetches new posts every 10 seconds
+		}, 10000);
 
-		return () => clearInterval(interval); // Clean up on component unmount
+		return () => clearInterval(interval);
 	}, [posts]);
 
 	const handleButtonClick = () => {
@@ -425,7 +425,7 @@ const NewsFeed = () => {
 								</div>
 							</div>
 
-							<CiMenuKebab className="text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent" />
+							<CiMenuKebab className=" text-2xl lg:text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent" />
 						</div>
 						{/* top bar */}
 						{/* body */}
@@ -521,7 +521,7 @@ const NewsFeed = () => {
 									comments?.filter(
 										(comment) => comment?.post_id == po?._id
 									).length > 5
-										? "h-92 overflow-y-auto"
+										? "max-h-[350px] overflow-y-auto duration-200"
 										: ""
 								}`}
 							>
@@ -529,11 +529,11 @@ const NewsFeed = () => {
 									?.filter((com) => com?.post_id === po?._id)
 									.map((com) => (
 										<div
-											className=" text-gray-600 font-semibold px-4 py-1 my-2 grid grid-cols-7"
+											className=" text-gray-600 font-semibold pr-2 lg:px-4 py-1 my-2 grid grid-cols-7"
 											key={com?._id}
 										>
 											<div className="avatar flex justify-center items-center">
-												<div className="h-7 lg:h-12 rounded-full z-10 object-cover drop-shadow-md">
+												<div className="h-8 -mt-4 lg:mt-0 lg:h-12 rounded-full z-10 object-cover drop-shadow-md">
 													<img
 														src={com?.user_image}
 														alt="commenter avatar"

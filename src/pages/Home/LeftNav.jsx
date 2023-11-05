@@ -143,7 +143,7 @@ const LeftNav = () => {
 
 				<div>
 					<nav className="ml-5 my-2">
-						<ul className="flex lg:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
+						<ul className="flex md:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
 							<ActiveLink to={"/"}>
 								<li>
 									<p className="flex justify-start items-center gap-3">

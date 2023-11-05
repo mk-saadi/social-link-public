@@ -61,9 +61,9 @@ const RightNav = () => {
 	// }
 
 	return (
-		<div className="bg-white shadow-md rounded-lg w-[340px]">
+		<div className="bg-white shadow-md rounded-lg lg:w-[340px]">
 			<div className="flex flex-col">
-				<p className="text-xl font-semibold p-4 text-gray-600">
+				<p className="text-lg lg:text-xl font-semibold p-4 text-gray-600">
 					People you may know
 				</p>
 
@@ -75,25 +75,21 @@ const RightNav = () => {
 								<div className="line"></div>
 								<div className="line"></div>
 							</div>
-
 							<div className="post">
 								<div className="avatar"></div>
 								<div className="line"></div>
 								<div className="line"></div>
 							</div>
-
 							<div className="post">
 								<div className="avatar"></div>
 								<div className="line"></div>
 								<div className="line"></div>
 							</div>
-
 							<div className="post">
 								<div className="avatar"></div>
 								<div className="line"></div>
 								<div className="line"></div>
 							</div>
-
 							<div className="post">
 								<div className="avatar"></div>
 								<div className="line"></div>
@@ -126,7 +122,7 @@ const RightNav = () => {
 												<p className="text-gray-600 hover:underline">
 													{user?.name}
 												</p>
-												<p className="text-sm text-gray-500 font-semibold">
+												<p className="text-sm text-gray-500 font-semibold hidden lg:block">
 													@{user?.userName}
 												</p>
 											</div>
