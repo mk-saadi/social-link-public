@@ -108,8 +108,8 @@ const TopNavbar = () => {
 	};
 
 	return (
-		<div className="bg-white shadow-md flex px-7">
-			<div className=" flex justify-start items-center gap-4 flex-1">
+		<div className="flex bg-white shadow-md px-7">
+			<div className="flex items-center justify-start flex-1 gap-4 ">
 				<Link
 					to="/"
 					className="text-2xl text-center font-bold  text-[#32308E] opacity-80 hidden md:block"
@@ -119,7 +119,7 @@ const TopNavbar = () => {
 			</div>
 
 			<div className="relative flex-none gap-2">
-				<div className=" flex justify-start items-center gap-2 ">
+				<div className="flex items-center justify-start gap-2 ">
 					<Search onChange={handleSearch}>
 						<SearchIconWrapper>
 							<SearchIcon sx={{ color: "#6b7280" }} />
@@ -131,9 +131,9 @@ const TopNavbar = () => {
 						/>
 					</Search>
 
-					<div className="relative flex justify-start items-center gap-4 flex-1">
+					<div className="relative flex items-center justify-start flex-1 gap-4">
 						{searchResults.length > 0 && (
-							<div className="absolute top-8 right-0 bg-white rounded-lg shadow-lg py-3">
+							<div className="absolute right-0 py-3 bg-white rounded-lg shadow-lg top-8">
 								{searchResults.map((us) => (
 									<Link
 										key={us._id}
@@ -142,7 +142,7 @@ const TopNavbar = () => {
 										onClick={resetSearchResults}
 									>
 										<div className="avatar">
-											<div className="w-10 rounded-full object-cover">
+											<div className="object-cover w-10 rounded-full">
 												<img
 													src={us?.image}
 													alt="avatar"

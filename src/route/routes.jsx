@@ -7,6 +7,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Landing from "../pages/UserProfile/UserProfile";
 import ProfilePage from "../pages/UserProfile/ProfilePage";
+import AdminRoute from "./AdminRoute";
+import Admin from "../pages/adminDashboard/Admin";
 
 const router = createBrowserRouter([
 	{
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
 			<PrivateRoute>
 				<ProfilePage />
 			</PrivateRoute>
+		),
+	},
+	{
+		path: "/admin",
+		element: (
+			<AdminRoute>
+				<Admin />
+			</AdminRoute>
 		),
 	},
 ]);

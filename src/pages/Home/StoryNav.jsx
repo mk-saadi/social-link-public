@@ -34,7 +34,7 @@ const StoryNav = () => {
 		fetchData();
 	}, [userId]);
 
-	console.log("userInfos", userInfos);
+	// console.log("userInfos", userInfos);
 
 	// useEffect(()=>{
 	// 	axios.get("https://social-link-server-liard.vercel.app/story")
@@ -63,7 +63,7 @@ const StoryNav = () => {
 						name="image"
 						accept="image/*"
 						placeholder="Photo"
-						className="file-input file-input-ghost bg-transparent w-full max-w-xs focus:bg-transparent focus:outline-none rounded"
+						className="w-full max-w-xs bg-transparent rounded file-input file-input-ghost focus:bg-transparent focus:outline-none"
 					/>
 				</form>
 			</div>

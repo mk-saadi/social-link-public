@@ -1,10 +1,15 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 // import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import imageCompression from "browser-image-compression";
+import useToast from "../../hook/useToast";
+import Toast from "../../hook/Toast";
 
 const MakePost = ({ updatePostCount }) => {
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
+
 	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
 	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
 
@@ -32,7 +37,7 @@ const MakePost = ({ updatePostCount }) => {
 				);
 				setFormData({ ...formData, image: compressedFile });
 			} catch (error) {
-				alert("Error compressing image, please try again");
+				showToast("error", "image compression failed!");
 			}
 		} else {
 			setFormData({
@@ -119,6 +124,8 @@ const MakePost = ({ updatePostCount }) => {
 	const handlePost = (event) => {
 		event.preventDefault();
 
+		showToast("loading", "Please wait!");
+
 		if (formData.image) {
 			// Image is selected, proceed with image upload
 			const imgbbFormData = new FormData();
@@ -142,7 +149,6 @@ const MakePost = ({ updatePostCount }) => {
 						// Continue with the rest of the post creation process
 						createPost();
 					} else {
-						alert("Please try again");
 						console.error(
 							"Image upload to ImgBB failed:",
 							imgbbResponse.data
@@ -150,7 +156,7 @@ const MakePost = ({ updatePostCount }) => {
 					}
 				})
 				.catch((imgbbError) => {
-					console.error("Image upload to ImgBB failed:", imgbbError);
+					showToast("error", "Image upload to ImgBB failed!");
 				});
 		} else {
 			// No image selected, create the post without an image
@@ -172,19 +178,27 @@ const MakePost = ({ updatePostCount }) => {
 				const responseData = JSON.parse(response.config.data);
 				const userEmail = responseData.email;
 				localStorage.setItem("email", userEmail);
-				alert("Post successful");
+				showToast("success", "Successfully Posted!");
+
 				// location.reload();
 				updatePostCount((prevCount) => prevCount + 1);
 			})
 			.catch((postError) => {
-				console.error("Post failed:", postError);
+				showToast("error", "Post failed. Please try again!");
 			});
 	};
 
 	return (
 		<div>
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
 			<form
-				className=" bg-white shadow-md rounded-lg pb-6 w-full"
+				className="w-full pb-6 bg-white rounded-lg shadow-md "
 				onSubmit={handlePost}
 			>
 				{/* <hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl" /> */}
@@ -200,14 +214,14 @@ const MakePost = ({ updatePostCount }) => {
 						name="name"
 					></textarea>
 				</div>
-				<div className="flex justify-between items-center gap-3">
+				<div className="flex items-center justify-between gap-3">
 					<input
 						onChange={handleChange}
 						type="file"
 						name="image"
 						accept="image/*"
 						placeholder="Photo"
-						className="file-input file-input-ghost bg-transparent w-full max-w-xs focus:bg-transparent focus:outline-none rounded"
+						className="w-full max-w-xs bg-transparent rounded file-input file-input-ghost focus:bg-transparent focus:outline-none"
 					/>
 					<div>
 						<input
@@ -218,10 +232,10 @@ const MakePost = ({ updatePostCount }) => {
 					</div>
 				</div>
 
-				{/* <div className="modal-action absolute top-0 right-6 hover:underline text-rose-400">
+				{/* <div className="absolute top-0 modal-action right-6 hover:underline text-rose-400">
 						<a
 					
-							className="modal__close flex justify-center items-center text-2xl"
+							className="flex items-center justify-center text-2xl modal__close"
 						>
 							<AiOutlineClose />
 						</a>

@@ -112,7 +112,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 				).data;
 
 				// Count colors in an object
-				const brightnessThreshold = 180; // Adjust this value to change the brightness threshold
+				const brightnessThreshold = 220; // Adjust this value to change the brightness threshold
 
 				const colorCount = {};
 				for (let i = 0; i < imageData.length; i += 4) {
@@ -155,16 +155,16 @@ const LeftNav = ({ followingCount, postCount }) => {
 	return (
 		<div className="bg-white shadow-md rounded-lg w-[340px]">
 			<div className="flex flex-col">
-				<div className="relative px-4 flex flex-col text-center justify-center items-center gap-2">
+				<div className="relative flex flex-col items-center justify-center gap-2 px-4 text-center">
 					<div
-						className="absolute rounded-t-lg top-0  w-full"
+						className="absolute top-0 w-full rounded-t-lg"
 						style={{
 							backgroundColor: dominantColor,
 							minHeight: "80px",
 						}}
 					></div>
 					<div className="avatar">
-						<div className="w-20 md:w-28 rounded-xl mt-4 border-white border-4 shadow-md">
+						<div className="w-20 mt-4 border-4 border-white shadow-md md:w-28 rounded-xl">
 							<img
 								src={matchedUser?.image}
 								onError={(e) => {
@@ -176,33 +176,33 @@ const LeftNav = ({ followingCount, postCount }) => {
 						</div>
 					</div>
 					<div>
-						<p className="text-gray-600 font-semibold text-xl">
+						<p className="text-xl font-semibold text-gray-600">
 							{matchedUser?.name}
 						</p>
 						{matchedUser?.userName && (
-							<p className="text-sm text-gray-400 font-semibold mb-3">
+							<p className="mb-3 text-sm font-semibold text-gray-400">
 								@{matchedUser.userName}
 							</p>
 						)}
 					</div>
 
-					<div className="flex justify-around items-center mt-6 mx-2 text-sm text-gray-400 w-full">
+					<div className="flex items-center justify-around w-full mx-2 mt-6 text-sm text-gray-400">
 						<p className="font-semibold">
-							<span className="text-gray-600 text-xl font-semibold">
+							<span className="text-xl font-semibold text-gray-600">
 								{posts?.length + postCount}
 							</span>
 							<br />
 							posts
 						</p>
-						<p className="cursor-pointer font-semibold">
-							<span className="text-gray-600 text-xl font-semibold">
+						<p className="font-semibold cursor-pointer">
+							<span className="text-xl font-semibold text-gray-600">
 								{getFollowerCount(following)}
 							</span>
 							<br />
 							Followers
 						</p>
-						<p className="cursor-pointer font-semibold">
-							<span className="text-gray-600 text-xl font-semibold">
+						<p className="font-semibold cursor-pointer">
+							<span className="text-xl font-semibold text-gray-600">
 								{follow.map(
 									(fo) =>
 										fo?.followingIds.length + followingCount
@@ -216,11 +216,11 @@ const LeftNav = ({ followingCount, postCount }) => {
 				<hr className="bg-gray-400 border-0 h-[1px] mt-2" />
 
 				<div>
-					<nav className="ml-5 my-2">
+					<nav className="my-2 ml-5">
 						<ul className="flex md:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
 							<ActiveLink to={"/"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<HomeIcon className="bg-transparent" />
 										Home
 									</p>
@@ -236,7 +236,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</p> */}
 							<p to={"/message"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<TextsmsIcon className="bg-transparent" />{" "}
 										Message
 									</p>
@@ -244,7 +244,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</p>
 							<p to={"/notification"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<NotificationsIcon className="bg-transparent" />
 										Notification
 									</p>
@@ -252,7 +252,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</p>
 							<ActiveLink to={"/profile"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<AccountCircleIcon className="bg-transparent" />{" "}
 										Profile
 									</p>
@@ -260,7 +260,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</ActiveLink>
 							<p to={"/settings"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<SettingsIcon className="bg-transparent" />{" "}
 										Settings
 									</p>
@@ -268,7 +268,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</p>
 							<p onClick={handleLogout}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<LogoutIcon className="bg-transparent" />{" "}
 										Logout
 									</p>
@@ -276,7 +276,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 							</p>
 							<p to={"/more"}>
 								<li>
-									<p className="flex justify-start items-center gap-3">
+									<p className="flex items-center justify-start gap-3">
 										<MenuIcon className="bg-transparent" />
 									</p>
 								</li>

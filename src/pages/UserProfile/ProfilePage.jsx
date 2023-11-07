@@ -240,36 +240,41 @@ const ProfilePage = () => {
 			>
 				<TopNavbar />
 			</div>
-			<div className="relative container mx-auto pt-16">
+			<div className="relative pt-16 mx-auto">
 				<div
-					className="absolute rounded-t-lg top-0 h-40 lg:h-64 w-full"
+					className="absolute top-0 w-full h-40 rounded-t-lg lg:h-64"
 					style={{
 						backgroundColor: dominantColor,
 					}}
 				></div>
-				<div className="flex flex-col md:flex-row justify-between mx-3 items-center">
+				<div className="flex flex-col items-center justify-between mx-3 md:flex-row">
 					<div
-						className=" flex flex-col md:flex-row justify-center items-center gap-4"
+						className="flex flex-col items-center justify-center gap-4 md:flex-row"
 						style={{ zIndex: "9" }}
 					>
 						{/* <img
-							className="xl:w-72 lg:w-64 w-36 xl:h-72 lg:h-52 h-40 object-cover drop-shadow-md rounded-full border-white lg:border-8 border-4"
+							className="object-cover h-40 border-4 border-white rounded-full xl:w-72 lg:w-64 w-36 xl:h-72 lg:h-52 drop-shadow-md lg:border-8"
 							src={user?.image}
 							alt=""
 						/> */}
-						<div className="flex justify-center items-center avatar w-full">
-							<div className="xl:w-72 lg:w-64 w-44 xl:h-72 lg:h-52 h-4w-44 object-cover drop-shadow-md rounded-full border-white lg:border-8 border-4">
+						<div className="flex items-center justify-center w-full avatar">
+							<div className="object-cover h-auto border-4 border-white rounded-full xl:w-72 lg:w-64 w-44 drop-shadow-md lg:border-8">
 								<img
 									src={user?.image}
 									alt="users avatar"
 								/>
 							</div>
 						</div>
-						<div className="w-full">
-							<h2 className="lg:text-4xl md:text-2xl md:text-left text-center text-xl font-bold text-white whitespace-nowrap">
-								{user?.name}
-							</h2>
-							<div className="flex justify-center lg:justify-start items-center gap-4 font-semibold text-gray-400 mt-2 w-full">
+						<div className="w-full md:mb-2">
+							<div className="flex flex-col items-center justify-start md:items-start">
+								<h2 className="text-2xl font-bold text-center text-gray-600 md:text-white lg:text-4xl md:text-2xl md:text-left whitespace-nowrap">
+									{user?.name}
+								</h2>
+								<p className="text-lg text-gray-400 md:text-gray-200">
+									{user?.userName}
+								</p>
+							</div>
+							<div className="flex items-center justify-center w-full gap-4 mt-1 font-semibold text-gray-400 md:text-gray-200 lg:justify-start">
 								<p>Followers - {getFollowerCount(following)}</p>
 								<p>
 									Following -{" "}
@@ -282,14 +287,14 @@ const ProfilePage = () => {
 					</div>
 					{/* 2xl:w-[78%] xl:w-[940px] lg:w-9/12 md:w-9/12 ml-auto lg:mt-5 md:mt-5 */}
 					<div
-						className="mt-3 w-full lg:w-fit"
+						className="w-full mt-3 lg:w-fit"
 						style={{ zIndex: "9" }}
 					>
 						{/**/}
-						<div className=" flex justify-between md:flex-row flex-col items-center">
-							<div className="grid grid-cols-2 lg:flex justify-end gap-4 lg:mt-0 mt-3 w-full">
+						<div className="flex flex-col items-center justify-between md:flex-row">
+							<div className="grid justify-end w-full grid-cols-2 gap-4 mt-3 lg:flex lg:mt-0">
 								<button
-									className="font-semibold normal-case text-lg border-0 py-1 rounded-md shadow-md lg:px-4"
+									className="py-1 text-lg font-semibold normal-case border-0 rounded-md shadow-md lg:px-4"
 									onClick={() => handleFollow(user?._id)}
 									style={{
 										backgroundColor: indeedFollow.includes(
@@ -312,7 +317,7 @@ const ProfilePage = () => {
 								</button>
 
 								<button
-									className="text-gray-600 font-semibold bg-white normal-case text-lg border-0 py-1 rounded-md shadow-md lg:px-4"
+									className="py-1 text-lg font-semibold text-gray-600 normal-case bg-white border-0 rounded-md shadow-md lg:px-4"
 									style={{
 										display:
 											user?._id === userId
@@ -358,8 +363,8 @@ const ProfilePage = () => {
 							</TabList>
 						</Box>
 						<TabPanel value="1">
-							<div className="flex lg:flex-row flex-col-reverse items-start gap-5">
-								<div className="w-full flex flex-col gap-5 ">
+							<div className="flex flex-col-reverse items-start gap-5 lg:flex-row">
+								<div className="flex flex-col w-full gap-5 ">
 									{posts?.map((post, index) => (
 										<div key={index}>
 											<div className="p-5 bg-white rounded-lg shadow-md">
@@ -367,7 +372,7 @@ const ProfilePage = () => {
 													<div className="flex items-center gap-3">
 														<img
 															src={user?.image}
-															className="w-12 h-12 rounded-full object-cover"
+															className="object-cover w-12 h-12 rounded-full"
 															alt=""
 														/>
 														<div>
@@ -397,9 +402,9 @@ const ProfilePage = () => {
 										</div>
 									))}
 								</div>
-								<div className="lg:w-6/12 lg:block hidden rounded-lg shadow-md bg-white p-5">
-									<div className="flex justify-between items-center mb-3">
-										<h4 className="font-bold text-2xl">
+								<div className="hidden p-5 bg-white rounded-lg shadow-md lg:w-6/12 lg:block">
+									<div className="flex items-center justify-between mb-3">
+										<h4 className="text-2xl font-bold">
 											Photos
 										</h4>
 										<Link className="text-[#6A67FF]">
@@ -422,9 +427,9 @@ const ProfilePage = () => {
 						</TabPanel>
 						<TabPanel value="2">About</TabPanel>
 						<TabPanel value="3">
-							<div className="w-full rounded-lg shadow-md bg-white p-5">
-								<div className="flex justify-between  items-center mb-3">
-									<h4 className="font-bold text-2xl">
+							<div className="w-full p-5 bg-white rounded-lg shadow-md">
+								<div className="flex items-center justify-between mb-3">
+									<h4 className="text-2xl font-bold">
 										Photos
 									</h4>
 									<Link className="text-[#6A67FF]">

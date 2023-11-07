@@ -82,7 +82,7 @@ const Login = () => {
 		});
 
 	return (
-		<div className="container grid grid-cols-1 justify-center items-center mx-auto min-h-screen">
+		<div className="container grid items-center justify-center min-h-screen grid-cols-1 mx-auto">
 			{toastType && (
 				<Toast
 					type={toastType}
@@ -90,14 +90,14 @@ const Login = () => {
 					onHide={hideToast}
 				/>
 			)}
-			<div className="flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg">
+			<div className="flex flex-col justify-center max-w-sm gap-5 p-8 mx-auto rounded-lg shadow-lg lg:max-w-xl">
 				<h3 className="text-5xl text-center font-bold  text-[#32308E] opacity-40">
 					Social<span className="underline text-[#2a295f]">Link</span>
 				</h3>
 
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-col justify-center gap-4 mt-10 text-gray-600 font-semibold"
+					className="flex flex-col justify-center gap-4 mt-10 font-semibold text-gray-600"
 				>
 					<input
 						label="Email"
@@ -121,12 +121,12 @@ const Login = () => {
 						{passwordShow ? (
 							<VisibilityIcon
 								onClick={() => handlePasswordShow()}
-								className="absolute right-5 top-4 cursor-pointer"
+								className="absolute cursor-pointer right-5 top-4"
 							/>
 						) : (
 							<VisibilityOffIcon
 								onClick={() => handlePasswordShow()}
-								className="absolute right-5 top-4 cursor-pointer"
+								className="absolute cursor-pointer right-5 top-4"
 							/>
 						)}
 					</div>

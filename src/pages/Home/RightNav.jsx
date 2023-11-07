@@ -65,9 +65,9 @@ const RightNav = ({ updateFollowingCount }) => {
 	// }
 
 	return (
-		<div className="bg-white shadow-md rounded-lg lg:w-[340px]">
+		<div className="bg-white shadow-md rounded-lg w-full xl:w-[340px]">
 			<div className="flex flex-col">
-				<p className="text-lg lg:text-xl font-semibold p-4 text-gray-600">
+				<p className="p-4 text-lg font-semibold text-gray-600 lg:text-xl">
 					People you may know
 				</p>
 
@@ -110,14 +110,14 @@ const RightNav = ({ updateFollowingCount }) => {
 								.map((user) => (
 									<div
 										key={user._id}
-										className="flex justify-between gap-2 items-center mx-4 text-base font-semibold"
+										className="flex items-center justify-between gap-2 mx-4 text-base font-semibold"
 									>
 										<Link
-											className="flex justify-center items-center gap-3 my-2"
+											className="flex items-center justify-center gap-3 my-2"
 											to={`/profilePage/${user?.userName}`}
 										>
 											<div className="avatar">
-												<div className="w-14 rounded-full object-cover">
+												<div className="object-cover rounded-full w-14">
 													<img
 														src={user?.image || ""}
 														alt="person"
@@ -128,7 +128,7 @@ const RightNav = ({ updateFollowingCount }) => {
 												<p className="text-gray-600 hover:underline">
 													{user?.name}
 												</p>
-												<p className="text-sm text-gray-500 font-semibold hidden lg:block">
+												<p className="hidden text-sm font-semibold text-gray-500 lg:block">
 													@{user?.userName}
 												</p>
 											</div>
