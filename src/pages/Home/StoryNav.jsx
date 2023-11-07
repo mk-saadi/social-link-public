@@ -36,9 +36,37 @@ const StoryNav = () => {
 
 	console.log("userInfos", userInfos);
 
+	// useEffect(()=>{
+	// 	axios.get("https://social-link-server-liard.vercel.app/story")
+	// 		.then(res=>{
+	// 			console.log(res);
+	// 		});
+	// },[])
+
+	const handleStory = (event) => {
+		event.preventDefault();
+
+		const form = event.target;
+		const image = form.image.value;
+
+		// after selecting the image show an image preview
+		// first compress image to less than 600kb then post it to imgbb then send it to mongodb using this url: https://social-link-server-liard.vercel.app/story
+		// use axios.post for this operation
+	};
+
 	return (
 		<div>
-			<p>story navbar here</p>
+			<div>
+				<form onClick={handleStory}>
+					<input
+						type="file"
+						name="image"
+						accept="image/*"
+						placeholder="Photo"
+						className="file-input file-input-ghost bg-transparent w-full max-w-xs focus:bg-transparent focus:outline-none rounded"
+					/>
+				</form>
+			</div>
 		</div>
 	);
 };

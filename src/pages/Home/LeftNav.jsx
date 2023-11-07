@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ActiveLink from "../../hook/ActiveLink";
 
-const LeftNav = () => {
+const LeftNav = ({ followingCount, postCount }) => {
 	const [users, setUsers] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [follow, setFollow] = useState([]);
@@ -66,12 +66,12 @@ const LeftNav = () => {
 			.then((res) => res.data)
 			.then((data) => {
 				const filteredAndMappedPosts = data.filter(
-					(post) => post.followerId === userId
+					(post) => post?.followerId === userId
 				);
 				setFollow(filteredAndMappedPosts);
 
 				const followers = data.filter((item) =>
-					item.followingIds.includes(userId)
+					item?.followingIds?.includes(userId)
 				);
 
 				setFollowing(followers);
@@ -87,11 +87,82 @@ const LeftNav = () => {
 		return uniqueFollowerIds.size;
 	};
 
+	const [dominantColor, setDominantColor] = useState("");
+
+	useEffect(() => {
+		const imageUrl = matchedUser?.image;
+		if (imageUrl) {
+			const img = new Image();
+			img.crossOrigin = "Anonymous";
+			img.src = imageUrl;
+
+			img.onload = function () {
+				const canvas = document.createElement("canvas");
+				const ctx = canvas.getContext("2d");
+
+				canvas.width = img.width;
+				canvas.height = img.height;
+				ctx.drawImage(img, 0, 0, img.width, img.height);
+
+				const imageData = ctx.getImageData(
+					0,
+					0,
+					canvas.width,
+					canvas.height
+				).data;
+
+				// Count colors in an object
+				const brightnessThreshold = 180; // Adjust this value to change the brightness threshold
+
+				const colorCount = {};
+				for (let i = 0; i < imageData.length; i += 4) {
+					const hexColor = `#${(
+						(1 << 24) +
+						(imageData[i] << 16) +
+						(imageData[i + 1] << 8) +
+						imageData[i + 2]
+					)
+						.toString(16)
+						.slice(1)}`;
+
+					// Calculate the brightness of the color
+					const colorRed = imageData[i];
+					const colorGreen = imageData[i + 1];
+					const colorBlue = imageData[i + 2];
+					const brightness = (colorRed + colorGreen + colorBlue) / 3;
+
+					// Skip light colors and white color
+					if (brightness > brightnessThreshold) {
+						continue;
+					}
+
+					if (colorCount[hexColor]) {
+						colorCount[hexColor] += 1;
+					} else {
+						colorCount[hexColor] = 1;
+					}
+				}
+
+				const dominantColorHex = Object.keys(colorCount).reduce(
+					(a, b) => (colorCount[a] > colorCount[b] ? a : b)
+				);
+
+				setDominantColor(dominantColorHex);
+			};
+		}
+	}, [matchedUser?.image]);
+
 	return (
 		<div className="bg-white shadow-md rounded-lg w-[340px]">
 			<div className="flex flex-col">
 				<div className="relative px-4 flex flex-col text-center justify-center items-center gap-2">
-					<div className="absolute rounded-t-lg top-0 bg-[#6A67FF] h-16 w-full"></div>
+					<div
+						className="absolute rounded-t-lg top-0  w-full"
+						style={{
+							backgroundColor: dominantColor,
+							minHeight: "80px",
+						}}
+					></div>
 					<div className="avatar">
 						<div className="w-20 md:w-28 rounded-xl mt-4 border-white border-4 shadow-md">
 							<img
@@ -118,7 +189,7 @@ const LeftNav = () => {
 					<div className="flex justify-around items-center mt-6 mx-2 text-sm text-gray-400 w-full">
 						<p className="font-semibold">
 							<span className="text-gray-600 text-xl font-semibold">
-								{posts?.length}
+								{posts?.length + postCount}
 							</span>
 							<br />
 							posts
@@ -132,7 +203,10 @@ const LeftNav = () => {
 						</p>
 						<p className="cursor-pointer font-semibold">
 							<span className="text-gray-600 text-xl font-semibold">
-								{follow.map((fo) => fo?.followingIds.length)}
+								{follow.map(
+									(fo) =>
+										fo?.followingIds.length + followingCount
+								)}
 							</span>
 							<br />
 							Following

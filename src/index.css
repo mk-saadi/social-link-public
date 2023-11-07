@@ -7,7 +7,9 @@ body {
 	/* margin: auto; */
 	background-color: #e7e7e7;
 }
-
+html {
+	scroll-behavior: smooth;
+}
 /* .menu .active {
 	color: #242424;
 } */

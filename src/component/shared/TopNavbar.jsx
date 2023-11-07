@@ -103,6 +103,10 @@ const TopNavbar = () => {
 		}
 	};
 
+	const resetSearchResults = () => {
+		setSearchResults([]);
+	};
+
 	return (
 		<div className="bg-white shadow-md flex px-7">
 			<div className=" flex justify-start items-center gap-4 flex-1">
@@ -129,12 +133,13 @@ const TopNavbar = () => {
 
 					<div className="relative flex justify-start items-center gap-4 flex-1">
 						{searchResults.length > 0 && (
-							<Link className="absolute top-8 right-0 bg-white rounded-lg shadow-lg py-3">
+							<div className="absolute top-8 right-0 bg-white rounded-lg shadow-lg py-3">
 								{searchResults.map((us) => (
 									<Link
 										key={us._id}
 										className="flex justify-start items-center gap-4 p-3 w-[258px] md:w-[280px] hover:bg-[#e7e7e7] duration-200"
 										to={`/profilePage/${us?.userName}`}
+										onClick={resetSearchResults}
 									>
 										<div className="avatar">
 											<div className="w-10 rounded-full object-cover">
@@ -147,7 +152,7 @@ const TopNavbar = () => {
 										<span>{us.name}</span>
 									</Link>
 								))}
-							</Link>
+							</div>
 						)}
 					</div>
 

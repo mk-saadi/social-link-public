@@ -4,9 +4,12 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import { Link, useNavigate } from "react-router-dom";
+import useToast from "../hook/useToast";
+import Toast from "../hook/Toast";
 
 const SignUp = () => {
 	const navigate = useNavigate();
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
 	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
@@ -61,7 +64,7 @@ const SignUp = () => {
 
 				setFormData({ ...formData, image: compressedFile });
 			} catch (error) {
-				alert("Error compressing image please try again");
+				showToast("error", "image compression failed!");
 			}
 		} else {
 			setFormData({
@@ -123,12 +126,13 @@ const SignUp = () => {
 		console.log(userName);
 
 		if (userName === null) {
-			alert("Registration failed, please try again.");
+			showToast("error", "username generation failed!");
 			return;
 		}
 
 		const imgbbFormData = new FormData();
 		imgbbFormData.append("image", formData.image);
+		showToast("loading", "Please wait!");
 
 		axios
 			.post(
@@ -158,7 +162,7 @@ const SignUp = () => {
 							);
 							const userEmail = responseData.email;
 							localStorage.setItem("email", userEmail);
-							alert("Registration successful");
+							showToast("success", "Registration Successful!");
 
 							console.log("Registration successful:", userEmail);
 							// location.reload();
@@ -169,7 +173,7 @@ const SignUp = () => {
 								"Registration failed:",
 								registrationError
 							);
-							// alert("Registration failed please try again");
+							showToast("error", "Registration failed!");
 						});
 				} else {
 					alert("Please try again");
@@ -181,6 +185,7 @@ const SignUp = () => {
 			})
 			.catch((imgbbError) => {
 				console.error("Image upload to ImgBB failed:", imgbbError);
+				showToast("error", "Image upload error!");
 			});
 	};
 
@@ -214,6 +219,13 @@ const SignUp = () => {
 
 	return (
 		<div className="container grid grid-cols-1 justify-center items-center mx-auto min-h-screen">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
 			<div className="flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg">
 				<h3 className="text-5xl text-center font-bold  text-[#32308E] opacity-40">
 					Social<span className="underline text-[#2a295f]">Link</span>

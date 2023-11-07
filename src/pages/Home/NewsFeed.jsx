@@ -1,152 +1,15 @@
-// import { TiThMenu } from "react-icons/ti";
-// import { AiFillHeart } from "react-icons/ai";
-// import { FaComment, FaShare } from "react-icons/fa";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import MakePost from "./MakePost";
-// import PostContent from "../../hook/PostContent";
-// // import LikeButton from "../../button/LikeButton";
-
-// const NewsFeed = () => {
-// 	const [posts, setPosts] = useState([]);
-// 	// const [loading, setLoading] = useState(true);
-
-// 	useEffect(() => {
-// 		// setLoading(true);
-// 		axios
-// 			.get("https://social-link-server-liard.vercel.app/posts")
-// 			.then((res) => res.data)
-// 			.then((data) => {
-// 				console.log("data", data);
-// 				const postsWithTimeDifference = data.map((post) => ({
-// 					...post,
-// 					timeDifference: getTimeDifference(post.createdAt),
-// 				}));
-// 				// Reverse the array to display new posts first
-// 				const reversedPosts = postsWithTimeDifference.reverse();
-
-// 				setPosts(reversedPosts);
-// 				// setLoading(false);
-// 			})
-// 			.catch((err) => {
-// 				console.log(err.message);
-// 			});
-// 	}, []);
-
-// 	function getTimeDifference(timestamp) {
-// 		const now = new Date();
-// 		const createdTime = new Date(timestamp);
-// 		const timeDifference = now - createdTime;
-// 		const hoursDifference = Math.floor(timeDifference / (60 * 60 * 1000));
-// 		const minutesDifference = Math.floor(
-// 			(timeDifference % (60 * 60 * 1000)) / (60 * 1000)
-// 		);
-
-// 		if (hoursDifference >= 24) {
-// 			const daysDifference = Math.floor(hoursDifference / 24);
-// 			return `${daysDifference} days ago`;
-// 		} else if (hoursDifference > 0) {
-// 			return `${hoursDifference} hours ago`;
-// 		} else if (minutesDifference > 0) {
-// 			return `${minutesDifference} minutes ago`;
-// 		} else {
-// 			return "just now";
-// 		}
-// 	}
-
-// 	console.log(posts);
-
-// 	return (
-// 		<div>
-// 			<MakePost />
-// 			<div>
-// 				{posts.map((po) => (
-// 					<div key={po._id}>
-// 						<div className="bg-[#fff] mx-2 md:m-8 mt-6  shadow-md rounded-lg py-4">
-// 							{/* top bar */}
-// 							<div className="px-4 flex justify-between items-center  bg-transparent">
-// 								<div className="flex justify-center items-center bg-transparent">
-// 									<div className="avatar">
-// 										<div className="w-12 lg:w-16  rounded-full drop-shadow-md">
-// 											<img
-// 												src={po?.uploaderImage}
-// 												onError={(e) => {
-// 													e.target.src =
-// 														"https://hpsnf.com/wp-content/uploads/2021/04/avatar.jpg";
-// 												}}
-// 												alt="avatar"
-// 											/>{" "}
-// 										</div>
-// 									</div>
-// 									<div className="flex flex-col ml-4 bg-transparent">
-// 										<p className="text-xl md:text-2xl text-gray-600  font-semibold cursor-pointer bg-transparent">
-// 											{po?.uploaderName}
-// 										</p>
-// 										<p className="text-sm md:text-lg text-gray-500 bg-transparent">
-// 											{po.timeDifference}
-// 										</p>
-// 									</div>
-// 								</div>
-
-// 								<TiThMenu className="text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent " />
-// 							</div>
-// 							{/* top bar */}
-
-// 							{/* body */}
-// 							<div className="px-4">
-// 								<PostContent content={po?.name} />
-
-// 								<img
-// 									src={po?.image}
-// 									alt="post image"
-// 									className="my-6 w-full rounded-md"
-// 									loading="lazy"
-// 									style={{
-// 										display: po?.image ? "block" : "none",
-// 									}}
-// 								/>
-// 							</div>
-// 							<hr className="bg-gray-500 border-0 h-[1px] my-2" />
-// 							<div className="px-4 flex justify-around items-center">
-// 								<div className="flex justify-start items-center gap-8 w-full  mr-16">
-// 									<AiFillHeart className="button-11" />
-// 									{/* <LikeButton /> */}
-
-// 									<FaComment className="text-gray-600 text-5xl" />
-// 									<input
-// 										type="text"
-// 										placeholder="comment"
-// 										className="input input-bordered border-gray-400 w-full focus:outline-0 bg-transparent rounded-md"
-// 									/>
-// 								</div>
-// 								<div className="flex justify-center items-center gap-8 mr-4">
-// 									<FaShare className="text-gray-600 text-4xl" />
-// 								</div>
-// 							</div>
-// 						</div>
-// 					</div>
-// 				))}
-// 			</div>
-// 		</div>
-// 	);
-// };
-
-// export default NewsFeed;
-
 import { CiMenuKebab } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment, FaShare } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axios from "axios";
-// import MakePost from "./MakePost";
 import PostContent from "../../hook/PostContent";
 import { Link } from "react-router-dom";
 import MakePost from "./MakePost";
 import StoryNav from "./StoryNav";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-// import LikeButton from "../../button/LikeButton";
 
-const NewsFeed = () => {
+const NewsFeed = ({ updatePostCount }) => {
 	// const [like, setLike] = useState(true);
 	const [comments, setComments] = useState([]);
 	const [postsId, setPostsId] = useState("");
@@ -156,9 +19,9 @@ const NewsFeed = () => {
 	const [users, setUsers] = useState([]);
 	const [include, setInclude] = useState([]);
 	const [recom, setRecom] = useState("");
-	const userId = localStorage.getItem("social_id");
 	const [newPostsAvailable, setNewPostsAvailable] = useState(false);
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
+	const userId = localStorage.getItem("social_id"); // CURRENT USER
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
@@ -193,96 +56,96 @@ const NewsFeed = () => {
 				// console.log(err);
 			});
 	};
+	const [fetchedPosts, setFetchedPosts] = useState([]);
+	// Function to fetch posts
+	const fetchPosts = () => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/posts")
+			.then((res) => res.data)
+			.then((data) => {
+				const postsWithTimeDifference = data.map((post) => ({
+					...post,
+					timeDifference: getTimeDifference(post.createdAt),
+				}));
 
-	//>>  main fetch code
-	// useEffect(() => {
-	// 	// setLoading(true);
-	// 	axios
-	// 		.get("https://social-link-server-liard.vercel.app/posts")
-	// 		.then((res) => res.data)
-	// 		.then((data) => {
-	// 			const postsWithTimeDifference = data.map((post) => ({
-	// 				...post,
-	// 				timeDifference: getTimeDifference(post.createdAt),
-	// 			}));
+				const reversedPosts = postsWithTimeDifference.reverse();
 
-	// 			const reversedPosts = postsWithTimeDifference.reverse();
+				if (reversedPosts.length > posts.length) {
+					setNewPostsAvailable(true);
+					setFetchedPosts(reversedPosts); // Store fetched posts in a new state variable
 
-	// 			setPosts(reversedPosts);
-	// 			// setLoading(false);
-	// 		})
-	// 		.catch((err) => {
-	// 			// console.log(err.message);
-	// 		});
-	// }, []);
-
-	// >> fetches post without reloading the page
-	useEffect(() => {
-		const interval = setInterval(() => {
-			axios
-				.get("https://social-link-server-liard.vercel.app/posts")
-				.then((res) => res.data)
-				.then((data) => {
-					const postsWithTimeDifference = data.map((post) => ({
-						...post,
-						timeDifference: getTimeDifference(post.createdAt),
-					}));
-
-					const reversedPosts = postsWithTimeDifference.reverse();
-
-					setPosts(reversedPosts);
-				})
-				.catch((err) => {
-					// console.log(err.message);
-				});
-		}, 1000); // Fetches new posts every 5 seconds
-
-		return () => clearInterval(interval); // Clean up on component unmount
-	}, []);
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			axios
-				.get("https://social-link-server-liard.vercel.app/posts")
-				.then((res) => res.data)
-				.then((data) => {
-					const postsWithTimeDifference = data.map((post) => ({
-						...post,
-						timeDifference: getTimeDifference(post.createdAt),
-					}));
-
-					const reversedPosts = postsWithTimeDifference.reverse();
-
-					if (reversedPosts.length > posts.length) {
-						setNewPostsAvailable(true);
+					// If posts state is empty (i.e., page has just loaded), set it directly
+					if (posts.length === 0) {
 						setPosts(reversedPosts);
 					}
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		}, 10000);
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+
+	useEffect(() => {
+		// Fetch posts immediately when the page loads
+		fetchPosts();
+
+		// Then start the interval
+		const interval = setInterval(fetchPosts, 10000);
 
 		return () => clearInterval(interval);
 	}, [posts]);
 
 	const handleButtonClick = () => {
 		setNewPostsAvailable(false);
-		// Add functionality to navigate to the new post section, e.g., using history.push('/newpost');
+		setPosts(fetchedPosts); // Update posts state with fetched posts when user clicks on the toast
+		window.scrollTo(0, 0);
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
+
+	// >> main fetch function
+	// useEffect(() => {
+	// 	const interval = setInterval(() => {
+	// 		axios
+	// 			.get("https://social-link-server-liard.vercel.app/posts")
+	// 			.then((res) => res.data)
+	// 			.then((data) => {
+	// 				const postsWithTimeDifference = data.map((post) => ({
+	// 					...post,
+	// 					timeDifference: getTimeDifference(post.createdAt),
+	// 				}));
+
+	// 				const reversedPosts = postsWithTimeDifference.reverse();
+
+	// 				if (reversedPosts.length > posts.length) {
+	// 					setNewPostsAvailable(true);
+	// 					setPosts(reversedPosts);
+	// 				}
+	// 			})
+	// 			.catch((err) => {
+	// 				console.error(err);
+	// 			});
+	// 	}, 60000);
+
+	// 	return () => clearInterval(interval);
+	// }, [posts]);
+
+	// const handleButtonClick = () => {
+	// 	// setNewPostsAvailable(false);
+	// 	setNewPostsAvailable(false); // Close the notification
+	// 	window.scrollTo(0, 0); // Scroll to the top of the page
+	// };
 
 	useEffect(() => {
 		axios("https://social-link-server-liard.vercel.app/comments").then(
 			(res) => {
-				const postsWithTimeDifference = res.data.map((com) => ({
+				const commentsWithTimeDifference = res.data.map((com) => ({
 					...com,
 					timeDifferenceCom: getTimeDifferenceCom(com.createdAt),
 				}));
 
-				// Reverse the array to display new posts first
-				const reversedPosts = postsWithTimeDifference.reverse();
+				const reversedComments = commentsWithTimeDifference.reverse();
 
-				setComments(reversedPosts);
+				setComments(reversedComments);
 			}
 		);
 	}, [recom]);
@@ -378,11 +241,14 @@ const NewsFeed = () => {
 			</div>
 
 			{newPostsAvailable && scrollPosition > 0 && (
-				<div className="fixed top-16 text-rose-400">
-					<div className="toast toast-top toast-center mt-12 lg:mt-0 lg:toast-bottom lg:toast-start">
+				<div className="fixed top-16 lg:top-28 text-rose-400">
+					<div
+						className="toast toast-top toast-center mt-12 lg:mt-16"
+						style={{ zIndex: "9999" }}
+					>
 						<div className="alert bg-white text-gray-600 font-semibold rounded-md shadow-md border-0 ml-[10px]">
 							<p className="flex justify-center items-center">
-								New post arrived.{" "}
+								New post available.{" "}
 								<span>
 									<CloseRoundedIcon
 										onClick={handleButtonClick}
@@ -396,7 +262,7 @@ const NewsFeed = () => {
 			)}
 
 			<div className="my-4 mt-12 mx-4 md:mx-8">
-				<MakePost />
+				<MakePost updatePostCount={updatePostCount} />
 			</div>
 			{filteredPosts.map((po) => (
 				<div key={po._id}>
@@ -449,17 +315,18 @@ const NewsFeed = () => {
 							<div className="flex justify-start items-center gap-8 w-full mx-4 mr-16">
 								<div className="flex items-center justify-center gap-1">
 									<button
-										onClick={() => {
+										onClick={(postId) => {
 											fetch(
-												"https://social-link-server-liard.vercel.app/posts/like",
+												`http://localhost:7000/posts/like/${postId}`,
 												{
-													method: "PUT",
+													method: "PATCH",
 													headers: {
 														"Content-Type":
 															"application/json",
 													},
 													body: JSON.stringify({
 														postId: po?._id,
+														likedId: userId,
 													}),
 												}
 											)
@@ -490,7 +357,7 @@ const NewsFeed = () => {
 									<input
 										type="submit"
 										value="submit"
-										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-lg font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] pr-2"
+										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-lg font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] px-4"
 									/>
 								</form>
 							</div>
@@ -542,9 +409,12 @@ const NewsFeed = () => {
 											</div>
 											<div className="col-span-6 bg-[#e5e7eb] flex flex-col gap-1 pl-3 rounded-md shadow-sm">
 												<div className="flex justify-start items-center gap-2">
-													<h4 className="font-bold">
+													<Link
+														className="font-bold hover:underline"
+														to={`/profilePage/${com?.userName}`}
+													>
 														{com?.user_name}
-													</h4>
+													</Link>
 													<span className="text-sm text-gray-400">
 														-{" "}
 														{com?.timeDifferenceCom}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const RightNav = () => {
+const RightNav = ({ updateFollowingCount }) => {
 	const [users, setUsers] = useState([]);
 	const userId = localStorage.getItem("social_id");
 	const [followingState, setFollowingState] = useState({});
@@ -41,6 +41,8 @@ const RightNav = () => {
 				...prev,
 				[id]: true,
 			}));
+
+			updateFollowingCount((prevCount) => prevCount + 1);
 		} catch (error) {
 			console.error("Error following user:", error);
 		}
@@ -50,7 +52,9 @@ const RightNav = () => {
 		axios
 			.get("https://social-link-server-liard.vercel.app/follow")
 			.then((res) => {
-				const exclude = res.data.find((re) => re.followerId === userId);
+				const exclude = res.data.find(
+					(re) => re?.followerId === userId
+				);
 				const followingId = exclude?.followingIds;
 				setExclude(followingId);
 			});
@@ -100,7 +104,9 @@ const RightNav = () => {
 						<>
 							{users
 								.filter((user) => user._id !== userId) // exclude current user
-								.filter((user) => !exclude.includes(user._id)) // exclude users the current user is already following
+								.filter((user) => !exclude?.includes(user?._id)) // exclude users the current user is already following
+								.reverse() // reverse the array to get the latest users first
+								.slice(0, 5) // get only the latest 5 users
 								.map((user) => (
 									<div
 										key={user._id}

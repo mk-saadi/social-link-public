@@ -4,10 +4,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Toast from "../hook/Toast";
+import useToast from "../hook/useToast";
 
 const Login = () => {
 	const navigate = useNavigate();
 	const [passwordShow, setPasswordShow] = useState(false);
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	const handlePasswordShow = () => {
 		setPasswordShow(!passwordShow);
@@ -27,6 +30,7 @@ const Login = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
+		showToast("loading", "Loading... please wait!");
 		axios
 			.post(
 				"https://social-link-server-liard.vercel.app/users/login",
@@ -40,9 +44,12 @@ const Login = () => {
 				window.location.reload(true);
 
 				console.log("Login successful:", userEmail);
+
+				showToast("success", "Login Successful!");
 			})
 			.catch((error) => {
 				console.error("Login failed:", error);
+				showToast("error", "Login Failed! Please try again.");
 			});
 	};
 
@@ -76,6 +83,13 @@ const Login = () => {
 
 	return (
 		<div className="container grid grid-cols-1 justify-center items-center mx-auto min-h-screen">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
 			<div className="flex flex-col justify-center gap-5 lg:max-w-xl max-w-sm mx-auto shadow-lg p-8 rounded-lg">
 				<h3 className="text-5xl text-center font-bold  text-[#32308E] opacity-40">
 					Social<span className="underline text-[#2a295f]">Link</span>
