@@ -197,6 +197,7 @@ const MakePost = ({ updatePostCount }) => {
 					onHide={hideToast}
 				/>
 			)}
+
 			<form
 				className="w-full pb-6 bg-white rounded-lg shadow-md "
 				onSubmit={handlePost}
@@ -208,9 +209,9 @@ const MakePost = ({ updatePostCount }) => {
 					<textarea
 						type="text"
 						required
-						placeholder="Create a new most"
+						placeholder="Create a new post"
 						onChange={handleChange}
-						className="bg-[#e5e7eb] text-xl border-none textarea input-bordered w-full h-[100px] placeholder:text-lg focus:outline-none rounded-none"
+						className="bg-[#e5e7eb] text-lg border-none textarea input-bordered w-full h-[100px] placeholder:text-lg focus:outline-none rounded-none"
 						name="name"
 					></textarea>
 				</div>

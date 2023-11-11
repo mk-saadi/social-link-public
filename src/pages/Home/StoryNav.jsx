@@ -65,6 +65,10 @@ const StoryNav = () => {
 						placeholder="Photo"
 						className="w-full max-w-xs bg-transparent rounded file-input file-input-ghost focus:bg-transparent focus:outline-none"
 					/>
+					<input
+						type="text"
+						placeholder="write caption"
+					/>
 				</form>
 			</div>
 		</div>

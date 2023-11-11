@@ -64,6 +64,13 @@ const RightNav = ({ updateFollowingCount }) => {
 	// 	return <div>Loading...</div>;
 	// }
 
+	const formatText = (text, maxLength) => {
+		if (text.length > maxLength) {
+			return `${text.substring(0, maxLength)}...`;
+		}
+		return text;
+	};
+
 	return (
 		<div className="bg-white shadow-md rounded-lg w-full xl:w-[340px]">
 			<div className="flex flex-col">
@@ -125,11 +132,15 @@ const RightNav = ({ updateFollowingCount }) => {
 												</div>
 											</div>
 											<div>
-												<p className="text-gray-600 hover:underline">
-													{user?.name}
+												<p className="font-sans text-gray-600 hover:underline">
+													{formatText(user?.name, 14)}
 												</p>
 												<p className="hidden text-sm font-semibold text-gray-500 lg:block">
-													@{user?.userName}
+													@
+													{formatText(
+														user?.userName,
+														14
+													)}
 												</p>
 											</div>
 										</Link>

@@ -9,6 +9,7 @@ import Landing from "../pages/UserProfile/UserProfile";
 import ProfilePage from "../pages/UserProfile/ProfilePage";
 import AdminRoute from "./AdminRoute";
 import Admin from "../pages/adminDashboard/Admin";
+import ViewPost from "../pages/Home/ViewPost";
 
 const router = createBrowserRouter([
 	{
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
 		element: (
 			<PrivateRoute>
 				<ProfilePage />
+			</PrivateRoute>
+		),
+	},
+	{
+		path: "/viewPost/:id",
+		element: (
+			<PrivateRoute>
+				<ViewPost />
 			</PrivateRoute>
 		),
 	},

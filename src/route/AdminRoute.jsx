@@ -14,21 +14,15 @@ const AdminRoute = ({ children }) => {
 			.then((res) => res.data)
 			.then((data) => {
 				const filteredUser = data.find((us) => us._id === social_id);
-				const UserRole = filteredUser.role;
-				// console.log("social_id", UserRole);
-
-				setRole(UserRole);
+				const userRole = filteredUser?.role;
+				setRole(userRole);
+				setLoading(false); // Move the setLoading state update inside the promise chain
 			})
 			.catch((err) => {
 				console.log(err.message);
+				setLoading(false); // Ensure to set loading state in the catch block as well
 			});
 	}, [social_id]);
-
-	console.log("role", role);
-
-	useEffect(() => {
-		setLoading(false);
-	}, []);
 
 	if (loading) {
 		return (
@@ -39,18 +33,16 @@ const AdminRoute = ({ children }) => {
 		);
 	}
 
-	if (!role) {
-		// Redirect the user to the home "/" page if their role "admin" does not exist
+	if (!role || role !== "admin") {
 		return (
 			<Navigate
 				state={{ from: location }}
 				to="/"
 				replace
-			></Navigate>
+			/>
 		);
 	}
 
-	// Return the children component if the user who is logged in has role "admin"
 	return children;
 };
 

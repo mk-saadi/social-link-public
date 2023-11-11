@@ -162,6 +162,20 @@ const ProfilePage = () => {
 
 	// console.log(users.find((us) => us._id === userId));
 
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/savePost")
+			.then((res) => res.data)
+			.then((data) => {
+				console.log("data", data);
+
+				// setFollowing(followers);
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
+	}, []);
+
 	const [dominantColor, setDominantColor] = useState("");
 
 	useEffect(() => {

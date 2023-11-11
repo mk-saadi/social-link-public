@@ -6,7 +6,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import MakePost from "./MakePost";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -18,6 +18,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 	const [follow, setFollow] = useState([]);
 	const [following, setFollowing] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [feedback, setFeedback] = useState([]);
 
 	const userId = localStorage.getItem("social_id");
 
@@ -86,6 +87,22 @@ const LeftNav = ({ followingCount, postCount }) => {
 		const uniqueFollowerIds = new Set(followerIds);
 		return uniqueFollowerIds.size;
 	};
+
+	// >> feedback api
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/feedback")
+			.then((res) => {
+				const data = res.data;
+				const sentTo = data.filter(
+					(d) => d?.to === matchedUser?.userName
+				);
+
+				setFeedback(sentTo);
+			});
+	}, [matchedUser]);
+
+	console.log("feedback", feedback);
 
 	const [dominantColor, setDominantColor] = useState("");
 
@@ -219,11 +236,9 @@ const LeftNav = ({ followingCount, postCount }) => {
 					<nav className="my-2 ml-5">
 						<ul className="flex md:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
 							<ActiveLink to={"/"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<HomeIcon className="bg-transparent" />
-										Home
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<HomeIcon className="bg-transparent" />
+									Home
 								</li>
 							</ActiveLink>
 							{/* <p>
@@ -235,50 +250,98 @@ const LeftNav = ({ followingCount, postCount }) => {
 								</li>
 							</p> */}
 							<p to={"/message"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<TextsmsIcon className="bg-transparent" />{" "}
-										Message
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<TextsmsIcon className="bg-transparent" />{" "}
+									Message
 								</li>
 							</p>
-							<p to={"/notification"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<NotificationsIcon className="bg-transparent" />
-										Notification
-									</p>
-								</li>
-							</p>
+
+							<div className="drawer">
+								<input
+									id="my-drawer"
+									type="checkbox"
+									className="drawer-toggle"
+								/>
+								<div className="drawer-content">
+									{/* Page content here */}
+									<label
+										// to={"/notification"}
+										htmlFor="my-drawer"
+									>
+										<li className="flex items-center justify-start gap-3 cursor-pointer">
+											<NotificationsIcon className="bg-transparent" />
+											Notifications
+										</li>
+									</label>
+								</div>
+								<div className="drawer-side">
+									<label
+										htmlFor="my-drawer"
+										aria-label="close sidebar"
+										className="drawer-overlay"
+									></label>
+									<ul className="min-h-full menu w-80 lg:w-96 bg-[#e7e7e7] pt-16">
+										{/* Sidebar content here */}
+										<div>
+											<h3 className="mb-2 text-xl font-bold text-gray-600">
+												Notifications!
+											</h3>
+										</div>
+										<div className="p-1 font-semibold text-gray-600 bg-white rounded-md">
+											<p>From Admin.</p>
+											{feedback.map((feed) => (
+												<div
+													key={feed._id}
+													className="my-2"
+												>
+													{/* <p>{feed.to[0]}</p> */}
+													<p>
+														Feedback:{" "}
+														<span className="text-gray-500">
+															{feed.feedbackBody}
+														</span>
+													</p>
+													<p>
+														PostId:{" "}
+														<Link
+															className="cursor-pointer text-sky-400 hover:underline"
+															to={`/viewPost/${feed?.postId}`}
+														>
+															{feed.postId}
+														</Link>
+													</p>
+													<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px]" />
+												</div>
+											))}
+										</div>
+
+										{/* <li>
+											<a>Sidebar Item 2</a>
+										</li> */}
+									</ul>
+								</div>
+							</div>
 							<ActiveLink to={"/profile"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<AccountCircleIcon className="bg-transparent" />{" "}
-										Profile
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<AccountCircleIcon className="bg-transparent" />{" "}
+									Profile
 								</li>
 							</ActiveLink>
 							<p to={"/settings"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<SettingsIcon className="bg-transparent" />{" "}
-										Settings
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<SettingsIcon className="bg-transparent" />{" "}
+									Settings
 								</li>
 							</p>
 							<p onClick={handleLogout}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<LogoutIcon className="bg-transparent" />{" "}
-										Logout
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<LogoutIcon className="bg-transparent" />{" "}
+									Logout
 								</li>
 							</p>
 							<p to={"/more"}>
-								<li>
-									<p className="flex items-center justify-start gap-3">
-										<MenuIcon className="bg-transparent" />
-									</p>
+								<li className="flex items-center justify-start gap-3">
+									<MenuIcon className="bg-transparent" />
 								</li>
 							</p>
 						</ul>

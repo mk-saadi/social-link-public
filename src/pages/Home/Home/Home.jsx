@@ -32,7 +32,7 @@ const Home = () => {
 				<div className=" col-span-8 lg:col-span-5 xl:col-span-4 mt-[70px] ">
 					<NewsFeed updatePostCount={updatePostCount} />
 				</div>
-				<div className="md:col-span-2 md:fixed top-[70px] md:right-5 xl:right-6 hidden md:block h-full">
+				<div className="md:col-span-2 md:fixed top-[70px] md:right-5 lg:right-6 xl:right-6 hidden md:block h-full">
 					<RightNav updateFollowingCount={updateFollowingCount} />
 				</div>
 			</div>

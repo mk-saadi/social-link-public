@@ -133,7 +133,7 @@ const TopNavbar = () => {
 
 					<div className="relative flex items-center justify-start flex-1 gap-4">
 						{searchResults.length > 0 && (
-							<div className="absolute right-0 py-3 bg-white rounded-lg shadow-lg top-8">
+							<div className="absolute right-0 py-3 bg-white rounded-lg shadow-lg drop-shadow-lg top-8">
 								{searchResults.map((us) => (
 									<Link
 										key={us._id}

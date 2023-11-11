@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { CiMenuKebab } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment, FaShare } from "react-icons/fa";
@@ -7,11 +8,18 @@ import PostContent from "../../hook/PostContent";
 import { Link } from "react-router-dom";
 import MakePost from "./MakePost";
 import StoryNav from "./StoryNav";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { BsArrowThroughHeartFill, BsJournalBookmarkFill } from "react-icons/bs";
+import { AiOutlineArrowUp } from "react-icons/ai";
+import { BiEdit } from "react-icons/bi";
+import { MdReport } from "react-icons/md";
+import { TbLockSquareRoundedFilled } from "react-icons/tb";
+import { SiAdblock } from "react-icons/si";
+import { ImBlocked, ImEyeBlocked } from "react-icons/im";
+import Toast from "../../hook/Toast";
+import useToast from "../../hook/useToast";
 
 const NewsFeed = ({ updatePostCount }) => {
 	// const [like, setLike] = useState(true);
-	const [comments, setComments] = useState([]);
 	const [postsId, setPostsId] = useState("");
 	const [show, setShow] = useState(false);
 	const [showId, setShowId] = useState(false);
@@ -19,9 +27,17 @@ const NewsFeed = ({ updatePostCount }) => {
 	const [users, setUsers] = useState([]);
 	const [include, setInclude] = useState([]);
 	const [recom, setRecom] = useState("");
+	const [comments, setComments] = useState([]);
 	const [newPostsAvailable, setNewPostsAvailable] = useState(false);
+	const [fetchedPosts, setFetchedPosts] = useState([]);
+	const [showToasts, setShowToast] = useState(true); // initial value was "true"
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
+	const [isFormVisible, setFormVisible] = useState(true);
+
 	// const [loading, setLoading] = useState(true);
 	const userId = localStorage.getItem("social_id"); // CURRENT USER
+
+	// modal
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
@@ -56,7 +72,7 @@ const NewsFeed = ({ updatePostCount }) => {
 				// console.log(err);
 			});
 	};
-	const [fetchedPosts, setFetchedPosts] = useState([]);
+
 	// Function to fetch posts
 	const fetchPosts = () => {
 		axios
@@ -75,6 +91,7 @@ const NewsFeed = ({ updatePostCount }) => {
 					setFetchedPosts(reversedPosts); // Store fetched posts in a new state variable
 
 					// If posts state is empty (i.e., page has just loaded), set it directly
+					// setShowToast(true); // Set the alert/toast flag to show on new posts
 					if (posts.length === 0) {
 						setPosts(reversedPosts);
 					}
@@ -91,15 +108,17 @@ const NewsFeed = ({ updatePostCount }) => {
 
 		// Then start the interval
 		const interval = setInterval(fetchPosts, 10000);
+		console.log("interval", interval);
 
 		return () => clearInterval(interval);
 	}, [posts]);
 
 	const handleButtonClick = () => {
+		setShowToast(true);
+
 		setNewPostsAvailable(false);
 		setPosts(fetchedPosts); // Update posts state with fetched posts when user clicks on the toast
 		window.scrollTo(0, 0);
-		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
 	// >> main fetch function
@@ -234,23 +253,93 @@ const NewsFeed = ({ updatePostCount }) => {
 		};
 	}, []);
 
+	// useEffect(() => {
+	// 	const timeout = setTimeout(() => {
+	// 		setShowToast(false);
+	// 	}, 5000);
+
+	// 	return () => clearTimeout(timeout);
+	// }, []);
+
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setShowToast(false);
+			// setNewPostsAvailable(false);
+		}, 5000);
+
+		return () => clearTimeout(timeout);
+	}, [newPostsAvailable]);
+
+	console.log("showToast", showToasts);
+
+	const handleReport = (event, postId, userName, name, image) => {
+		event.preventDefault();
+
+		showToast("loading", "Please wait!");
+
+		const form = event.target;
+		const reportType = form["radio-1"].value;
+
+		const report = {
+			reportType,
+			postId,
+			reporter: matchedUser?.userName,
+			postMaker: userName,
+			body: name,
+			postImage: image,
+		};
+
+		if (report === "" || null) {
+			return showToast("error", "Please try again!");
+		}
+
+		event.target.reset(); // Resets the form fields
+
+		axios
+			.post("https://social-link-server-liard.vercel.app/report", report)
+			.then((res) => {
+				showToast("success", "Reported!");
+				setFormVisible(false);
+				console.log(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+				showToast("error", "Failed to report!");
+			});
+	};
+
+	const saveHandle = (postId, userName) => {
+		axios.post("https://social-link-server-liard.vercel.app/savePost", {
+			postId: postId,
+			userName: userName,
+		});
+		showToast("success", "Post saved!");
+	};
+
 	return (
 		<div className="relative">
-			<div className="mb-4 mx-4 md:mx-8">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
+			{/* <div className="mx-4 mb-4 md:mx-8">
 				<StoryNav />
-			</div>
+			</div> */}
 
-			{newPostsAvailable && scrollPosition > 0 && (
+			{newPostsAvailable && scrollPosition > 0 && showToasts && (
 				<div className="fixed top-16 lg:top-28 text-rose-400">
 					<div
-						className="toast toast-top toast-center mt-12 lg:mt-16"
+						className="mt-12 toast toast-top toast-center lg:mt-16"
 						style={{ zIndex: "9999" }}
 					>
 						<div className="alert bg-white text-gray-600 font-semibold rounded-md shadow-md border-0 ml-[10px]">
-							<p className="flex justify-center items-center">
+							<p className="flex items-center justify-center gap-2">
 								New post available.{" "}
 								<span>
-									<CloseRoundedIcon
+									<AiOutlineArrowUp
 										onClick={handleButtonClick}
 										className="text-xl"
 									/>
@@ -261,17 +350,18 @@ const NewsFeed = ({ updatePostCount }) => {
 				</div>
 			)}
 
-			<div className="my-4 mt-12 mx-4 md:mx-8">
+			<div className="mx-4 my-4 mt-12 md:mx-8">
 				<MakePost updatePostCount={updatePostCount} />
 			</div>
+
 			{filteredPosts.map((po) => (
 				<div key={po._id}>
-					<div className="bg-white  my-4 mx-4 md:mx-8  shadow-md rounded-lg py-4">
+					<div className="py-4 mx-4 my-4 bg-white rounded-lg shadow-md md:mx-8">
 						{/* top bar */}
-						<div className="flex justify-between items-center mx-4">
-							<div className="flex justify-center items-center bg-transparent">
+						<div className="flex items-center justify-between mx-4">
+							<div className="flex items-center justify-center bg-transparent">
 								<div className="avatar">
-									<div className="w-10 lg:w-16 rounded-full z-10 object-cover">
+									<div className="z-10 object-cover w-10 rounded-full lg:w-16">
 										<img
 											src={po?.uploaderImage}
 											alt="person"
@@ -280,108 +370,322 @@ const NewsFeed = ({ updatePostCount }) => {
 								</div>
 								<div className="flex flex-col ml-4 bg-transparent">
 									<Link
-										className="text-xl text-gray-600  font-semibold cursor-pointer bg-transparent hover:underline"
+										className="text-base font-semibold text-gray-600 bg-transparent cursor-pointer md:text-lg hover:underline"
 										to={`/profilePage/${po?.userName}`}
 									>
 										{po?.uploaderName}
 									</Link>
-									<p className="text-sm text-gray-500">
+									<p className="text-xs text-gray-500 md:text-sm">
 										{po.timeDifference}
 									</p>
 								</div>
 							</div>
 
-							<CiMenuKebab className=" text-2xl lg:text-3xl text-gray-600 ml-2 font-semibold cursor-pointer bg-transparent" />
-						</div>
-						{/* top bar */}
-						{/* body */}
-						<div className="mx-4 mt-8  bg-transparent mb-5">
-							<PostContent content={po?.name} />
+							{/* <CiMenuKebab className="ml-2 text-2xl font-semibold text-gray-600 bg-transparent cursor-pointer lg:text-3xl" /> */}
+							<details className="dropdown dropdown-end">
+								<summary
+									// onClick={toggleDropdown}
+									className="ml-1 text-xl btn btn-circle btn-ghost"
+								>
+									<CiMenuKebab />
+								</summary>
 
-							<img
-								src={po?.image}
-								alt="post image"
-								className="my-4 w-full"
-								loading="lazy"
-								style={{
-									display: po?.image ? "block" : "none",
-								}}
-							/>
-						</div>
-						<hr className="bg-gray-400 border-0 h-[1px] my-2" />
-
-						{/* comment and like button */}
-						<div className="flex justify-around items-center">
-							<div className="flex justify-start items-center gap-8 w-full mx-4 mr-16">
-								<div className="flex items-center justify-center gap-1">
-									<button
-										onClick={(postId) => {
-											fetch(
-												`http://localhost:7000/posts/like/${postId}`,
-												{
-													method: "PATCH",
-													headers: {
-														"Content-Type":
-															"application/json",
-													},
-													body: JSON.stringify({
-														postId: po?._id,
-														likedId: userId,
-													}),
-												}
+								<div className="p-2 shadow-lg drop-shadow-lg menu dropdown-content z-[1] bg-white rounded-md w-80 text-gray-600 font-semibold">
+									<li
+										onClick={() =>
+											saveHandle(
+												po._id,
+												matchedUser.userName
 											)
-												.then((res) => res.json())
-												.then((data) => {
-													// setLike(false);
-													// console.log(data);
-												});
-										}}
+										}
 									>
-										<AiFillHeart className="text-3xl text-slate-400 cursor-pointer" />
-									</button>
-									<p>{po?.likes}</p>
+										<p className="flex items-center gap-4 rounded-md hover:[#e5e7eb]">
+											<BsJournalBookmarkFill className="text-2xl " />{" "}
+											Save Post
+										</p>
+									</li>
+									<li>
+										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb] whitespace-nowrap">
+											<BiEdit className="text-2xl " />
+											Request edit to the post
+										</p>
+									</li>
+									<li>
+										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb] whitespace-nowrap">
+											<ImEyeBlocked className="text-2xl " />
+											Hide post
+										</p>
+									</li>
+									<li>
+										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
+											<ImBlocked className="text-2xl " />
+											Hide all post from{" "}
+											{po?.uploaderName}
+										</p>
+									</li>
+									<li>
+										<a
+											href="#post-modal-block"
+											className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]"
+											// htmlFor="my_modal_7"
+											// htmlFor={`modal_${po._id}`}
+											// onClick={() => openModal(po._id)}
+										>
+											<SiAdblock className="text-2xl " />
+											Block {po?.uploaderName}
+										</a>
+									</li>
+									<li>
+										<label
+											className="flex items-center gap-4 rounded-md hover:[#e5e7eb]"
+											// htmlFor="my_modal_6"
+											htmlFor={`modal_${po._id}`}
+										>
+											<MdReport className="text-2xl " />{" "}
+											Report to admin
+										</label>
+									</li>
 								</div>
+							</details>
+						</div>
 
-								<FaComment className="text-gray-600 text-2xl" />
-								<form
-									onSubmit={onSubmit}
-									className="flex items-center"
-								>
-									<input
-										type="text"
-										name="comment"
-										onChange={() => setPostsId(po?._id)}
-										placeholder="comment"
-										className="input border border-e-0 rounded-e-none border-gray-400 w-full outline-none focus:outline-0 bg-white rounded-md"
-									/>
-									<input
-										type="submit"
-										value="submit"
-										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-lg font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] px-4"
-									/>
-								</form>
+						{/* block post */}
+						{/* <input
+							type="checkbox"
+							id="my_modal_7"
+							// id={`modal_${po._id}`}
+							className="modal-toggle"
+						/> */}
+						{/*<div
+							className="modal"
+							// id={`modal_${po._id}`}
+						>
+							<div className="bg-white rounded-md modal-box">
+								<h3 className="text-xl font-bold text-gray-600">
+									Block!
+								</h3>
+								<p className="mt-4 mb-8 font-semibold text-gray-600">
+									Are you sure you want to block{" "}
+									{po?.uploaderName}?
+								</p>
+								<div className="flex items-center justify-between text-base">
+									<div className="modal-action">
+										<label
+											htmlFor="my_modal_7"
+											// htmlFor={`modal_${po._id}`}
+											// className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 -mt-6 px-5"
+											className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md"
+										>
+											Go back
+										</label>
+									</div>
+									<button className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300">
+										Block
+									</button>
+								</div>
 							</div>
-							<div className="flex justify-center items-center gap-8 mr-4">
-								<FaShare className="text-gray-600 text-2xl" />
+						</div> */}
+						<div
+							id="post-modal-block"
+							className="modal"
+						>
+							<div className="bg-white rounded-md modal-box">
+								<h3 className="text-xl font-bold text-gray-600">
+									Block!
+								</h3>
+								<p className="mt-4 mb-8 font-semibold text-gray-600">
+									Are you sure you want to block{" "}
+									{po?.uploaderName}?{" "}
+									{/* getting the first uploaderName in the first index of the post data collection, both are not the same  */}
+								</p>
+								<div className="flex items-center justify-between text-base">
+									<div className="modal-action">
+										<a
+											// htmlFor="my_modal_7"
+											// className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 -mt-6 px-5"
+											href="#"
+											className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md modal__close "
+										>
+											Go back
+										</a>
+									</div>
+									<button className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300">
+										Block
+									</button>
+								</div>
 							</div>
 						</div>
 
-						{/* view comment section */}
-						{comments.filter(
-							(comment) => comment.post_id === po?._id
-						).length > 0 && (
-							<div className="flex justify-center items-center">
-								<button
-									onClick={() => {
-										setShow(!show);
-										setShowId(po?._id);
-									}}
-									className="hover:underline pt-3"
-								>
-									view comment
-								</button>
+						{/* report post to admin modal */}
+						<input
+							type="checkbox"
+							// id="my_modal_6"
+							id={`modal_${po._id}`}
+							className="modal-toggle"
+						/>
+						{isFormVisible && (
+							<div className="modal">
+								<div className="relative bg-white rounded-md modal-box">
+									{/* body starts here */}
+									<h3 className="text-xl font-semibold text-gray-600">
+										Report post {po.uploaderName}
+									</h3>
+									<form
+										// onSubmit={handleReport}
+										onSubmit={(event) =>
+											handleReport(
+												event,
+												po?._id,
+												po?.userName,
+												po.name,
+												po?.image
+											)
+										}
+										className="font-semibold text-gray-600"
+									>
+										<div className="flex items-center justify-start gap-2 my-4">
+											<input
+												value="misinformation"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Misinformation</p>
+										</div>
+										<div className="flex items-center justify-start gap-2 my-4">
+											<input
+												value="spam"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Spam or misleading</p>
+										</div>
+										<div className="flex items-center justify-start gap-2 my-4">
+											<input
+												value="bullying"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Harassment or bullying</p>
+										</div>
+										<div className="flex items-center justify-start gap-2 my-4">
+											<input
+												value="hateful"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Hateful or abusive content</p>
+										</div>
+										<div className="flex items-center justify-start gap-2 my-4">
+											<input
+												value="harmful"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Harmful or dangerous acts</p>
+										</div>
+										<div className="flex items-center justify-start gap-2 mt-4 mb-8">
+											<input
+												value="terrorism"
+												type="radio"
+												name="radio-1"
+												className="radio radio-primary"
+											/>
+											<p>Promotes terrorism</p>
+										</div>
+										<div className="flex items-center justify-end">
+											<input
+												type="submit"
+												value="Submit"
+												className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 text-base"
+											/>
+										</div>
+									</form>
+
+									<div className="absolute bottom-6 left-6 modal-action">
+										<label
+											// htmlFor="my_modal_6"
+											htmlFor={`modal_${po._id}`}
+											className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md"
+										>
+											Go back
+										</label>
+									</div>
+								</div>
 							</div>
 						)}
+
+						{/* top bar */}
+						{/* body */}
+						<div className="mx-4 mt-8 mb-5 bg-transparent">
+							<Link to={`/viewPost/${po?._id}`}>
+								<PostContent content={po?.name} />
+
+								<img
+									src={po?.image}
+									alt="post image"
+									className="w-full my-4"
+									loading="lazy"
+									style={{
+										display: po?.image ? "block" : "none",
+									}}
+								/>
+							</Link>
+						</div>
+						<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px]" />
+
+						{/* comment and like button */}
+						<div className="flex items-center justify-around h-full">
+							<div className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
+								<button
+									className="flex items-center justify-center gap-2"
+									onClick={(postId) => {
+										fetch(
+											`http://localhost:7000/posts/like/${postId}`,
+											{
+												method: "PATCH",
+												headers: {
+													"Content-Type":
+														"application/json",
+												},
+												body: JSON.stringify({
+													postId: po?._id,
+													likedId: userId,
+												}),
+											}
+										)
+											.then((res) => res.json())
+											.then((data) => {
+												// setLike(false);
+												// console.log(data);
+											});
+									}}
+								>
+									<AiFillHeart className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-slate-500" />{" "}
+									Like
+									<p>{po?.likes}</p>
+								</button>
+							</div>
+							<button
+								className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 "
+								onClick={() => {
+									setShow(!show);
+									setShowId(po?._id);
+								}}
+							>
+								<FaComment className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-slate-500" />{" "}
+								Comment
+							</button>
+							<div className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-3">
+								<FaShare className="text-2xl cursor-pointer xl:text-2xl lg:text-lg" />{" "}
+								Share
+							</div>
+						</div>
+
 						{show && showId === po?._id && (
 							<div
 								className={`${
@@ -392,15 +696,38 @@ const NewsFeed = ({ updatePostCount }) => {
 										: ""
 								}`}
 							>
+								<form
+									onSubmit={onSubmit}
+									className="flex items-center p-2"
+								>
+									<input
+										type="text"
+										name="comment"
+										onChange={() => setPostsId(po?._id)}
+										placeholder="comment"
+										className="w-full p-2 bg-white border border-gray-400 rounded-md outline-none max-h-10 input border-e-0 rounded-e-none focus:outline-0 placeholder:text-sm placeholder:lg:text-base"
+									/>
+									<button
+										type="submit"
+										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-xl lg:text-2xl font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] lg:py-[7px] px-4"
+									>
+										<FaComment />
+									</button>
+									{/* <input
+										type="submit"
+										value="submit"
+										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-sm lg:text-lg font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] px-4"
+									/> */}
+								</form>
 								{comments
 									?.filter((com) => com?.post_id === po?._id)
 									.map((com) => (
 										<div
-											className=" text-gray-600 font-semibold pr-2 lg:px-4 py-1 my-2 grid grid-cols-7"
+											className="grid grid-cols-7 py-1 pr-2 my-2 font-semibold text-gray-600 lg:px-4"
 											key={com?._id}
 										>
-											<div className="avatar flex justify-center items-center">
-												<div className="h-8 -mt-4 lg:mt-0 lg:h-12 rounded-full z-10 object-cover drop-shadow-md">
+											<div className="flex items-center justify-center avatar">
+												<div className="z-10 object-cover h-8 -mt-4 rounded-full lg:mt-0 lg:h-12 drop-shadow-md">
 													<img
 														src={com?.user_image}
 														alt="commenter avatar"
@@ -408,7 +735,7 @@ const NewsFeed = ({ updatePostCount }) => {
 												</div>
 											</div>
 											<div className="col-span-6 bg-[#e5e7eb] flex flex-col gap-1 pl-3 rounded-md shadow-sm">
-												<div className="flex justify-start items-center gap-2">
+												<div className="flex items-center justify-start gap-2">
 													<Link
 														className="font-bold hover:underline"
 														to={`/profilePage/${com?.userName}`}

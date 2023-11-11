@@ -2,7 +2,11 @@
 export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
-		extend: {},
+		extend: {
+			fontFamily: {
+				sans: ["Noto Sans", "sans-serif"],
+			},
+		},
 	},
 	// plugins: [require("@tailwindcss/typography"), require("daisyui")],
 	plugins: [require("daisyui")],
