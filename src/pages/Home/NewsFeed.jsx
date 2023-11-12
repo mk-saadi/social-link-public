@@ -14,6 +14,7 @@ import { BiEdit } from "react-icons/bi";
 import { MdReport } from "react-icons/md";
 import { TbLockSquareRoundedFilled } from "react-icons/tb";
 import { SiAdblock } from "react-icons/si";
+import { RiUserUnfollowFill } from "react-icons/ri";
 import { ImBlocked, ImEyeBlocked } from "react-icons/im";
 import Toast from "../../hook/Toast";
 import useToast from "../../hook/useToast";
@@ -188,6 +189,34 @@ const NewsFeed = ({ updatePostCount }) => {
 				setInclude(followingId);
 			});
 	}, [userId]);
+
+	const handleUnfollow = (unfollowId) => {
+		showToast("loading", `Please wait!`);
+
+		axios
+			.delete(`https://social-link-server-liard.vercel.app/follow`, {
+				data: { followerId: userId, unfollowId: unfollowId },
+			})
+			.then((response) => {
+				if (response.data.success) {
+					const updatedPosts = posts.filter(
+						(post) => post.uploaderId !== unfollowId
+					);
+					// Update the posts state
+					setPosts(updatedPosts);
+					showToast("success", "Unfollow successful!");
+				}
+			})
+			.catch((err) => {
+				console.log(err.message);
+				showToast("error", "Unfollow unsuccessful!");
+			});
+	};
+	// Update the local state to remove the unfollowed user from the following list
+	// const updatedFollowing = following.filter(
+	// 	(po) => po.uploaderId !== userId
+	// );
+	// setFollowing(updatedFollowing);
 
 	const filteredPosts = posts.filter((post) => {
 		return include?.concat(userId).includes(post.uploaderId);
@@ -421,6 +450,16 @@ const NewsFeed = ({ updatePostCount }) => {
 											<ImBlocked className="text-2xl " />
 											Hide all post from{" "}
 											{po?.uploaderName}
+										</p>
+									</li>
+									<li
+										onClick={() =>
+											handleUnfollow(po.uploaderId)
+										}
+									>
+										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
+											<RiUserUnfollowFill className="text-2xl " />
+											Unfollow {po?.uploaderName}
 										</p>
 									</li>
 									<li>
