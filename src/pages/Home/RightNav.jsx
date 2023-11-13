@@ -4,7 +4,7 @@ import { MdAddCircle, MdMore } from "react-icons/md";
 import { RiUserFollowFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
-const RightNav = ({ updateFollowingCount }) => {
+const RightNav = ({ updateFollowingCount, dominantColor }) => {
 	const [users, setUsers] = useState([]);
 	const userId = localStorage.getItem("social_id");
 	const [followingState, setFollowingState] = useState({});
@@ -74,9 +74,9 @@ const RightNav = ({ updateFollowingCount }) => {
 	};
 
 	return (
-		<div className="bg-white shadow-md rounded-md w-full xl:w-[340px] border-4 border-[#7C9D96]">
+		<div className="bg-white shadow-md rounded-md w-full xl:w-[340px] ">
 			<div className="flex flex-col">
-				<p className="p-2 text-lg font-semibold text-gray-600 lg:text-xl">
+				<p className="p-2 text-lg font-semibold text-gray-600">
 					People you may know
 				</p>
 
@@ -153,9 +153,19 @@ const RightNav = ({ updateFollowingCount }) => {
 											}
 										>
 											{followingState[user?._id] ? (
-												<RiUserFollowFill className="text-3xl opacity-80 text-[#7C9D96]" />
+												<RiUserFollowFill
+													className="text-3xl opacity-80"
+													style={{
+														color: dominantColor,
+													}}
+												/>
 											) : (
-												<MdAddCircle className="text-3xl opacity-80 text-[#7C9D96]" />
+												<MdAddCircle
+													className="text-3xl opacity-80"
+													style={{
+														color: dominantColor,
+													}}
+												/>
 											)}
 										</div>
 									</div>
@@ -163,7 +173,10 @@ const RightNav = ({ updateFollowingCount }) => {
 						</>
 					)}
 				</div>
-				<div className="text-center bg-[#7C9D96] text-white font-semibold p-2">
+				<div
+					className="p-2 text-base font-semibold text-center text-white rounded-b-md"
+					style={{ backgroundColor: dominantColor }}
+				>
 					<p className="flex items-center justify-center gap-3 cursor-pointer">
 						Show more <MdMore className="text-2xl" />
 					</p>

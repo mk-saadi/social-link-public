@@ -35,7 +35,7 @@ const style = {
 	// boxShadow: 24,
 	p: 4,
 };
-const NewsFeed = ({ updatePostCount }) => {
+const NewsFeed = ({ updatePostCount, dominantColor }) => {
 	// const [like, setLike] = useState(true);
 	const [postsId, setPostsId] = useState("");
 	const [show, setShow] = useState(false);
@@ -401,12 +401,12 @@ const NewsFeed = ({ updatePostCount }) => {
 
 			{filteredPosts.map((po) => (
 				<div key={po._id}>
-					<div className="pt-4 mx-4 my-4 bg-white rounded-lg shadow-md md:mx-8 border-4 border-[#7C9D96]">
+					<div className="pt-4 mx-4 my-4 bg-white rounded-lg shadow-md md:mx-8">
 						{/* top bar */}
 						<div className="flex items-center justify-between mx-4">
 							<div className="flex items-center justify-center bg-transparent">
 								<div className="avatar">
-									<div className="z-10 object-cover w-10 rounded-full lg:w-16">
+									<div className="z-10 object-cover w-10 rounded-full lg:w-14">
 										<img
 											src={po?.uploaderImage}
 											alt="person"
@@ -415,12 +415,12 @@ const NewsFeed = ({ updatePostCount }) => {
 								</div>
 								<div className="flex flex-col ml-4 bg-transparent">
 									<Link
-										className="text-base font-semibold text-gray-600 bg-transparent cursor-pointer md:text-lg hover:underline"
+										className="text-base font-semibold text-gray-600 bg-transparent cursor-pointer hover:underline"
 										to={`/profilePage/${po?.userName}`}
 									>
 										{po?.uploaderName}
 									</Link>
-									<p className="text-xs text-gray-500 md:text-sm">
+									<p className="text-sm text-gray-400">
 										{po.timeDifference}
 									</p>
 								</div>
@@ -690,10 +690,13 @@ const NewsFeed = ({ updatePostCount }) => {
 						<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px]" />
 
 						{/* comment and like button */}
-						<div className="flex items-center justify-around h-full">
-							<div className="flex items-center justify-center w-full duration-300  text-[#7C9D96] gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
+						<div
+							className="flex items-center justify-around h-full"
+							style={{ color: dominantColor }}
+						>
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
 								<button
-									className="flex items-center justify-center gap-2"
+									className="flex items-center justify-center gap-2 text-sm"
 									onClick={(postId) => {
 										fetch(
 											`http://localhost:7000/posts/like/${postId}`,
@@ -716,23 +719,23 @@ const NewsFeed = ({ updatePostCount }) => {
 											});
 									}}
 								>
-									<AiFillHeart className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-[#7C9D96]" />{" "}
+									<AiFillHeart className="text-xl cursor-pointer" />{" "}
 									Like
 									<p>{po?.likes}</p>
 								</button>
 							</div>
 							<button
-								className="flex items-center justify-center w-full duration-300  text-[#7C9D96] gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 "
+								className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2  text-sm"
 								onClick={() => {
 									setShow(!show);
 									setShowId(po?._id);
 								}}
 							>
-								<FaComment className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-[#7C9D96]" />{" "}
+								<FaComment className="text-xl cursor-pointer" />{" "}
 								Comment
 							</button>
-							<div className="flex items-center justify-center w-full duration-300  text-[#7C9D96] gap-2 cursor-pointer hover:bg-[#e5e7eb] py-3">
-								<FaShare className="text-2xl cursor-pointer xl:text-2xl lg:text-lg" />{" "}
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-3 text-sm">
+								<FaShare className="text-xl cursor-pointer" />{" "}
 								Share
 							</div>
 						</div>
@@ -757,7 +760,7 @@ const NewsFeed = ({ updatePostCount }) => {
 										name="comment"
 										onChange={() => setPostsId(po?._id)}
 										placeholder="comment"
-										className="w-full p-2 bg-white border border-gray-300 rounded-md outline-none max-h-10 input border-e-0 rounded-e-none focus:outline-0 placeholder:text-xs placeholder:lg:text-sm text-gray-600 text-sm"
+										className="w-full p-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-md outline-none max-h-10 input border-e-0 rounded-e-none focus:outline-0 placeholder:text-xs placeholder:lg:text-sm"
 									/>
 									<button
 										type="submit"
@@ -771,7 +774,10 @@ const NewsFeed = ({ updatePostCount }) => {
 										className="text-gray-600 hover:bg-[#e5e7eb] cursor-pointer text-sm lg:text-lg font-semibold  hover:bg-opacity-80 duration-300 border border-gray-400 border-s-0 rounded-s-none rounded-md py-[9px] px-4"
 									/> */}
 								</form>
-								<div className=" bg-[#7C9D96]">
+								<div
+									className="rounded-b-md"
+									style={{ backgroundColor: dominantColor }}
+								>
 									{comments
 										?.filter(
 											(com) => com?.post_id === po?._id

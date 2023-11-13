@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ActiveLink from "../../hook/ActiveLink";
 
-const LeftNav = ({ followingCount, postCount }) => {
+const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 	const [users, setUsers] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [follow, setFollow] = useState([]);
@@ -180,16 +180,17 @@ const LeftNav = ({ followingCount, postCount }) => {
 				);
 
 				setDominantColor(dominantColorHex);
+				handleDominantColor(dominantColorHex);
 			};
 		}
-	}, [matchedUser?.image]);
+	}, [matchedUser?.image, handleDominantColor]);
 
 	return (
-		<div className="bg-white shadow-md rounded-md w-[340px] border-4 border-[#7C9D96]">
+		<div className="bg-white shadow-md rounded-md w-[340px]">
 			<div className="flex flex-col">
 				<div className="relative flex flex-col items-center justify-center gap-2 px-4 text-center">
 					<div
-						className="absolute top-0 w-full"
+						className="absolute top-0 w-full rounded-t-md"
 						style={{
 							backgroundColor: dominantColor,
 							minHeight: "80px",
@@ -218,23 +219,31 @@ const LeftNav = ({ followingCount, postCount }) => {
 						)}
 					</div>
 
-					<div className="flex items-center justify-around w-full mx-2 mt-6 text-sm text-gray-400">
+					<div className="flex items-center justify-around w-full mx-2 mt-6 text-xs text-gray-400">
 						<p className="font-semibold">
-							<span className="text-xl font-semibold text-gray-600">
+							<span className="text-lg font-semibold text-gray-600">
 								{posts?.length + postCount}
 							</span>
 							<br />
 							posts
 						</p>
+
+						<div className="divider divider-horizontal divider-info">
+							|
+						</div>
+
 						<p className="font-semibold cursor-pointer">
-							<span className="text-xl font-semibold text-gray-600">
+							<span className="text-lg font-semibold text-gray-600">
 								{getFollowerCount(following)}
 							</span>
 							<br />
 							Followers
 						</p>
+						<div className="divider divider-horizontal divider-info">
+							|
+						</div>
 						<p className="font-semibold cursor-pointer">
-							<span className="text-xl font-semibold text-gray-600">
+							<span className="text-lg font-semibold text-gray-600">
 								{follow.map(
 									(fo) =>
 										fo?.followingIds.length + followingCount
@@ -249,7 +258,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 
 				<div>
 					<nav className="my-2 ml-5">
-						<ul className="flex flex-row gap-3 text-xl font-semibold text-gray-600 md:flex-col">
+						<ul className="flex flex-row gap-3 text-base font-semibold text-gray-600 md:flex-col">
 							<ActiveLink to={"/"}>
 								<li className="flex items-center justify-start gap-3">
 									<HomeIcon className="bg-transparent" />

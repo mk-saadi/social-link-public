@@ -85,7 +85,7 @@ const StoryNav = () => {
 
 	return (
 		<div className="grid w-full grid-cols-4 gap-2 md:grid-cols-5">
-			<div className="md:col-span-1">
+			<div className="md:col-span-1 bg-white rounded-md shadow-md">
 				{/* The button to open modal */}
 				<a
 					className="flex flex-col items-center justify-center h-full border-[3px] rounded-md border-dotted border-[#7C9D96] cursor-pointer"
