@@ -1,13 +1,11 @@
 import HomeIcon from "@mui/icons-material/Home";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Link, NavLink } from "react-router-dom";
-import MakePost from "./MakePost";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ActiveLink from "../../hook/ActiveLink";
@@ -17,9 +15,10 @@ const LeftNav = ({ followingCount, postCount }) => {
 	const [posts, setPosts] = useState([]);
 	const [follow, setFollow] = useState([]);
 	const [following, setFollowing] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const [feedback, setFeedback] = useState([]);
-
+	const [followingDetails, setFollowingDetails] = useState([]); // users details of the current user is following
+	const [followersDetails, setFollowersDetails] = useState([]); // users details of the current user is being followed
+	const [role, setRole] = useState("");
 	const userId = localStorage.getItem("social_id");
 
 	const handleLogout = () => {
@@ -38,14 +37,16 @@ const LeftNav = ({ followingCount, postCount }) => {
 		const fetchUsers = async () => {
 			const users = await getUsers();
 			setUsers(users);
+			const filteredUser = users.find((us) => us._id === userId);
+			const userRole = filteredUser?.role;
+			setRole(userRole);
 		};
 		fetchUsers();
-	}, []);
+	}, [userId]);
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
 	useEffect(() => {
-		// setLoading(true);
 		axios
 			.get("https://social-link-server-liard.vercel.app/posts")
 			.then((res) => res.data)
@@ -56,9 +57,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 
 				setPosts(filteredAndMappedPosts);
 			})
-			.catch((err) => {
-				console.log(err.message);
-			});
+			.catch((err) => {});
 	}, [userId]);
 
 	useEffect(() => {
@@ -66,6 +65,19 @@ const LeftNav = ({ followingCount, postCount }) => {
 			.get("https://social-link-server-liard.vercel.app/follow")
 			.then((res) => res.data)
 			.then((data) => {
+				// Get the followingIds of the current user
+				const followingIds = data.find(
+					(follow) => follow?.followerId === userId
+				)?.followingIds; // i have the user's id
+
+				// Filter the users array to get the details of the users that the current user is following
+				const followingUserDetails = users.filter((user) =>
+					followingIds.includes(user._id)
+				); // i need the all the details that id has in stored in "users" state
+				// im not getting that using the function above, what do i do now
+
+				setFollowingDetails(followingUserDetails);
+
 				const filteredAndMappedPosts = data.filter(
 					(post) => post?.followerId === userId
 				);
@@ -74,13 +86,18 @@ const LeftNav = ({ followingCount, postCount }) => {
 				const followers = data.filter((item) =>
 					item?.followingIds?.includes(userId)
 				);
-
 				setFollowing(followers);
+
+				const followerIds = followers.map((fol) => fol.followerId);
+				const followerUserDetails = users.filter((user) =>
+					followerIds.includes(user._id)
+				);
+				setFollowersDetails(followerUserDetails);
 			})
 			.catch((err) => {
-				console.log(err.message);
+				console.log(err);
 			});
-	}, [userId]);
+	}, [userId, users]);
 
 	const getFollowerCount = (following) => {
 		const followerIds = following.map((fo) => fo?.followerId);
@@ -101,8 +118,6 @@ const LeftNav = ({ followingCount, postCount }) => {
 				setFeedback(sentTo);
 			});
 	}, [matchedUser]);
-
-	console.log("feedback", feedback);
 
 	const [dominantColor, setDominantColor] = useState("");
 
@@ -170,11 +185,11 @@ const LeftNav = ({ followingCount, postCount }) => {
 	}, [matchedUser?.image]);
 
 	return (
-		<div className="bg-white shadow-md rounded-lg w-[340px]">
+		<div className="bg-white shadow-md rounded-md w-[340px] border-4 border-[#7C9D96]">
 			<div className="flex flex-col">
 				<div className="relative flex flex-col items-center justify-center gap-2 px-4 text-center">
 					<div
-						className="absolute top-0 w-full rounded-t-lg"
+						className="absolute top-0 w-full"
 						style={{
 							backgroundColor: dominantColor,
 							minHeight: "80px",
@@ -193,11 +208,11 @@ const LeftNav = ({ followingCount, postCount }) => {
 						</div>
 					</div>
 					<div>
-						<p className="text-xl font-semibold text-gray-600">
+						<p className="text-base font-semibold text-gray-600">
 							{matchedUser?.name}
 						</p>
 						{matchedUser?.userName && (
-							<p className="mb-3 text-sm font-semibold text-gray-400">
+							<p className="mb-3 text-xs font-semibold text-gray-400">
 								@{matchedUser.userName}
 							</p>
 						)}
@@ -234,7 +249,7 @@ const LeftNav = ({ followingCount, postCount }) => {
 
 				<div>
 					<nav className="my-2 ml-5">
-						<ul className="flex md:flex-col flex-row gap-3 text-xl text-[#32308E] font-semibold">
+						<ul className="flex flex-row gap-3 text-xl font-semibold text-gray-600 md:flex-col">
 							<ActiveLink to={"/"}>
 								<li className="flex items-center justify-start gap-3">
 									<HomeIcon className="bg-transparent" />
@@ -288,12 +303,12 @@ const LeftNav = ({ followingCount, postCount }) => {
 											</h3>
 										</div>
 										<div className="p-1 font-semibold text-gray-600 bg-white rounded-md">
-											<p>From Admin.</p>
 											{feedback.map((feed) => (
 												<div
 													key={feed._id}
 													className="my-2"
 												>
+													<p>From Admin.</p>
 													{/* <p>{feed.to[0]}</p> */}
 													<p>
 														Feedback:{" "}
@@ -321,12 +336,23 @@ const LeftNav = ({ followingCount, postCount }) => {
 									</ul>
 								</div>
 							</div>
-							<ActiveLink to={"/profile"}>
-								<li className="flex items-center justify-start gap-3">
-									<AccountCircleIcon className="bg-transparent" />{" "}
-									Profile
-								</li>
-							</ActiveLink>
+
+							{role ? (
+								<ActiveLink to={"/admin"}>
+									<li className="flex items-center justify-start gap-3">
+										<AccountCircleIcon className="bg-transparent" />{" "}
+										Admin
+									</li>
+								</ActiveLink>
+							) : (
+								<ActiveLink to={"/profile"}>
+									<li className="flex items-center justify-start gap-3">
+										<AccountCircleIcon className="bg-transparent" />{" "}
+										Profile
+									</li>
+								</ActiveLink>
+							)}
+
 							<p to={"/settings"}>
 								<li className="flex items-center justify-start gap-3">
 									<SettingsIcon className="bg-transparent" />{" "}

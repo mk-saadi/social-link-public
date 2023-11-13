@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { MdAddCircle, MdMore } from "react-icons/md";
+import { RiUserFollowFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const RightNav = ({ updateFollowingCount }) => {
@@ -72,9 +74,9 @@ const RightNav = ({ updateFollowingCount }) => {
 	};
 
 	return (
-		<div className="bg-white shadow-md rounded-lg w-full xl:w-[340px]">
+		<div className="bg-white shadow-md rounded-md w-full xl:w-[340px] border-4 border-[#7C9D96]">
 			<div className="flex flex-col">
-				<p className="p-4 text-lg font-semibold text-gray-600 lg:text-xl">
+				<p className="p-2 text-lg font-semibold text-gray-600 lg:text-xl">
 					People you may know
 				</p>
 
@@ -132,10 +134,10 @@ const RightNav = ({ updateFollowingCount }) => {
 												</div>
 											</div>
 											<div>
-												<p className="font-sans text-gray-600 hover:underline">
+												<p className="font-sans text-sm text-gray-600 hover:underline">
 													{formatText(user?.name, 14)}
 												</p>
-												<p className="hidden text-sm font-semibold text-gray-500 lg:block">
+												<p className="hidden text-xs font-semibold text-gray-400 lg:block">
 													@
 													{formatText(
 														user?.userName,
@@ -150,14 +152,21 @@ const RightNav = ({ updateFollowingCount }) => {
 												handleFollow(user?._id)
 											}
 										>
-											{followingState[user?._id]
-												? "Following"
-												: "Follow"}
+											{followingState[user?._id] ? (
+												<RiUserFollowFill className="text-3xl opacity-80 text-[#7C9D96]" />
+											) : (
+												<MdAddCircle className="text-3xl opacity-80 text-[#7C9D96]" />
+											)}
 										</div>
 									</div>
 								))}
 						</>
 					)}
+				</div>
+				<div className="text-center bg-[#7C9D96] text-white font-semibold p-2">
+					<p className="flex items-center justify-center gap-3 cursor-pointer">
+						Show more <MdMore className="text-2xl" />
+					</p>
 				</div>
 			</div>
 		</div>

@@ -112,9 +112,9 @@ const TopNavbar = () => {
 			<div className="flex items-center justify-start flex-1 gap-4 ">
 				<Link
 					to="/"
-					className="text-2xl text-center font-bold  text-[#32308E] opacity-80 hidden md:block"
+					className="text-2xl text-center font-bold  text-[#7C9D96] opacity-80 hidden md:block"
 				>
-					Social<span className="text-[#2a295f]">Link</span>
+					Social<span className="text-[#7C9D96]">Link</span>
 				</Link>
 			</div>
 

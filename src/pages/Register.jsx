@@ -52,8 +52,8 @@ const SignUp = () => {
 			const selectedFile = event.target.files[0];
 
 			const options = {
-				maxSizeMB: 0.2,
-				maxWidthOrHeight: 600,
+				maxSizeMB: 0.1,
+				maxWidthOrHeight: 400,
 			};
 
 			try {
