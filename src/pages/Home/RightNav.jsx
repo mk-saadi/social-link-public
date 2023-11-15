@@ -1,15 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdAddCircle, MdMore } from "react-icons/md";
 import { RiUserFollowFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
 
-const RightNav = ({ updateFollowingCount, dominantColor }) => {
+const RightNav = ({ updateFollowingCount, postCount }) => {
 	const [users, setUsers] = useState([]);
 	const userId = localStorage.getItem("social_id");
 	const [followingState, setFollowingState] = useState({});
 	const [exclude, setExclude] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const { dominantColor } = useContext(DominantColorContext);
 
 	const getUsers = async () => {
 		const response = await axios.get(
@@ -147,7 +149,7 @@ const RightNav = ({ updateFollowingCount, dominantColor }) => {
 											</div>
 										</Link>
 										<div
-											className="text-[#32308E] font-semibold hover:underline cursor-pointer"
+											className="cursor-pointer"
 											onClick={() =>
 												handleFollow(user?._id)
 											}
@@ -173,14 +175,15 @@ const RightNav = ({ updateFollowingCount, dominantColor }) => {
 						</>
 					)}
 				</div>
-				<div
+				<Link
+					to="/allUsers"
 					className="p-2 text-base font-semibold text-center text-white rounded-b-md"
 					style={{ backgroundColor: dominantColor }}
 				>
 					<p className="flex items-center justify-center gap-3 cursor-pointer">
 						Show more <MdMore className="text-2xl" />
 					</p>
-				</div>
+				</Link>
 			</div>
 		</div>
 	);

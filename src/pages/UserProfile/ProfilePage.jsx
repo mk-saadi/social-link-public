@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import { Box, Divider, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import TopNavbar from "../../component/shared/TopNavbar";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
 
 const ProfilePage = () => {
 	const [user, setUser] = useState([]);
@@ -18,6 +19,7 @@ const ProfilePage = () => {
 	const [following, setFollowing] = useState([]);
 	const [followingState, setFollowingState] = useState({});
 	const [indeedFollow, setIndeedFollow] = useState([]);
+	const { dominantColor } = useContext(DominantColorContext);
 
 	const [newFollow, setNewFollow] = useState(0);
 
@@ -176,76 +178,6 @@ const ProfilePage = () => {
 			});
 	}, []);
 
-	const [dominantColor, setDominantColor] = useState("");
-
-	useEffect(() => {
-		const imageUrl = user?.image;
-		if (imageUrl) {
-			const img = new Image();
-			img.crossOrigin = "Anonymous";
-			img.src = imageUrl;
-
-			img.onload = function () {
-				const canvas = document.createElement("canvas");
-				const ctx = canvas.getContext("2d");
-
-				canvas.width = img.width;
-				canvas.height = img.height;
-				ctx.drawImage(img, 0, 0, img.width, img.height);
-
-				const imageData = ctx.getImageData(
-					0,
-					0,
-					canvas.width,
-					canvas.height
-				).data;
-
-				function isLightColor(r, g, b) {
-					const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-					return brightness > 220; // Adjust the threshold for light colors
-				}
-				const colorCount = {};
-				for (let i = 0; i < imageData.length; i += 4) {
-					const hexColor = `#${(
-						(1 << 24) +
-						(imageData[i] << 16) +
-						(imageData[i + 1] << 8) +
-						imageData[i + 2]
-					)
-						.toString(16)
-						.slice(1)}`;
-
-					if (
-						colorCount[hexColor] &&
-						!isLightColor(
-							imageData[i],
-							imageData[i + 1],
-							imageData[i + 2]
-						) &&
-						hexColor !== "#ffffff"
-					) {
-						colorCount[hexColor] += 1;
-					} else if (
-						!isLightColor(
-							imageData[i],
-							imageData[i + 1],
-							imageData[i + 2]
-						) &&
-						hexColor !== "#ffffff"
-					) {
-						colorCount[hexColor] = 1;
-					}
-				}
-
-				const dominantColorHex = Object.keys(colorCount).reduce(
-					(a, b) => (colorCount[a] > colorCount[b] ? a : b)
-				);
-
-				setDominantColor(dominantColorHex);
-			};
-		}
-	}, [user?.image]);
-
 	return (
 		<div className="min-h-screen">
 			<div
@@ -285,7 +217,7 @@ const ProfilePage = () => {
 									{user?.name}
 								</h2>
 								<p className="text-lg text-gray-400 md:text-gray-200">
-									{user?.userName}
+									@{user?.userName}
 								</p>
 							</div>
 							<div className="flex items-center justify-center w-full gap-4 mt-1 font-semibold text-gray-400 md:text-gray-200 lg:justify-start">

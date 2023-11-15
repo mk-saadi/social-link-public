@@ -10,6 +10,7 @@ import ProfilePage from "../pages/UserProfile/ProfilePage";
 import AdminRoute from "./AdminRoute";
 import Admin from "../pages/adminDashboard/Admin";
 import ViewPost from "../pages/Home/ViewPost";
+import AllUsers from "../pages/allUsers/AllUsers";
 
 const router = createBrowserRouter([
 	{
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
 			{
 				path: "/profile",
 				element: <UserProfile />,
+			},
+			{
+				path: "/allUsers",
+				element: <AllUsers />,
 			},
 		],
 	},

@@ -1,17 +1,30 @@
 // import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
+import { styled } from "@mui/material/styles";
+// import AppBar from "@mui/material/AppBar";
+// import Box from "@mui/material/Box";
+// import Toolbar from "@mui/material/Toolbar";
+// import IconButton from "@mui/material/IconButton";
+// import Typography from "@mui/material/Typography";
+// import MenuIcon from "@mui/icons-material/Menu";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
 
 // search input field
 const Search = styled("div")(({ theme }) => ({
@@ -61,8 +74,31 @@ const TopNavbar = () => {
 	const [user, setUser] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [searchResults, setSearchResults] = useState([]);
+	const { dominantColor } = useContext(DominantColorContext);
 
 	const userId = localStorage.getItem("social_id");
+
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+
+	const handleClick = (event) => {
+		if (anchorEl === null) {
+			setAnchorEl(event.currentTarget);
+			document.body.classList.add("menu-open");
+		} else {
+			setAnchorEl(null); // Close the menu
+		}
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+		document.body.classList.remove("menu-open");
+	};
+
+	const handleLogout = () => {
+		localStorage.removeItem("social_id");
+		window.location.reload();
+	};
 
 	useEffect(() => {
 		axios
@@ -77,7 +113,7 @@ const TopNavbar = () => {
 				setUsers(data);
 			})
 			.catch((err) => {
-				// console.log(err.message);
+				console.log(err.message);
 			});
 	}, [userId]);
 	// console.log("top navbar", user);
@@ -107,14 +143,82 @@ const TopNavbar = () => {
 		setSearchResults([]);
 	};
 
+	console.log("user image", user.image);
+
+	// const [dominantColor, setDominantColor] = useState("");
+
+	// useEffect(() => {
+	// 	const imageUrl = user.map((us) => us.image);
+	// 	if (imageUrl) {
+	// 		const img = new Image();
+	// 		img.crossOrigin = "Anonymous";
+	// 		img.src = imageUrl;
+
+	// 		img.onload = function () {
+	// 			const canvas = document.createElement("canvas");
+	// 			const ctx = canvas.getContext("2d");
+
+	// 			canvas.width = img.width;
+	// 			canvas.height = img.height;
+	// 			ctx.drawImage(img, 0, 0, img.width, img.height);
+
+	// 			const imageData = ctx.getImageData(
+	// 				0,
+	// 				0,
+	// 				canvas.width,
+	// 				canvas.height
+	// 			).data;
+
+	// 			// Count colors in an object
+	// 			const brightnessThreshold = 220; // Adjust this value to change the brightness threshold
+
+	// 			const colorCount = {};
+	// 			for (let i = 0; i < imageData.length; i += 4) {
+	// 				const hexColor = `#${(
+	// 					(1 << 24) +
+	// 					(imageData[i] << 16) +
+	// 					(imageData[i + 1] << 8) +
+	// 					imageData[i + 2]
+	// 				)
+	// 					.toString(16)
+	// 					.slice(1)}`;
+
+	// 				// Calculate the brightness of the color
+	// 				const colorRed = imageData[i];
+	// 				const colorGreen = imageData[i + 1];
+	// 				const colorBlue = imageData[i + 2];
+	// 				const brightness = (colorRed + colorGreen + colorBlue) / 3;
+
+	// 				// Skip light colors and white color
+	// 				if (brightness > brightnessThreshold) {
+	// 					continue;
+	// 				}
+
+	// 				if (colorCount[hexColor]) {
+	// 					colorCount[hexColor] += 1;
+	// 				} else {
+	// 					colorCount[hexColor] = 1;
+	// 				}
+	// 			}
+
+	// 			const dominantColorHex = Object.keys(colorCount).reduce(
+	// 				(a, b) => (colorCount[a] > colorCount[b] ? a : b)
+	// 			);
+
+	// 			setDominantColor(dominantColorHex);
+	// 		};
+	// 	}
+	// }, [user]);
+
 	return (
-		<div className="flex bg-white shadow-md px-7">
+		<div className="flex py-1 bg-white shadow-md px-7">
 			<div className="flex items-center justify-start flex-1 gap-4 ">
 				<Link
 					to="/"
-					className="text-2xl text-center font-bold  text-[#7C9D96] opacity-80 hidden md:block"
+					className="hidden text-2xl font-bold text-center opacity-80 md:block"
+					style={{ color: dominantColor }}
 				>
-					Social<span className="text-[#7C9D96]">Link</span>
+					Social<span className="">Link</span>
 				</Link>
 			</div>
 
@@ -155,15 +259,110 @@ const TopNavbar = () => {
 							</div>
 						)}
 					</div>
-
+					{/* 
 					<label
 						tabIndex={0}
 						className="btn btn-ghost btn-circle avatar"
 					>
-						<div className="w-10 rounded-full">
+						<div className="object-cover w-10 rounded-full lg:w-14">
 							<img src={user.map((us) => us.image)} />
 						</div>
-					</label>
+					</label> */}
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							textAlign: "center",
+						}}
+					>
+						<Tooltip title="Account settings">
+							<IconButton
+								onClick={handleClick}
+								size="small"
+								sx={{ ml: 2 }}
+								aria-controls={
+									open ? "account-menu" : undefined
+								}
+								aria-haspopup="true"
+								aria-expanded={open ? "true" : undefined}
+							>
+								<Avatar className="object-cover w-10 rounded-full lg:w-14">
+									<img src={user.map((us) => us?.image)} />
+								</Avatar>
+							</IconButton>
+						</Tooltip>
+					</Box>
+
+					<Menu
+						anchorEl={anchorEl}
+						id="account-menu"
+						open={open}
+						onClose={handleClose}
+						onClick={handleClose}
+						PaperProps={{
+							elevation: 0,
+							sx: {
+								overflow: "visible",
+								filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+								mt: 1.5,
+								"& .MuiAvatar-root": {
+									width: 32,
+									height: 32,
+									ml: -0.5,
+									mr: 1,
+								},
+								"&:before": {
+									content: '""',
+									display: "block",
+									position: "absolute",
+									top: 0,
+									right: 14,
+									width: 10,
+									height: 10,
+									bgcolor: "background.paper",
+									transform: "translateY(-50%) rotate(45deg)",
+									zIndex: 0,
+								},
+							},
+						}}
+						transformOrigin={{
+							horizontal: "right",
+							vertical: "top",
+						}}
+						anchorOrigin={{
+							horizontal: "right",
+							vertical: "bottom",
+						}}
+					>
+						<MenuItem onClick={handleClose}>
+							<Avatar /> Profile
+						</MenuItem>
+						<MenuItem onClick={handleClose}>
+							<Avatar /> My account
+						</MenuItem>
+						<Divider />
+						<MenuItem onClick={handleClose}>
+							<ListItemIcon>
+								<PersonAdd fontSize="small" />
+							</ListItemIcon>
+							Add another account
+						</MenuItem>
+						<MenuItem onClick={handleClose}>
+							<ListItemIcon>
+								<Settings fontSize="small" />
+							</ListItemIcon>
+							Settings
+						</MenuItem>
+						<MenuItem
+							onClick={handleClose}
+							onMouseDown={handleLogout}
+						>
+							<ListItemIcon>
+								<Logout fontSize="small" />
+							</ListItemIcon>
+							Logout
+						</MenuItem>
+					</Menu>
 				</div>
 			</div>
 		</div>

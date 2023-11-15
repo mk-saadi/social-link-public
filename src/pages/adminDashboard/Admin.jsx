@@ -1,24 +1,32 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Toast from "../../hook/Toast";
 import useToast from "../../hook/useToast";
-// import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
+import {
+	styled,
+	AppBar,
+	Box,
+	IconButton,
+	InputBase,
+	Toolbar,
+	Typography,
+	Tabs,
+	Tab,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	TablePagination,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { TabPanel } from "@mui/lab";
 import PropTypes from "prop-types";
 import ReportCom from "./adminComponent/ReportCom";
 
+// Styled components
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
 	borderRadius: theme.shape.borderRadius,
@@ -49,20 +57,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	color: "6b7280",
 	"& .MuiInputBase-input": {
 		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
 		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
 		transition: theme.transitions.create("width"),
 		width: "100%",
 		[theme.breakpoints.up("sm")]: {
 			width: "26ch",
-			// "&:focus": {
-			// 	width: "34ch",
-			// },
 		},
 	},
 }));
 
-// tab
+// Tab
 function CustomTabPanel(props) {
 	const { children, value, index, ...other } = props;
 
@@ -89,30 +93,40 @@ CustomTabPanel.propTypes = {
 	value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-	return {
-		id: `simple-tab-${index}`,
-		"aria-controls": `simple-tabpanel-${index}`,
-	};
-}
-
+// Main component
 const Admin = () => {
+	// State variables
 	const [user, setUser] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const social_id = localStorage.getItem("social_id");
 	const [users, setUsers] = useState([]);
 	const [report, setReport] = useState([]);
-	// const [posts, setPosts] = useState([]);
 	const [feedback, setFeedback] = useState([]);
 	const [searchResults, setSearchResults] = useState([]);
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(5);
 
+	// Toast handling
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
-	const [value, setValue] = useState(0);
 
+	// Tab handling
+	const [value, setValue] = useState(0);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
+	// Page change handling
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
+	};
+
+	// Rows per page change handling
+	const handleChangeRowsPerPage = (event) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
+	};
+
+	// Fetch user data on mount
 	useEffect(() => {
 		axios
 			.get("https://social-link-server-liard.vercel.app/users")
@@ -127,6 +141,7 @@ const Admin = () => {
 			});
 	}, [social_id]);
 
+	// Handle user deletion
 	const handleDelete = (id) => {
 		const confirmDelete = window.confirm(
 			"Are you sure you want to delete this user from the database?"
@@ -142,81 +157,49 @@ const Admin = () => {
 				.then((response) => {
 					showToast("success", "Successfully deleted user!");
 
-					console.log("User deleted successfully:", response.data);
-					// You may want to refresh the user list or perform other actions after deletion
 					const filteredUsers = users.filter(
 						(user) => user._id !== id
 					);
-
-					// Update the user list state with the filtered data
 					setUsers(filteredUsers);
-					// Refresh the user list or perform other actions after deletion
 				})
 				.catch((error) => {
 					showToast("error", "Error deleting user!");
 					console.error("Error deleting user:", error);
-					// Handle the error gracefully, display a message to the user, or take appropriate action
 				});
 		}
 	};
 
+	// Set search results on user change
 	useEffect(() => {
 		setSearchResults(users);
 	}, [users]);
 
-	console.log(searchResults);
-
-	// const handleSearch = (event) => {
-	// 	const searchInputValue = event.target.value;
-
-	// 	let searchResults = [];
-
-	// 	if (searchInputValue.startsWith("@")) {
-	// 		// Search by username
-	// 		searchResults = users.filter((user) => {
-	// 			return user.userName
-	// 				.toLowerCase()
-	// 				.includes(searchInputValue.toLowerCase().substring(1));
-	// 		});
-	// 	} else {
-	// 		// Don't search by username if "@" is not present
-	// 		searchResults = users.filter((user) =>
-	// 			user.name.toLowerCase().includes(searchInputValue.toLowerCase())
-	// 		);
-	// 	}
-
-	// 	setSearchResults(searchResults);
-	// };
-
+	// Search functionality
 	const handleSearch = (event) => {
-		const searchInputValue = event.target.value;
+		const searchInputValue = event.target.value.toLowerCase();
 
 		let searchResults = [];
 
 		if (searchInputValue.startsWith("@")) {
-			// Search by username
 			searchResults = users.filter((user) =>
 				user.userName
 					.toLowerCase()
-					.includes(searchInputValue.toLowerCase().substring(1))
+					.includes(searchInputValue.substring(1))
 			);
 		} else if (searchInputValue.startsWith("#")) {
-			// Search by _id
 			searchResults = users.filter(
 				(user) => user._id === searchInputValue.substring(1)
 			);
 		} else {
-			// Don't search by username if "@" is not present
 			searchResults = users.filter((user) =>
-				user.name.toLowerCase().includes(searchInputValue.toLowerCase())
+				user.name.toLowerCase().includes(searchInputValue)
 			);
 		}
 
 		setSearchResults(searchResults);
 	};
 
-	// >> report api
-	// has post id as postId and userName as userName
+	// Fetch report data on mount
 	useEffect(() => {
 		axios
 			.get("https://social-link-server-liard.vercel.app/report")
@@ -231,20 +214,7 @@ const Admin = () => {
 	}, []);
 	console.log("report", report);
 
-	// >> posts api
-	// has post _id
-	// useEffect(() => {
-	// 	axios
-	// 		.get("https://social-link-server-liard.vercel.app/posts")
-	// 		.then((res) => res.data)
-	// 		.then((data) => {
-	// 			setPosts(data);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err.message);
-	// 		});
-	// }, []);
-
+	// Fetch feedback data on mount
 	useEffect(() => {
 		axios
 			.get("https://social-link-server-liard.vercel.app/feedback")
@@ -257,8 +227,16 @@ const Admin = () => {
 			});
 	}, []);
 
+	// Accessibility helper function
+	function a11yProps(index) {
+		return {
+			id: `simple-tab-${index}`,
+			"aria-controls": `simple-tabpanel-${index}`,
+		};
+	}
+
 	return (
-		<div className="grid h-screen grid-cols-3 overflow-hidden max-w-[1080px] mx-auto">
+		<div className="container flex flex-col h-screen mx-auto overflow-hidden md:flex-row">
 			{toastType && (
 				<Toast
 					type={toastType}
@@ -266,43 +244,45 @@ const Admin = () => {
 					onHide={hideToast}
 				/>
 			)}
-			<div className="flex flex-col items-center justify-center bg-white shadow-md">
-				<div className="avatar">
-					<div className="object-cover shadow-md drop-shadow-md rounded-xl w-44">
+			{/* Sidebar */}
+			<div className="pt-5 bg-white shadow-md lg:w-2/6 md:pt-16">
+				<div className="w-full text-center avatar">
+					<div className="object-cover w-32 mx-auto shadow-md drop-shadow-md rounded-xl md:w-52">
 						<img
-							src={user?.image || ""}
+							src={user?.image}
 							alt="person"
 						/>
 					</div>
 				</div>
-				<p className="mt-3 text-2xl font-semibold text-gray-600">
-					{user?.role}
-				</p>
-				<p className="text-2xl font-semibold text-gray-600">
-					{user?.name}
-				</p>
-
-				<p className="font-semibold text-gray-400">{user?.userName}</p>
+				<div className="text-center">
+					<p className="mt-3 text-sm font-semibold text-gray-600 uppercase">
+						{user?.role}
+					</p>
+					<p className="text-2xl font-semibold text-gray-600">
+						{user?.name}
+					</p>
+					<p className="text-gray-400 ">{user?.userName}</p>
+				</div>
 			</div>
 
+			{/* Main content */}
 			<Box
-				className="col-span-2 overflow-y-auto hideScrollBar"
+				className="w-full overflow-y-auto hideScrollBar"
 				sx={{ width: "100%" }}
 			>
-				{/* <Box sx={{ width: '100%' }}> */}
 				<Box
 					sx={{
 						borderBottom: 2,
 						borderColor: "divider",
 						fontWeight: "700",
 					}}
+					className="mb-10"
 				>
 					<Tabs
 						value={value}
 						onChange={handleChange}
-						centered
 						aria-label="basic tabs example"
-						className="bg-whie"
+						className="fixed z-10 w-full bg-white shadow-sm"
 						sx={{ fontWeight: "600" }}
 					>
 						<Tab
@@ -320,6 +300,7 @@ const Admin = () => {
 					</Tabs>
 				</Box>
 
+				{/* Users Tab */}
 				<CustomTabPanel
 					value={value}
 					index={0}
@@ -334,56 +315,89 @@ const Admin = () => {
 							</SearchIconWrapper>
 							<StyledInputBase
 								sx={{ fontSize: "15px" }}
-								placeholder="search user"
+								className="py-2"
+								placeholder="Search user"
 								inputProps={{ "aria-label": "search" }}
 							/>
 						</Search>
 					</div>
 
-					{searchResults
-						.filter((us) => us._id !== user?._id)
-						.reverse()
-						.map((us) => (
-							<div
-								key={us._id}
-								className="flex items-center justify-start gap-4 m-2 mx-6 bg-white rounded-md"
-							>
-								<Link
-									to={`/profilePage/${us?.userName}`}
-									className="avatar hover:shadow-sm"
-								>
-									<div className="object-cover w-16 rounded-md">
-										<img
-											src={us?.image || ""}
-											alt="person"
-										/>
-									</div>
-								</Link>
+					<TableContainer>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<TableCell>Avatar</TableCell>
+									<TableCell>Name</TableCell>
+									<TableCell>Username</TableCell>
+									<TableCell>Action</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{searchResults
+									.filter((us) => us._id !== user?._id)
+									.slice(
+										page * rowsPerPage,
+										page * rowsPerPage + rowsPerPage
+									)
+									.reverse()
+									.map((us) => (
+										<TableRow key={us._id}>
+											<TableCell>
+												<Link
+													to={`/profilePage/${us?.userName}`}
+													className="avatar hover:shadow-sm"
+												>
+													<div className="object-cover w-16 rounded-md">
+														<img
+															src={
+																us?.image || ""
+															}
+															alt="person"
+														/>
+													</div>
+												</Link>
+											</TableCell>
+											<TableCell>
+												<Link
+													className="text-base font-semibold text-gray-600 hover:underline"
+													to={`/profilePage/${us?.userName}`}
+												>
+													{us?.name}
+												</Link>
+											</TableCell>
+											<TableCell>
+												<p className="text-sm text-gray-400">
+													{us?.userName}
+												</p>
+											</TableCell>
+											<TableCell>
+												<button
+													className="text-base text-red-600"
+													onClick={() =>
+														handleDelete(us?._id)
+													}
+												>
+													Delete
+												</button>
+											</TableCell>
+										</TableRow>
+									))}
+							</TableBody>
+						</Table>
+					</TableContainer>
 
-								<div className="flex-1">
-									<Link
-										className="text-base font-semibold text-gray-600 hover:underline"
-										to={`/profilePage/${us?.userName}`}
-									>
-										{us?.name}
-									</Link>
-									<p className="text-sm text-gray-400">
-										{us?.userName}
-									</p>
-								</div>
-
-								<div className="pr-2 text-base font-semibold text-error">
-									<button
-										className=""
-										onClick={() => handleDelete(us?._id)}
-									>
-										Delete
-									</button>
-								</div>
-							</div>
-						))}
+					<TablePagination
+						rowsPerPageOptions={[5, 10, 25]}
+						component="div"
+						count={searchResults.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onPageChange={handleChangePage}
+						onRowsPerPageChange={handleChangeRowsPerPage}
+					/>
 				</CustomTabPanel>
 
+				{/* Reports Tab */}
 				<CustomTabPanel
 					value={value}
 					index={1}
@@ -396,11 +410,12 @@ const Admin = () => {
 					</div>
 				</CustomTabPanel>
 
+				{/* Third Tab (Statistics) */}
 				<CustomTabPanel
 					value={value}
 					index={2}
 				>
-					<div>statistic</div>
+					<div>Statistics</div>
 				</CustomTabPanel>
 			</Box>
 		</div>

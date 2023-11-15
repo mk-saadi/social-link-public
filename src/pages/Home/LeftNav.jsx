@@ -6,15 +6,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ActiveLink from "../../hook/ActiveLink";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
+// import DominantColorContext from "../../hook/DominantColorProvider";
 
 const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 	const [users, setUsers] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [follow, setFollow] = useState([]);
-	const [following, setFollowing] = useState([]);
+	const [followers, setFollowers] = useState([]);
 	const [feedback, setFeedback] = useState([]);
 	const [followingDetails, setFollowingDetails] = useState([]); // users details of the current user is following
 	const [followersDetails, setFollowersDetails] = useState([]); // users details of the current user is being followed
@@ -23,6 +25,7 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 
 	const handleLogout = () => {
 		localStorage.removeItem("social_id");
+		sessionStorage.removeItem("dominantColor");
 		window.location.reload();
 	};
 
@@ -68,13 +71,12 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 				// Get the followingIds of the current user
 				const followingIds = data.find(
 					(follow) => follow?.followerId === userId
-				)?.followingIds; // i have the user's id
+				)?.followingIds;
 
-				// Filter the users array to get the details of the users that the current user is following
 				const followingUserDetails = users.filter((user) =>
 					followingIds.includes(user._id)
-				); // i need the all the details that id has in stored in "users" state
-				// im not getting that using the function above, what do i do now
+				);
+				console.log("followingUserDetails", followingUserDetails);
 
 				setFollowingDetails(followingUserDetails);
 
@@ -86,7 +88,7 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 				const followers = data.filter((item) =>
 					item?.followingIds?.includes(userId)
 				);
-				setFollowing(followers);
+				setFollowers(followers);
 
 				const followerIds = followers.map((fol) => fol.followerId);
 				const followerUserDetails = users.filter((user) =>
@@ -99,8 +101,8 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 			});
 	}, [userId, users]);
 
-	const getFollowerCount = (following) => {
-		const followerIds = following.map((fo) => fo?.followerId);
+	const getFollowerCount = (followers) => {
+		const followerIds = followers.map((fo) => fo?.followerId);
 		const uniqueFollowerIds = new Set(followerIds);
 		return uniqueFollowerIds.size;
 	};
@@ -119,7 +121,9 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 			});
 	}, [matchedUser]);
 
-	const [dominantColor, setDominantColor] = useState("");
+	// const [dominantColor, setDominantColor] = useState("");
+	const { dominantColor, setDominantColor } =
+		useContext(DominantColorContext);
 
 	useEffect(() => {
 		const imageUrl = matchedUser?.image;
@@ -183,7 +187,7 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 				handleDominantColor(dominantColorHex);
 			};
 		}
-	}, [matchedUser?.image, handleDominantColor]);
+	}, [matchedUser?.image, handleDominantColor, setDominantColor]);
 
 	return (
 		<div className="bg-white shadow-md rounded-md w-[340px]">
@@ -234,7 +238,7 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 
 						<p className="font-semibold cursor-pointer">
 							<span className="text-lg font-semibold text-gray-600">
-								{getFollowerCount(following)}
+								{getFollowerCount(followers)}
 							</span>
 							<br />
 							Followers

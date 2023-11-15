@@ -6,15 +6,24 @@
 	font-family: "Noto Sans";
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+.menu-open {
+	overflow-y: initial !important;
+}
+
+.storyModal::-webkit-scrollbar {
+	overflow-y: auto;
+	display: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
 .hideScrollBar::-webkit-scrollbar {
 	display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .hideScrollBar {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 body {

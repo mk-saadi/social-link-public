@@ -2,7 +2,7 @@
 import { CiMenuKebab } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment, FaShare } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import PostContent from "../../hook/PostContent";
 import { Link } from "react-router-dom";
@@ -22,6 +22,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
 
 const style = {
 	position: "absolute",
@@ -35,7 +36,7 @@ const style = {
 	// boxShadow: 24,
 	p: 4,
 };
-const NewsFeed = ({ updatePostCount, dominantColor }) => {
+const NewsFeed = ({ updatePostCount }) => {
 	// const [like, setLike] = useState(true);
 	const [postsId, setPostsId] = useState("");
 	const [show, setShow] = useState(false);
@@ -50,6 +51,7 @@ const NewsFeed = ({ updatePostCount, dominantColor }) => {
 	// const [showToasts, setShowToast] = useState(true); // initial value was "true"
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
 	const [isFormVisible, setFormVisible] = useState(true);
+	const { dominantColor } = useContext(DominantColorContext);
 
 	// material modal
 	const [open, setOpen] = useState(false);
@@ -291,22 +293,22 @@ const NewsFeed = ({ updatePostCount, dominantColor }) => {
 		}
 	}
 
-	const [scrollPosition, setScrollPosition] = useState(0);
+	// const [scrollPosition, setScrollPosition] = useState(0);
+
+	// useEffect(() => {
+	// 	const handleScroll = () => {
+	// 		setScrollPosition(window.pageYOffset);
+	// 	};
+
+	// 	window.addEventListener("scroll", handleScroll);
+
+	// 	return () => {
+	// 		window.removeEventListener("scroll", handleScroll);
+	// 	};
+	// }, []);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			setScrollPosition(window.pageYOffset);
-		};
-
-		window.addEventListener("scroll", handleScroll);
-
-		return () => {
-			window.removeEventListener("scroll", handleScroll);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (newPostsAvailable && scrollPosition > 0) {
+		if (newPostsAvailable) {
 			// Set a timeout to hide the toast after 4 seconds
 			const timeoutId = setTimeout(() => {
 				setNewPostsAvailable(false);
@@ -315,7 +317,7 @@ const NewsFeed = ({ updatePostCount, dominantColor }) => {
 			// Clear the timeout when the component unmounts or the dependencies change
 			return () => clearTimeout(timeoutId);
 		}
-	}, [newPostsAvailable, scrollPosition]);
+	}, [newPostsAvailable]);
 
 	const handleReport = (event, postId, userName, name, image) => {
 		event.preventDefault();
@@ -370,16 +372,16 @@ const NewsFeed = ({ updatePostCount, dominantColor }) => {
 					onHide={hideToast}
 				/>
 			)}
-			<div className="mx-4 mb-4 md:mx-8 h-36">
-				<StoryNav />
+			<div className="mx-4 mb-20 md:mx-8 h-36">
+				<StoryNav dominantColor={dominantColor} />
 			</div>
 
-			{newPostsAvailable && scrollPosition > 0 && (
-				<div className="fixed top-16 lg:top-28 text-rose-400">
-					<div
-						className="mt-12 toast toast-top toast-center lg:mt-16"
-						style={{ zIndex: "9999" }}
-					>
+			{newPostsAvailable && (
+				<div
+					className="fixed top-16 lg:top-28 text-rose-400"
+					style={{ zIndex: "99999999" }}
+				>
+					<div className="mt-12 toast toast-top toast-center lg:mt-16">
 						<div className="alert bg-white text-gray-600 font-semibold rounded-md shadow-md border-0 ml-[10px]">
 							<p className="flex items-center justify-center gap-2">
 								New post available.{" "}
