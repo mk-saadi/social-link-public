@@ -403,7 +403,7 @@ const NewsFeed = ({ updatePostCount }) => {
 
 			{filteredPosts.map((po) => (
 				<div key={po._id}>
-					<div className="pt-4 mx-4 my-4 bg-white rounded-lg shadow-md md:mx-8">
+					<div className="pt-4 mx-4 my-4 bg-white rounded-lg shadow-md drop-shadow md:mx-8">
 						{/* top bar */}
 						<div className="flex items-center justify-between mx-4">
 							<div className="flex items-center justify-center bg-transparent">

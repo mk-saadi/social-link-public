@@ -76,7 +76,7 @@ const RightNav = ({ updateFollowingCount, postCount }) => {
 	};
 
 	return (
-		<div className="bg-white shadow-md rounded-md w-full xl:w-[340px] ">
+		<div className="bg-white  shadow-md drop-shadow rounded-md w-full xl:w-[340px] ">
 			<div className="flex flex-col">
 				<p className="p-2 text-lg font-semibold text-gray-600">
 					People you may know

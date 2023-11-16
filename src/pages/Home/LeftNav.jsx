@@ -190,7 +190,7 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 	}, [matchedUser?.image, handleDominantColor, setDominantColor]);
 
 	return (
-		<div className="bg-white shadow-md rounded-md w-[340px]">
+		<div className="bg-white  shadow-md drop-shadow rounded-md w-[340px]">
 			<div className="flex flex-col">
 				<div className="relative flex flex-col items-center justify-center gap-2 px-4 text-center">
 					<div
@@ -358,7 +358,9 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 									</li>
 								</ActiveLink>
 							) : (
-								<ActiveLink to={"/profile"}>
+								<ActiveLink
+									to={`/profilePage/${matchedUser?.userName}`}
+								>
 									<li className="flex items-center justify-start gap-3">
 										<AccountCircleIcon className="bg-transparent" />{" "}
 										Profile
@@ -372,7 +374,10 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 									Settings
 								</li>
 							</p>
-							<p onClick={handleLogout}>
+							<p
+								onClick={handleLogout}
+								className="cursor-pointer"
+							>
 								<li className="flex items-center justify-start gap-3">
 									<LogoutIcon className="bg-transparent" />{" "}
 									Logout

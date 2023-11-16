@@ -97,6 +97,7 @@ const TopNavbar = () => {
 
 	const handleLogout = () => {
 		localStorage.removeItem("social_id");
+		sessionStorage.removeItem("dominantColor");
 		window.location.reload();
 	};
 
@@ -143,7 +144,7 @@ const TopNavbar = () => {
 		setSearchResults([]);
 	};
 
-	console.log("user image", user.image);
+	// console.log("user image", user.image);
 
 	// const [dominantColor, setDominantColor] = useState("");
 

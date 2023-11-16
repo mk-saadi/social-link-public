@@ -13,16 +13,14 @@ import imageCompression from "browser-image-compression";
 import useToast from "../../hook/useToast";
 import Toast from "../../hook/Toast";
 import { Box, Fade, Modal, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const style = {
 	position: "absolute",
 	top: "50%",
 	left: "50%",
 	transform: "translate(-50%, -50%)",
-	width: 500,
-	// maxWidth: 400,
-	// maxHeight: 500,
-	// bgcolor: "white",
+	width: 400,
 	borderRadius: "7px",
 	border: "0",
 	filter: "drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))",
@@ -165,22 +163,53 @@ const StoryNav = ({ dominantColor }) => {
 	};
 
 	// material modal
-	const [storyImage, setUploaderImage] = useState("");
+	const [storyImage, setStoryImage] = useState("");
 	const [uploaderName, setUploaderName] = useState("");
+	const [uploaderImage, setUploaderImage] = useState("");
+	const [userName, setUploaderUserName] = useState("");
 
-	const handleOpen = (storyImage, uploaderName) => {
+	const handleOpen = (storyImage, uploaderName, uploaderImage, userName) => {
 		setOpen(true);
-		setUploaderImage(storyImage);
+		setStoryImage(storyImage);
 		setUploaderName(uploaderName);
+		setUploaderImage(uploaderImage);
+		setUploaderUserName(userName);
 	};
 
-	const [open, setOpen] = useState(false);
 	// const handleOpen = () => setOpen(true);
+	const [open, setOpen] = useState(false);
 	const handleClose = () => setOpen(false);
-	const customBackdropStyle = {
-		backgroundColor: "#00000050",
-		// opacity: 0.2,
-	};
+	// const customBackdropStyle = {
+	// 	backgroundColor: "#00000050",
+	// 	// opacity: 0.2,
+	// };
+
+	const [secondsLeft, setSecondsLeft] = useState(10);
+
+	useEffect(() => {
+		let timeoutId;
+		let intervalId;
+
+		if (open) {
+			timeoutId = setTimeout(() => {
+				setOpen(false);
+			}, 10000);
+
+			intervalId = setInterval(() => {
+				setSecondsLeft((prevSecondsLeft) => prevSecondsLeft - 1);
+			}, 1000);
+		}
+
+		return () => {
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+
+			if (intervalId) {
+				clearInterval(intervalId);
+			}
+		};
+	}, [open]);
 
 	return (
 		<div className="grid w-full grid-cols-4 gap-2 md:grid-cols-5">
@@ -283,6 +312,47 @@ const StoryNav = ({ dominantColor }) => {
 				modules={[FreeMode, Pagination]}
 				className="w-full h-full col-span-3 mySwiper md:col-span-4"
 			>
+				{/* current user's story */}
+
+				{story &&
+					story
+						.filter((st) => st?.uploaderId === userId)
+						.map((st) => (
+							<SwiperSlide
+								key={st._id}
+								style={{
+									height: "190px",
+									cursor: "pointer",
+									position: "relative",
+								}}
+							>
+								<a
+									href="#story-modal"
+									onClick={() =>
+										handleOpen(
+											st.storyImage,
+											st.uploaderName,
+											st.uploaderImage,
+											st.userName
+										)
+									}
+								>
+									<img
+										className="object-cover h-full rounded-md shadow-md drop-shadow-md"
+										src={st.uploaderImage}
+										alt=""
+									/>
+								</a>
+
+								<div className="flex items-center justify-center">
+									<p className="absolute bottom-0 w-full shadow-md drop-shadow-md font-semibold text-center text-gray-200 bg-gradient-to-b from-[#005e9401] to-gray-800 py-1 rounded-b-md">
+										{st.uploaderName.slice(0, 12)}
+									</p>
+								</div>
+							</SwiperSlide>
+						))}
+
+				{/* other user's story */}
 				{story
 					.filter((st) => followingUserIds.includes(st?.uploaderId))
 					.map((st) => (
@@ -297,7 +367,12 @@ const StoryNav = ({ dominantColor }) => {
 							<a
 								href="#story-modal"
 								onClick={() =>
-									handleOpen(st.storyImage, st.uploaderName)
+									handleOpen(
+										st.storyImage,
+										st.uploaderName,
+										st.uploaderImage,
+										st.userName
+									)
 								}
 							>
 								<img
@@ -312,53 +387,104 @@ const StoryNav = ({ dominantColor }) => {
 									{st.uploaderName.slice(0, 12)}
 								</p>
 							</div>
-							<Modal
-								aria-labelledby="transition-modal-title"
-								aria-describedby="transition-modal-description"
-								open={open}
-								onClose={handleClose}
-								closeAfterTransition
-								slots={{ backdrop: Backdrop }}
-								slotProps={{
-									backdrop: {
-										style: customBackdropStyle, // Apply the custom backdrop style
-										timeout: 500,
-									},
-								}}
-								className="mx-8"
-							>
-								<Fade in={open}>
-									<Box
-										sx={style}
-										style={{
-											backgroundColor: dominantColor,
-										}}
-									>
-										{/* <Typography
-										id="transition-modal-description"
-										sx={{ borderRadius: "10px" }}
-									>
-									</Typography> */}
-										<div
-											style={{
-												margin: "0px 10px",
-											}}
-										>
-											<img
-												src={storyImage}
-												alt=""
-												className="rounded-md"
-											/>
-											<p>{uploaderName}</p>
-										</div>
-									</Box>
-								</Fade>
-							</Modal>
 						</SwiperSlide>
 					))}
 			</Swiper>
+
+			{open && (
+				<div
+					id="story-modal"
+					className=" modal"
+					open={open}
+				>
+					<div className="bg-white rounded-md modal-box max-h-[80vh]">
+						<div>
+							<h3 className="text-xl font-bold text-gray-600">
+								Story!
+							</h3>
+							<p>{secondsLeft} seconds left</p>
+							<img
+								src={storyImage}
+								alt="story image"
+								className="rounded-md"
+							/>
+							<Link to={`/profilePage/${userName}`}>
+								{uploaderName}
+							</Link>
+							<Link to={`/profilePage/${userName}`}>
+								<div className="avatar">
+									<div className="object-cover rounded-full w-14">
+										<img
+											src={uploaderImage}
+											alt="person"
+										/>
+									</div>
+								</div>
+							</Link>
+						</div>
+
+						<div className="flex items-center justify-between text-base">
+							<div className="modal-action">
+								<a
+									href="#"
+									onClick={handleClose}
+									className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md modal__close "
+								>
+									Go back
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
 
 export default StoryNav;
+
+// <Modal
+// 	aria-labelledby="transition-modal-title"
+// 	aria-describedby="transition-modal-description"
+// 	open={open}
+// 	onClose={handleClose}
+// 	closeAfterTransition
+// 	slots={{ backdrop: Backdrop }}
+// 	slotProps={{
+// 		backdrop: {
+// 			style: customBackdropStyle, // Apply the custom backdrop style
+// 			timeout: 500,
+// 		},
+// 	}}
+// 	className="mx-8"
+// >
+// 	<Fade in={open}>
+// 		<Box
+// 			sx={style}
+// 			style={{
+// 				backgroundColor: dominantColor,
+// 			}}
+// 		>
+// 			{/* <Typography
+// 			id="transition-modal-description"
+// 			sx={{ borderRadius: "10px" }}
+// 		>
+// 		</Typography> */}
+// 			<div
+// 				style={{
+// 					margin: "0px 10px",
+// 				}}
+// 			>
+// 				<Typography>
+// 					{secondsLeft} seconds left
+// 				</Typography>
+// 				<img
+// 					src={storyImage}
+// 					alt=""
+// 					className="rounded-md"
+// 				/>
+// 				<p>{uploaderName}</p>
+// 			</div>
+// 		</Box>
+// 	</Fade>
+// </Modal>

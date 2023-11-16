@@ -16,12 +16,6 @@ const Home = () => {
 		setPostCount(count);
 	};
 
-	// const [dominantColor, setDominantColor] = useState("");
-
-	// const handleDominantColor = (color) => {
-	// 	setDominantColor(color);
-	// };
-
 	return (
 		<div className="min-h-screen mx-auto overflow-x-hidden xl:w-11/12">
 			<div className="grid grid-cols-8">
@@ -32,20 +26,15 @@ const Home = () => {
 					<LeftNav
 						followingCount={followingCount}
 						postCount={postCount}
-						// handleDominantColor={handleDominantColor}
 					/>
 				</div>
 				<div className="hidden xl:col-span-2 xl:block"></div>
 				<div className=" col-span-8 lg:col-span-5 xl:col-span-4 mt-[70px] ">
-					<NewsFeed
-						updatePostCount={updatePostCount}
-						// dominantColor={dominantColor}
-					/>
+					<NewsFeed updatePostCount={updatePostCount} />
 				</div>
-				<div className="md:col-span-2 md:fixed top-[70px] md:right-5 lg:right-6 xl:right-6 hidden md:block h-full">
+				<div className="lg:col-span-2 lg:fixed top-[70px] lg:right-6 xl:right-6 hidden lg:block h-full">
 					<RightNav
 						updateFollowingCount={updateFollowingCount}
-						// dominantColor={dominantColor}
 						postCount={postCount}
 					/>
 				</div>

@@ -261,7 +261,7 @@ const Admin = () => {
 					<p className="text-2xl font-semibold text-gray-600">
 						{user?.name}
 					</p>
-					<p className="text-gray-400 ">{user?.userName}</p>
+					<p className="text-gray-400 ">@{user?.userName}</p>
 				</div>
 			</div>
 
@@ -341,7 +341,12 @@ const Admin = () => {
 									)
 									.reverse()
 									.map((us) => (
-										<TableRow key={us._id}>
+										<TableRow
+											key={us._id}
+											sx={{
+												backgroundColor: "white",
+											}}
+										>
 											<TableCell>
 												<Link
 													to={`/profilePage/${us?.userName}`}

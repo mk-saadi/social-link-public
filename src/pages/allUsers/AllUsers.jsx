@@ -174,15 +174,15 @@ const AllUsers = () => {
 									</div>
 								</div>
 								<div className="absolute bottom-0 grid w-full">
-									<button
-										className="p-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									<Link
+										className="flex items-center justify-center p-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
 										to={`/profilePage/${inc?.userName}`}
 										style={{
 											backgroundColor: dominantColor,
 										}}
 									>
 										View Profile
-									</button>
+									</Link>
 									<button
 										className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md"
 										onClick={() => handleUnfollow(inc._id)}
@@ -268,12 +268,12 @@ const AllUsers = () => {
 												</button>
 											)}
 										</div>
-										<button
-											className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md"
+										<Link
+											className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md flex justify-center items-center"
 											to={`/profilePage/${user?.userName}`}
 										>
 											View Profile
-										</button>
+										</Link>
 									</div>
 								</div>
 							))}
@@ -343,12 +343,12 @@ const AllUsers = () => {
 													</button>
 												)}
 											</div>
-											<button
-												className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md"
+											<Link
+												className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md flex justify-center items-center"
 												to={`/profilePage/${user?.userName}`}
 											>
 												View Profile
-											</button>
+											</Link>
 										</div>
 									</div>
 								))}
