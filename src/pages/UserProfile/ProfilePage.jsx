@@ -27,6 +27,10 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import PhotoList from "./PhotoList";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const style = {
 	position: "absolute",
@@ -97,7 +101,12 @@ const ProfilePage = () => {
 					/>
 				);
 			case "about":
-				return <AboutContent />;
+				return (
+					<AboutContent
+						userName={userName}
+						dominantColor={dominantColor}
+					/>
+				);
 			case "photo":
 				return (
 					<SavedPostsContent
@@ -522,13 +531,17 @@ const ProfilePage = () => {
 								<div className="flex items-center justify-center w-full gap-4 mt-2 font-semibold text-gray-400">
 									<p>
 										Followers -{" "}
-										{getFollowerCount(following)}
+										<span style={{ color: dominantColor }}>
+											{getFollowerCount(following)}
+										</span>
 									</p>
 									<p>
 										Following -{" "}
-										{follow.map(
-											(fo) => fo?.followingIds.length
-										)}
+										<span style={{ color: dominantColor }}>
+											{follow.map(
+												(fo) => fo?.followingIds.length
+											)}
+										</span>
 									</p>
 								</div>
 							</div>
@@ -548,11 +561,11 @@ const ProfilePage = () => {
 											backgroundColor:
 												indeedFollow.includes(user?._id)
 													? "#FFFFFF"
-													: "#32308E",
+													: dominantColor,
 											color: indeedFollow.includes(
 												user?._id
 											)
-												? "#32308E"
+												? dominantColor
 												: "#FFFFFF",
 											display:
 												user?._id === userId
@@ -1247,7 +1260,7 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 									className="flex items-center justify-center gap-2 text-sm"
 									onClick={(postId) => {
 										fetch(
-											`http://localhost:7000/posts/like/${postId}`,
+											`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
 											{
 												method: "PATCH",
 												headers: {
@@ -1376,11 +1389,170 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 	);
 };
 
-const AboutContent = () => {
+const AboutContent = ({ userName, dominantColor }) => {
+	const [relation, setRelation] = useState("");
+	const [about, setAbout] = useState([]);
+
+	const handleChange = (event) => {
+		setRelation(event.target.value);
+	};
+
+	const handleAbout = (event) => {
+		event.preventDefault();
+
+		const form = event.target;
+
+		const bio = form.bio.value;
+		const address = form.address.value;
+		const birthday = form.birthday.value;
+		const facebook = form.facebook.value;
+		const github = form.github.value;
+		const twitter = form.twitter.value;
+		const linkedIn = form.linkedIn.value;
+		const website = form.website.value;
+		const discord = form.discord.value;
+
+		const about = {
+			bio: bio,
+			address: address,
+			birthday: birthday,
+			facebook: facebook,
+			github: github,
+			twitter: twitter,
+			linkedIn: linkedIn,
+			website: website,
+			discord: discord,
+			relation: relation,
+			userName: userName,
+		};
+
+		try {
+			axios
+				.post(
+					"https://social-link-server-liard.vercel.app/about",
+					about
+				)
+				.then((res) => {
+					console.log(res);
+				});
+		} catch (err) {
+			console.log(err.message);
+		}
+	};
+
 	return (
 		<div className="min-h-screen content-panel">
-			<h2>About Content</h2>
-			<p>This is the content for the About tab.</p>
+			<div className="p-3 bg-white">
+				<form onSubmit={handleAbout}>
+					<div className="flex flex-col gap-3">
+						<p className="font-semibold text-gray-400">
+							Tell us something about yourself
+						</p>
+
+						<textarea
+							name="bio"
+							id=""
+							cols="30"
+							rows="5"
+							required
+							placeholder="bio ( you can use markdown language here )"
+							className="bg-[#e5e7eb] outline-none p-2 textarea shadow-md text-gray-600"
+						></textarea>
+						<div className="grid items-center justify-center grid-cols-2 gap-8">
+							<input
+								type="text"
+								name="address"
+								placeholder="your address"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+
+							<input
+								type="date"
+								name="birthday"
+								placeholder="your birthday"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md cursor-pointer"
+							/>
+						</div>
+						<div className="flex items-center justify-start gap-12">
+							<InputLabel id="demo-simple-select-autowidth-label">
+								Relationship status
+							</InputLabel>
+							<Select
+								labelId="demo-simple-select-autowidth-label"
+								id="demo-simple-select-autowidth"
+								value={relation}
+								onChange={handleChange}
+								autoWidth
+								label="Relation"
+							>
+								<MenuItem value="">
+									<em>None</em>
+								</MenuItem>
+								<MenuItem value="single">Single</MenuItem>
+								<MenuItem value="married">Married</MenuItem>
+								<MenuItem value="in a relationship">
+									In a relationship
+								</MenuItem>
+								<MenuItem value="engaged">Engaged</MenuItem>
+								<MenuItem value="it's complicated">
+									It's complicated
+								</MenuItem>
+							</Select>
+						</div>
+						<p className="font-semibold text-gray-400">
+							Your social media links.
+						</p>
+						<div className="grid w-full grid-cols-2 gap-3">
+							<input
+								type="url"
+								name="facebook"
+								placeholder="your facebook profile url"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<input
+								type="url"
+								name="twitter"
+								placeholder="your twitter profile url"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<input
+								type="url"
+								name="discord"
+								placeholder="your discord profile url"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<input
+								type="url"
+								name="linkedIn"
+								placeholder="your linkedIn profile url"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<input
+								type="url"
+								name="github"
+								placeholder="your github profile url"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<input
+								type="url"
+								name="website"
+								placeholder="your website"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+						</div>
+					</div>
+					<div className="flex justify-end w-full mt-4">
+						<input
+							type="submit"
+							value="submit"
+							className="px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+							style={{
+								backgroundColor: dominantColor,
+							}}
+						/>
+					</div>
+				</form>
+			</div>
 		</div>
 	);
 };

@@ -701,7 +701,7 @@ const NewsFeed = ({ updatePostCount }) => {
 									className="flex items-center justify-center gap-2 text-sm"
 									onClick={(postId) => {
 										fetch(
-											`http://localhost:7000/posts/like/${postId}`,
+											`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
 											{
 												method: "PATCH",
 												headers: {
