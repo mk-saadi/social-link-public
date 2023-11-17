@@ -372,7 +372,7 @@ const NewsFeed = ({ updatePostCount }) => {
 					onHide={hideToast}
 				/>
 			)}
-			<div className="mx-4 mb-20 md:mx-8 h-36">
+			<div className="mx-4 mb-20 md:mx-8">
 				<StoryNav dominantColor={dominantColor} />
 			</div>
 

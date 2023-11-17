@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Backdrop from "@mui/material/Backdrop";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 // Import Swiper styles
 import "swiper/css";
@@ -34,6 +35,8 @@ const StoryNav = ({ dominantColor }) => {
 	const [userInfos, setUserInfos] = useState([]);
 	const [currentUser, setCurrentUser] = useState();
 	const [story, setStory] = useState([]);
+
+	console.log(story);
 
 	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
 
@@ -167,24 +170,47 @@ const StoryNav = ({ dominantColor }) => {
 	const [uploaderName, setUploaderName] = useState("");
 	const [uploaderImage, setUploaderImage] = useState("");
 	const [userName, setUploaderUserName] = useState("");
-
-	const handleOpen = (storyImage, uploaderName, uploaderImage, userName) => {
-		setOpen(true);
-		setStoryImage(storyImage);
-		setUploaderName(uploaderName);
-		setUploaderImage(uploaderImage);
-		setUploaderUserName(userName);
-	};
+	const [storyBody, setStoryBody] = useState("");
 
 	// const handleOpen = () => setOpen(true);
 	const [open, setOpen] = useState(false);
-	const handleClose = () => setOpen(false);
+	// const handleClose = () => setOpen(false);
 	// const customBackdropStyle = {
 	// 	backgroundColor: "#00000050",
 	// 	// opacity: 0.2,
 	// };
 
+	const [modalId, setModalId] = useState(0);
 	const [secondsLeft, setSecondsLeft] = useState(10);
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+	const handleOpen = (
+		storyImage,
+		uploaderName,
+		uploaderImage,
+		userName,
+		storyBody
+	) => {
+		setOpen(true);
+		setStoryImage(storyImage);
+		setUploaderName(uploaderName);
+		setUploaderImage(uploaderImage);
+		setUploaderUserName(userName);
+		setStoryBody(storyBody);
+		setSecondsLeft(10);
+		setOpen(true);
+		setModalId((prevId) => prevId + 1); // Update modalId to trigger useEffect
+	};
+
+	// const handleOpen = () => {
+	// 	// Reset the timer when opening the modal
+	// 	setSecondsLeft(10);
+	// 	setOpen(true);
+	// 	setModalId((prevId) => prevId + 1); // Update modalId to trigger useEffect
+	// };
 
 	useEffect(() => {
 		let timeoutId;
@@ -209,10 +235,10 @@ const StoryNav = ({ dominantColor }) => {
 				clearInterval(intervalId);
 			}
 		};
-	}, [open]);
+	}, [open, modalId]);
 
 	return (
-		<div className="grid w-full grid-cols-4 gap-2 md:grid-cols-5">
+		<div className="grid w-full grid-cols-4 gap-2 overflow-x-hidden md:grid-cols-5">
 			{toastType && (
 				<Toast
 					type={toastType}
@@ -304,23 +330,23 @@ const StoryNav = ({ dominantColor }) => {
 					</form>
 				</div>
 			</div>
-
 			<Swiper
 				slidesPerView={3}
 				spaceBetween={15}
 				freeMode={true}
 				modules={[FreeMode, Pagination]}
-				className="w-full h-full col-span-3 mySwiper md:col-span-4"
+				style={{ width: "438px" }}
+				className="w-full h-full col-span-3 mySwiper"
 			>
 				{/* current user's story */}
-
 				{story &&
 					story
 						.filter((st) => st?.uploaderId === userId)
 						.map((st) => (
 							<SwiperSlide
-								key={st._id}
+								key={st?._id}
 								style={{
+									width: "150px", // Set the desired width for each SwiperSlide
 									height: "190px",
 									cursor: "pointer",
 									position: "relative",
@@ -330,23 +356,32 @@ const StoryNav = ({ dominantColor }) => {
 									href="#story-modal"
 									onClick={() =>
 										handleOpen(
-											st.storyImage,
-											st.uploaderName,
-											st.uploaderImage,
-											st.userName
+											st?.storyImage,
+											st?.uploaderName,
+											st?.uploaderImage,
+											st?.userName,
+											st?.storyBody
 										)
 									}
+									style={{ display: "block", height: "100%" }}
 								>
 									<img
-										className="object-cover h-full rounded-md shadow-md drop-shadow-md"
-										src={st.uploaderImage}
+										className="object-cover w-full h-full rounded-md "
+										src={st.storyImage}
 										alt=""
+										style={{
+											width: "100%",
+											height: "100%",
+										}}
 									/>
 								</a>
 
 								<div className="flex items-center justify-center">
-									<p className="absolute bottom-0 w-full shadow-md drop-shadow-md font-semibold text-center text-gray-200 bg-gradient-to-b from-[#005e9401] to-gray-800 py-1 rounded-b-md">
-										{st.uploaderName.slice(0, 12)}
+									<p className="absolute bottom-0 w-full shadow-md drop-shadow-md font-semibold text-sm text-center text-gray-200 bg-gradient-to-b from-[#005e9401] to-gray-800 py-1 rounded-b-lg">
+										{st.uploaderName.lenth > 16
+											? st.uploaderName.slice(0, 16) +
+											  "..."
+											: st.uploaderName}
 									</p>
 								</div>
 							</SwiperSlide>
@@ -359,6 +394,7 @@ const StoryNav = ({ dominantColor }) => {
 						<SwiperSlide
 							key={st._id}
 							style={{
+								width: "150px", // Set the desired width for each SwiperSlide
 								height: "190px",
 								cursor: "pointer",
 								position: "relative",
@@ -376,14 +412,14 @@ const StoryNav = ({ dominantColor }) => {
 								}
 							>
 								<img
-									className="object-cover h-full rounded-md shadow-md drop-shadow-md"
+									className="object-cover h-full rounded-md"
 									src={st.uploaderImage}
 									alt=""
 								/>
 							</a>
 
 							<div className="flex items-center justify-center">
-								<p className="absolute bottom-0 w-full shadow-md drop-shadow-md font-semibold text-center text-gray-200 bg-gradient-to-b from-[#005e9401] to-gray-800 py-1 rounded-b-md">
+								<p className="absolute bottom-0 w-full shadow-md drop-shadow-md font-semibold text-center text-gray-200 bg-gradient-to-b from-[#005e9401] to-gray-800 py-1 rounded-b-lg">
 									{st.uploaderName.slice(0, 12)}
 								</p>
 							</div>
@@ -397,42 +433,47 @@ const StoryNav = ({ dominantColor }) => {
 					className=" modal"
 					open={open}
 				>
-					<div className="bg-white rounded-md modal-box max-h-[80vh]">
+					<div className="bg-white rounded-md modal-box max-h-[80vh] storyModal">
 						<div>
-							<h3 className="text-xl font-bold text-gray-600">
-								Story!
-							</h3>
-							<p>{secondsLeft} seconds left</p>
+							<div className="flex items-center justify-between text-base">
+								<div className="flex items-center gap-3">
+									<Link to={`/profilePage/${userName}`}>
+										<div className="avatar">
+											<div className="object-cover w-12 rounded-full">
+												<img
+													src={uploaderImage}
+													alt="person"
+												/>
+											</div>
+										</div>
+									</Link>
+									<Link
+										to={`/profilePage/${userName}`}
+										className="font-semibold text-gray-600 hover:underline"
+									>
+										{uploaderName}
+									</Link>
+								</div>
+								<HighlightOffIcon
+									onClick={handleClose}
+									fontSize="large"
+									className="text-gray-600 duration-300 cursor-pointer modal__close "
+								/>
+							</div>
+							<div className="flex items-center justify-between gap-3 my-3">
+								<p className="my-3 font-semibold text-gray-600">
+									{storyBody}
+								</p>
+								<p className="my-3 text-right">
+									{secondsLeft} seconds left
+								</p>
+							</div>
+
 							<img
 								src={storyImage}
 								alt="story image"
-								className="rounded-md"
+								className="object-cover w-full min-h-full overflow-hidden rounded-md shadow-md drop-shadow-md"
 							/>
-							<Link to={`/profilePage/${userName}`}>
-								{uploaderName}
-							</Link>
-							<Link to={`/profilePage/${userName}`}>
-								<div className="avatar">
-									<div className="object-cover rounded-full w-14">
-										<img
-											src={uploaderImage}
-											alt="person"
-										/>
-									</div>
-								</div>
-							</Link>
-						</div>
-
-						<div className="flex items-center justify-between text-base">
-							<div className="modal-action">
-								<a
-									href="#"
-									onClick={handleClose}
-									className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md modal__close "
-								>
-									Go back
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
