@@ -15,7 +15,7 @@ import { FaComment, FaShare } from "react-icons/fa";
 import PostContent from "../../hook/PostContent";
 import { BsArrowThroughHeartFill, BsJournalBookmarkFill } from "react-icons/bs";
 import { AiOutlineArrowUp } from "react-icons/ai";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiSolidErrorCircle } from "react-icons/bi";
 import { MdReport } from "react-icons/md";
 import { SiAdblock } from "react-icons/si";
 import { RiUserUnfollowFill } from "react-icons/ri";
@@ -31,6 +31,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import PostContents1 from "../../hook/PostContents1";
+import {
+	FaSquareFacebook,
+	FaXTwitter,
+	FaSquareGithub,
+	FaDiscord,
+} from "react-icons/fa6";
+import { BsLinkedin } from "react-icons/bs";
+import { TbWorld } from "react-icons/tb";
 
 const style = {
 	position: "absolute",
@@ -81,6 +90,8 @@ const ProfilePage = () => {
 
 	const profileUserId = user._id;
 
+	const sameUser = profileUserId === userId;
+
 	// >> tabs functions below
 	const [activeTab, setActiveTab] = useState("post");
 
@@ -105,6 +116,8 @@ const ProfilePage = () => {
 					<AboutContent
 						userName={userName}
 						dominantColor={dominantColor}
+						profileUserId={profileUserId}
+						userId={userId}
 					/>
 				);
 			case "photo":
@@ -256,226 +269,6 @@ const ProfilePage = () => {
 	}, [user.image]);
 
 	return (
-		// <div className="min-h-screen">
-		// 	<div
-		// 		className="fixed top-0 w-full"
-		// 		style={{ zIndex: "999" }}
-		// 	>
-		// 		<TopNavbar />
-		// 	</div>
-		// 	<div className="relative pt-16 mx-auto">
-		// 		<div
-		// 			className="absolute top-0 w-full h-40 rounded-t-lg lg:h-64"
-		// 			style={{
-		// 				backgroundColor: dominantColor,
-		// 			}}
-		// 		></div>
-		// 		<div className="flex flex-col items-center justify-between mx-3 md:flex-row">
-		// 			<div
-		// 				className="flex flex-col items-center justify-center gap-4 md:flex-row"
-		// 				style={{ zIndex: "9" }}
-		// 			>
-		// 				{/* <img
-		// 					className="object-cover h-40 border-4 border-white rounded-full xl:w-72 lg:w-64 w-36 xl:h-72 lg:h-52 drop-shadow-md lg:border-8"
-		// 					src={user?.image}
-		// 					alt=""
-		// 				/> */}
-		// 				<div className="flex items-center justify-center w-full avatar">
-		// 					<div className="object-cover h-auto border-4 border-white rounded-full xl:w-72 lg:w-64 w-44 drop-shadow-md lg:border-8">
-		// 						<img
-		// 							src={user?.image}
-		// 							alt="users avatar"
-		// 						/>
-		// 					</div>
-		// 				</div>
-		// 				<div className="w-full md:mb-2">
-		// 					<div className="flex flex-col items-center justify-start md:items-start">
-		// 						<h2 className="text-2xl font-bold text-center text-gray-600 md:text-white lg:text-4xl md:text-2xl md:text-left whitespace-nowrap">
-		// 							{user?.name}
-		// 						</h2>
-		// 						<p className="text-lg text-gray-400 md:text-gray-200">
-		// 							@{user?.userName}
-		// 						</p>
-		// 					</div>
-		// 					<div className="flex items-center justify-center w-full gap-4 mt-1 font-semibold text-gray-400 md:text-gray-200 lg:justify-start">
-		// 						<p>Followers - {getFollowerCount(following)}</p>
-		// 						<p>
-		// 							Following -{" "}
-		// 							{follow.map(
-		// 								(fo) => fo?.followingIds.length
-		// 							)}
-		// 						</p>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 			{/* 2xl:w-[78%] xl:w-[940px] lg:w-9/12 md:w-9/12 ml-auto lg:mt-5 md:mt-5 */}
-		// 			<div
-		// 				className="w-full mt-3 lg:w-fit"
-		// 				style={{ zIndex: "9" }}
-		// 			>
-		// 				{/**/}
-		// 				<div className="flex flex-col items-center justify-between md:flex-row">
-		// 					<div className="grid justify-end w-full grid-cols-2 gap-4 mt-3 lg:flex lg:mt-0">
-		// 						<button
-		// 							className="py-1 text-lg font-semibold normal-case border-0 rounded-md shadow-md lg:px-4"
-		// 							onClick={() => handleFollow(user?._id)}
-		// 							style={{
-		// 								backgroundColor: indeedFollow.includes(
-		// 									user?._id
-		// 								)
-		// 									? "#FFFFFF"
-		// 									: "#32308E",
-		// 								color: indeedFollow.includes(user?._id)
-		// 									? "#32308E"
-		// 									: "#FFFFFF",
-		// 								display:
-		// 									user?._id === userId
-		// 										? "none"
-		// 										: "block",
-		// 							}}
-		// 						>
-		// 							{indeedFollow.includes(user?._id)
-		// 								? "Following"
-		// 								: "Follow"}
-		// 						</button>
-
-		// 						<button
-		// 							className="py-1 text-lg font-semibold text-gray-600 normal-case bg-white border-0 rounded-md shadow-md lg:px-4"
-		// 							style={{
-		// 								display:
-		// 									user?._id === userId
-		// 										? "none"
-		// 										: "block",
-		// 							}}
-		// 						>
-		// 							<TextsmsIcon /> Message
-		// 						</button>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 		<Divider
-		// 			sx={{
-		// 				mt: {
-		// 					lg: "80px",
-		// 					md: "50px",
-		// 					sm: "50px",
-		// 					xs: "40px",
-		// 				},
-		// 			}}
-		// 		/>
-		// 		<Box sx={{ width: "100%", typography: "body1" }}>
-		// 			<TabContext value={value}>
-		// 				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-		// 					<TabList
-		// 						onChange={handleChange}
-		// 						aria-label="lab API tabs example"
-		// 					>
-		// 						<Tab
-		// 							label="Posts"
-		// 							value="1"
-		// 						/>
-		// 						<Tab
-		// 							label="About"
-		// 							value="2"
-		// 						/>
-		// 						<Tab
-		// 							label="Photos"
-		// 							value="3"
-		// 						/>
-		// 					</TabList>
-		// 				</Box>
-		// 				<TabPanel value="1">
-		// 					<div className="flex flex-col-reverse items-start gap-5 lg:flex-row">
-		// 						<div className="flex flex-col w-full gap-5 ">
-		// 							{posts?.map((post, index) => (
-		// 								<div key={index}>
-		// 									<div className="p-5 bg-white rounded-lg shadow-md">
-		// 										<div className="flex justify-between ">
-		// 											<div className="flex items-center gap-3">
-		// 												<img
-		// 													src={user?.image}
-		// 													className="object-cover w-12 h-12 rounded-full"
-		// 													alt=""
-		// 												/>
-		// 												<div>
-		// 													<h3 className="font-bold">
-		// 														{user?.name}
-		// 													</h3>
-		// 													<p>
-		// 														{
-		// 															post?.timeDifference
-		// 														}
-		// 													</p>
-		// 												</div>
-		// 											</div>
-		// 											<MoreHorizIcon />
-		// 										</div>
-		// 										<div className="mt-5">
-		// 											<p>{post?.name}</p>
-		// 											<div className="mt-5">
-		// 												<img
-		// 													src={post?.image}
-		// 													className="w-full"
-		// 													alt=""
-		// 												/>
-		// 											</div>
-		// 										</div>
-		// 									</div>
-		// 								</div>
-		// 							))}
-		// 						</div>
-		// 						<div className="hidden p-5 bg-white rounded-lg shadow-md lg:w-6/12 lg:block">
-		// 							<div className="flex items-center justify-between mb-3">
-		// 								<h4 className="text-2xl font-bold">
-		// 									Photos
-		// 								</h4>
-		// 								<Link className="text-[#6A67FF]">
-		// 									See More
-		// 								</Link>
-		// 							</div>
-		// 							<div className="grid grid-cols-2 gap-2 rounded-lg">
-		// 								{posts?.map((post, index) => (
-		// 									<div key={index}>
-		// 										<img
-		// 											src={post?.image}
-		// 											className="w-full"
-		// 											alt=""
-		// 										/>
-		// 									</div>
-		// 								))}
-		// 							</div>
-		// 						</div>
-		// 					</div>
-		// 				</TabPanel>
-		// 				<TabPanel value="2">About</TabPanel>
-		// 				<TabPanel value="3">
-		// 					<div className="w-full p-5 bg-white rounded-lg shadow-md">
-		// 						<div className="flex items-center justify-between mb-3">
-		// 							<h4 className="text-2xl font-bold">
-		// 								Photos
-		// 							</h4>
-		// 							<Link className="text-[#6A67FF]">
-		// 								See More
-		// 							</Link>
-		// 						</div>
-		// 						<div className="grid grid-cols-3 gap-5 rounded-lg">
-		// {posts?.map((post, index) => (
-		// 	<div key={index}>
-		// 		<img
-		// 			src={post?.image}
-		// 			className="w-full"
-		// 			alt=""
-		// 		/>
-		// 	</div>
-		// ))}
-		// 						</div>
-		// 					</div>
-		// 				</TabPanel>
-		// 			</TabContext>
-		// 		</Box>
-		// 	</div>
-		// </div>
 		<section className="min-h-screen mx-auto overflow-x-hidden">
 			<div
 				className="fixed top-0 w-full"
@@ -1389,9 +1182,12 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 	);
 };
 
-const AboutContent = ({ userName, dominantColor }) => {
+const AboutContent = ({ userName, dominantColor, profileUserId, userId }) => {
 	const [relation, setRelation] = useState("");
 	const [about, setAbout] = useState([]);
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
+
+	const sameUser = profileUserId === userId;
 
 	const handleChange = (event) => {
 		setRelation(event.target.value);
@@ -1399,6 +1195,8 @@ const AboutContent = ({ userName, dominantColor }) => {
 
 	const handleAbout = (event) => {
 		event.preventDefault();
+
+		showToast("loading", "Please wait!");
 
 		const form = event.target;
 
@@ -1411,6 +1209,7 @@ const AboutContent = ({ userName, dominantColor }) => {
 		const linkedIn = form.linkedIn.value;
 		const website = form.website.value;
 		const discord = form.discord.value;
+		const quote = form.quote.value;
 
 		const about = {
 			bio: bio,
@@ -1423,6 +1222,7 @@ const AboutContent = ({ userName, dominantColor }) => {
 			website: website,
 			discord: discord,
 			relation: relation,
+			quote: quote,
 			userName: userName,
 		};
 
@@ -1434,125 +1234,269 @@ const AboutContent = ({ userName, dominantColor }) => {
 				)
 				.then((res) => {
 					console.log(res);
+					showToast("success", "Bio updated!");
 				});
 		} catch (err) {
 			console.log(err.message);
+			showToast("error", "Failed to submit!");
 		}
 	};
 
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/about")
+			.then((res) => {
+				const data = res.data;
+
+				const about = data.find((da) => da.userName === userName);
+				setAbout(about);
+			});
+	}, [userName]);
+
+	const isAboutAvailable = about !== null;
+	const isAboutAvailableNot = about == null;
+
+	console.log(about);
+
 	return (
-		<div className="min-h-screen content-panel">
-			<div className="p-3 bg-white">
-				<form onSubmit={handleAbout}>
-					<div className="flex flex-col gap-3">
-						<p className="font-semibold text-gray-400">
-							Tell us something about yourself
+		<div className="min-h-screen mx-4 content-panel">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
+
+			<div>
+				{about && (
+					<div className="mt-2 font-semibold text-gray-600">
+						<p className="text-xl font-bold">{about?.quote}</p>
+						<div className="mt-3 mb-4">
+							<PostContents1 content={about?.bio} />
+						</div>
+						<p className="my-1">
+							Is{" "}
+							<span className="capitalize">
+								{about?.relation}
+							</span>
+						</p>
+						<p className="my-1">
+							Lives in -{" "}
+							<span className="capitalize">{about?.address}</span>
+						</p>
+						<p className="my-1">
+							Birthday -{" "}
+							<span className="capitalize">
+								{about?.birthday}
+							</span>
 						</p>
 
-						<textarea
-							name="bio"
-							id=""
-							cols="30"
-							rows="5"
-							required
-							placeholder="bio ( you can use markdown language here )"
-							className="bg-[#e5e7eb] outline-none p-2 textarea shadow-md text-gray-600"
-						></textarea>
-						<div className="grid items-center justify-center grid-cols-2 gap-8">
+						<div className="grid w-full grid-cols-2 mt-5">
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<FaSquareFacebook />
+								<a
+									href={about?.facebook}
+									className="capitalize hover:underline"
+								>
+									facebook
+								</a>
+							</p>
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<FaSquareGithub />
+								<a
+									href={about?.github}
+									className="capitalize hover:underline"
+								>
+									github
+								</a>
+							</p>
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<FaXTwitter />
+								<a
+									href={about?.twitter}
+									className="capitalize hover:underline"
+								>
+									twitter
+								</a>
+							</p>
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<BsLinkedin />
+								<a
+									href={about?.linkedIn}
+									className="capitalize hover:underline"
+								>
+									linked
+								</a>
+							</p>
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<FaDiscord />
+								<a
+									href={about?.discord}
+									className="capitalize hover:underline"
+								>
+									discord
+								</a>
+							</p>
+							<p
+								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{ backgroundColor: dominantColor }}
+							>
+								<TbWorld />
+								<a
+									href={about?.website}
+									className="capitalize hover:underline"
+								>
+									website
+								</a>
+							</p>
+						</div>
+					</div>
+				)}
+			</div>
+
+			{sameUser && isAboutAvailableNot && (
+				<div className="p-3 bg-white">
+					<form onSubmit={handleAbout}>
+						<div className="flex flex-col gap-3">
+							<p className="font-semibold text-gray-400">
+								Tell us something about yourself
+							</p>
+							<textarea
+								name="bio"
+								id=""
+								cols="30"
+								rows="5"
+								required
+								placeholder="bio ( you can use markdown language here )"
+								className="bg-[#e5e7eb] outline-none p-2 textarea shadow-md text-gray-600"
+							></textarea>
 							<input
 								type="text"
-								name="address"
-								placeholder="your address"
+								name="quote"
+								placeholder="add a quote"
 								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
 							/>
+							<div className="grid items-center justify-center grid-cols-2 gap-8">
+								<input
+									type="text"
+									name="address"
+									placeholder="your address"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
 
+								<input
+									type="date"
+									name="birthday"
+									placeholder="your birthday"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md cursor-pointer"
+								/>
+							</div>
+							<div className="flex items-center justify-start gap-12">
+								<InputLabel id="demo-simple-select-autowidth-label">
+									Relationship status
+								</InputLabel>
+								<Select
+									labelId="demo-simple-select-autowidth-label"
+									id="demo-simple-select-autowidth"
+									value={relation}
+									onChange={handleChange}
+									autoWidth
+									label="Relation"
+								>
+									<MenuItem value="">
+										<em>None</em>
+									</MenuItem>
+									<MenuItem value="single">Single</MenuItem>
+									<MenuItem value="married">Married</MenuItem>
+									<MenuItem value="in a relationship">
+										In a relationship
+									</MenuItem>
+									<MenuItem value="engaged">Engaged</MenuItem>
+									<MenuItem value="it's complicated">
+										It's complicated
+									</MenuItem>
+								</Select>
+							</div>
+							<p className="font-semibold text-gray-400">
+								Your social media links.
+							</p>
+							<div className="grid w-full grid-cols-2 gap-3">
+								<input
+									type="url"
+									name="facebook"
+									placeholder="your facebook profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="twitter"
+									placeholder="your twitter profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="discord"
+									placeholder="your discord profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="linkedIn"
+									placeholder="your linkedIn profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="github"
+									placeholder="your github profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="website"
+									placeholder="your website"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+							</div>
+						</div>
+						<div className="flex justify-end w-full mt-4">
 							<input
-								type="date"
-								name="birthday"
-								placeholder="your birthday"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md cursor-pointer"
+								type="submit"
+								value="submit"
+								className="px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+								style={{
+									backgroundColor: dominantColor,
+								}}
 							/>
 						</div>
-						<div className="flex items-center justify-start gap-12">
-							<InputLabel id="demo-simple-select-autowidth-label">
-								Relationship status
-							</InputLabel>
-							<Select
-								labelId="demo-simple-select-autowidth-label"
-								id="demo-simple-select-autowidth"
-								value={relation}
-								onChange={handleChange}
-								autoWidth
-								label="Relation"
-							>
-								<MenuItem value="">
-									<em>None</em>
-								</MenuItem>
-								<MenuItem value="single">Single</MenuItem>
-								<MenuItem value="married">Married</MenuItem>
-								<MenuItem value="in a relationship">
-									In a relationship
-								</MenuItem>
-								<MenuItem value="engaged">Engaged</MenuItem>
-								<MenuItem value="it's complicated">
-									It's complicated
-								</MenuItem>
-							</Select>
-						</div>
-						<p className="font-semibold text-gray-400">
-							Your social media links.
-						</p>
-						<div className="grid w-full grid-cols-2 gap-3">
-							<input
-								type="url"
-								name="facebook"
-								placeholder="your facebook profile url"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-							<input
-								type="url"
-								name="twitter"
-								placeholder="your twitter profile url"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-							<input
-								type="url"
-								name="discord"
-								placeholder="your discord profile url"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-							<input
-								type="url"
-								name="linkedIn"
-								placeholder="your linkedIn profile url"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-							<input
-								type="url"
-								name="github"
-								placeholder="your github profile url"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-							<input
-								type="url"
-								name="website"
-								placeholder="your website"
-								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
-							/>
-						</div>
-					</div>
-					<div className="flex justify-end w-full mt-4">
-						<input
-							type="submit"
-							value="submit"
-							className="px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-							style={{
-								backgroundColor: dominantColor,
-							}}
-						/>
-					</div>
-				</form>
-			</div>
+					</form>
+				</div>
+			)}
+
+			{!sameUser && about === undefined && (
+				<div className="flex items-start justify-center">
+					<p className="flex flex-col items-center justify-center gap-4 mt-10 text-gray-500">
+						<BiSolidErrorCircle className="text-6xl text-gray-600" />{" "}
+						No info added
+					</p>
+				</div>
+			)}
 		</div>
 	);
 };
@@ -1583,6 +1527,7 @@ const SavedPostsContent = ({ posts, userId, userName }) => {
 		</div>
 	);
 };
+
 const StoriesContent = () => {
 	return (
 		<div className="min-h-screen content-panel">

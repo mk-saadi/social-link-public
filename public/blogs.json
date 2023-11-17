@@ -1,0 +1,38 @@
+[
+	{
+		"_id": 1,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "Introduction to JSON",
+		"blog_description": "Learn the basics of JSON (JavaScript Object Notation) and how it is used for data interchange. Learn the basics of JSON (JavaScript Object Notation) and how it is used for data interchange."
+	},
+	{
+		"_id": 2,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "Web Development Trends 2023",
+		"blog_description": "Explore the latest trends in web development for the year 2023, including new technologies and frameworks."
+	},
+	{
+		"_id": 3,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "The Art of Data Visualization",
+		"blog_description": "Discover the importance of data visualization in conveying complex information effectively, with examples and best practices."
+	},
+	{
+		"_id": 4,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "Building RESTful APIs with Node.js",
+		"blog_description": "A step-by-step guide on creating RESTful APIs using Node.js, covering routing, middleware, and database integration."
+	},
+	{
+		"_id": 5,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "Machine Learning in Everyday Life",
+		"blog_description": "Explore real-world applications of machine learning and how it impacts our daily lives, from recommendation systems to image recognition."
+	},
+	{
+		"_id": 6,
+		"blog_image": "https://i.ibb.co/tzfBZhS/timothy-exodus-P-t-ABQl-Px-Y-unsplash.jpg",
+		"blog_title": "Cybersecurity Best Practices",
+		"blog_description": "Learn essential cybersecurity practices to protect your online presence and sensitive information from cyber threats and attacks."
+	}
+]

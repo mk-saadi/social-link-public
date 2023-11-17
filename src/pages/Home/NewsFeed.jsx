@@ -398,7 +398,10 @@ const NewsFeed = ({ updatePostCount }) => {
 			)}
 
 			<div className="mx-4 my-4 mt-12 md:mx-8">
-				<MakePost updatePostCount={updatePostCount} />
+				<MakePost
+					updatePostCount={updatePostCount}
+					dominantColor={dominantColor}
+				/>
 			</div>
 
 			{filteredPosts.map((po) => (

@@ -11,6 +11,8 @@ import AdminRoute from "./AdminRoute";
 import Admin from "../pages/adminDashboard/Admin";
 import ViewPost from "../pages/Home/ViewPost";
 import AllUsers from "../pages/allUsers/AllUsers";
+import AllBlogs from "../pages/blogs/AllBlogs";
+import Blog from "../pages/blogs/Blogs";
 
 const router = createBrowserRouter([
 	{
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
 			{
 				path: "/allUsers",
 				element: <AllUsers />,
+			},
+			{
+				path: "/allBlogs",
+				element: <AllBlogs />,
+			},
+			{
+				path: "/allBlogs/:id",
+				element: <Blog />,
 			},
 		],
 	},

@@ -7,7 +7,7 @@ import imageCompression from "browser-image-compression";
 import useToast from "../../hook/useToast";
 import Toast from "../../hook/Toast";
 
-const MakePost = ({ updatePostCount }) => {
+const MakePost = ({ updatePostCount, dominantColor }) => {
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
@@ -180,10 +180,10 @@ const MakePost = ({ updatePostCount }) => {
 				localStorage.setItem("email", userEmail);
 				showToast("success", "Successfully Posted!");
 
-				// location.reload();
 				updatePostCount((prevCount) => prevCount + 1);
 			})
 			.catch((postError) => {
+				console.log(postError);
 				showToast("error", "Post failed. Please try again!");
 			});
 	};
@@ -226,7 +226,8 @@ const MakePost = ({ updatePostCount }) => {
 					/>
 					<div>
 						<input
-							className="text-gray-600 hover:bg-[#e5e7eb] py-2 px-3 cursor-pointer text-xl font-semibold  hover:bg-opacity-80 duration-300 w-full"
+							className="w-full px-3 py-2 text-base font-semibold text-white duration-300 rounded-md shadow-md cursor-pointer"
+							style={{ backgroundColor: dominantColor }}
 							type="submit"
 							value="Submit post"
 						/>
