@@ -187,7 +187,7 @@ const AllBlogs = () => {
 									<div className="min-h-[320px]">
 										<Link
 											className="w-full avatar"
-											to={`/blogs/${blog?._id}`}
+											to={`/blog/${blog.title}`}
 										>
 											<div className="object-cover w-full rounded-md shadow-md h-[200px] drop-shadow-sm">
 												<img
@@ -210,7 +210,7 @@ const AllBlogs = () => {
 									</div>
 									<div className="absolute bottom-0 grid w-full ">
 										<Link
-											to={`/blogs/${blog?._id}`}
+											to={`/blog/${blog.title}`}
 											className="p-2 m-2 font-semibold text-center text-white bg-gray-600 rounded-md shadow-md"
 										>
 											View Blog
