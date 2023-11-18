@@ -1293,78 +1293,90 @@ const AboutContent = ({ userName, dominantColor, profileUserId, userId }) => {
 						</p>
 
 						<div className="grid w-full grid-cols-2 mt-5">
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<FaSquareFacebook />
-								<a
-									href={about?.facebook}
-									className="capitalize hover:underline"
+							{about?.facebook && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									facebook
-								</a>
-							</p>
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<FaSquareGithub />
-								<a
-									href={about?.github}
-									className="capitalize hover:underline"
+									<FaSquareFacebook />
+									<a
+										href={about?.facebook}
+										className="capitalize hover:underline"
+									>
+										facebook
+									</a>
+								</p>
+							)}
+							{about?.github && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									github
-								</a>
-							</p>
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<FaXTwitter />
-								<a
-									href={about?.twitter}
-									className="capitalize hover:underline"
+									<FaSquareGithub />
+									<a
+										href={about?.github}
+										className="capitalize hover:underline"
+									>
+										github
+									</a>
+								</p>
+							)}
+							{about?.twitter && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									twitter
-								</a>
-							</p>
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<BsLinkedin />
-								<a
-									href={about?.linkedIn}
-									className="capitalize hover:underline"
+									<FaXTwitter />
+									<a
+										href={about?.twitter}
+										className="capitalize hover:underline"
+									>
+										twitter
+									</a>
+								</p>
+							)}
+							{about?.linkedIn && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									linked
-								</a>
-							</p>
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<FaDiscord />
-								<a
-									href={about?.discord}
-									className="capitalize hover:underline"
+									<BsLinkedin />
+									<a
+										href={about?.linkedIn}
+										className="capitalize hover:underline"
+									>
+										linked
+									</a>
+								</p>
+							)}
+							{about?.discord && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									discord
-								</a>
-							</p>
-							<p
-								className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-								style={{ backgroundColor: dominantColor }}
-							>
-								<TbWorld />
-								<a
-									href={about?.website}
-									className="capitalize hover:underline"
+									<FaDiscord />
+									<a
+										href={about?.discord}
+										className="capitalize hover:underline"
+									>
+										discord
+									</a>
+								</p>
+							)}
+							{about?.website && (
+								<p
+									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+									style={{ backgroundColor: dominantColor }}
 								>
-									website
-								</a>
-							</p>
+									<TbWorld />
+									<a
+										href={about?.website}
+										className="capitalize hover:underline"
+									>
+										website
+									</a>
+								</p>
+							)}
 						</div>
 					</div>
 				)}

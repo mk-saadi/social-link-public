@@ -368,7 +368,7 @@ const StoryNav = ({ dominantColor }) => {
 									<img
 										className="object-cover w-full h-full rounded-md "
 										src={st.storyImage}
-										alt=""
+										alt="story image"
 										style={{
 											width: "100%",
 											height: "100%",
@@ -413,8 +413,12 @@ const StoryNav = ({ dominantColor }) => {
 							>
 								<img
 									className="object-cover h-full rounded-md"
-									src={st.uploaderImage}
-									alt=""
+									src={st.storyImage}
+									alt="story image"
+									style={{
+										width: "100%",
+										height: "100%",
+									}}
 								/>
 							</a>
 
