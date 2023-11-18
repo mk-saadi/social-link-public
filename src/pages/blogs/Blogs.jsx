@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import PostContents1 from "../../hook/PostContents1";
 
 const Blog = () => {
 	const [blog, setBlog] = useState([]);
 	const { title } = useParams();
+	const [user, setUser] = useState([]);
 
 	// useEffect(() => {
 	// 	fetch(`https://social-link-server-liard.vercel.app/blogs/${title}`)
@@ -33,26 +35,100 @@ const Blog = () => {
 		fetchBlog();
 	}, [title]);
 
-	console.log(blog);
+	const blogUserName = blog.userName;
+
+	useEffect(() => {
+		axios("https://social-link-server-liard.vercel.app/users").then(
+			(res) => {
+				const data = res.data;
+				const filterUser = data.find(
+					(da) => da.userName === blogUserName
+				);
+				setUser(filterUser);
+			}
+		);
+	}, [blogUserName]);
+
+	const [readingTime, setReadingTime] = useState(null);
+
+	useEffect(() => {
+		if (blog?.name) {
+			const result = estimateReadingTime(blog.name);
+			setReadingTime(result);
+		}
+	}, [blog]);
+
+	const estimateReadingTime = (paragraph) => {
+		const wordsPerMinute = 200;
+		const words = paragraph.split(/\s+/);
+		const wordCount = words.length;
+		const minutes = Math.ceil(wordCount / wordsPerMinute);
+
+		return {
+			wordCount,
+			estimatedTime: minutes,
+		};
+	};
 
 	return (
 		<div className="min-h-screen">
-			<div className="mt-[70px] mx-auto max-w-3xl p-5 rounded-md bg-white">
-				<div className="bg-white rounded-md shadow-md drop-shadow">
+			<div className="mt-[70px] bg-white mx-auto max-w-3xl p-5 rounded-md">
+				<div className="rounded-md">
 					<div>
-						<Link className="w-full avatar">
-							<div className="object-cover w-full rounded-md shadow-md h-[200px] drop-shadow-sm">
-								<img
-									src={blog?.image}
-									alt="Blog Image"
-								/>
+						<div className="relative">
+							<div className="w-full avatar">
+								<div className="object-cover w-full rounded-md shadow-md h-[450px] drop-shadow">
+									<img
+										src={blog?.image}
+										alt="Blog Image"
+									/>
+								</div>
 							</div>
-						</Link>
-						<div className="p-2 text-start md:h-[200px]">
-							<h3 className="text-xl font-semibold">
-								{blog.title}
-							</h3>
-							<p className="mt-3 text-gray-600">{blog.name}</p>
+							<div className="absolute z-50 w-full bg-gray-200 bottom-[6px] bg-opacity-40 backdrop-blur-sm rounded-b-md">
+								<h3 className="p-4 text-3xl font-semibold text-white ">
+									{blog.title}
+								</h3>
+							</div>
+						</div>
+
+						<div>
+							<div className="flex items-center justify-between p-2 my-4 bg-gray-200 rounded-md shadow-sm">
+								<div className="flex items-center justify-center gap-3">
+									<div className="avatar">
+										<div className="object-cover rounded-full w-14">
+											<img
+												src={user?.image}
+												alt="blog author image"
+											/>
+										</div>
+									</div>
+									<div>
+										<Link
+											to={`/profilePage/${user?.userName}`}
+											className="font-semibold text-gray-600 hover:underline"
+										>
+											{user?.name}
+										</Link>
+										{/* <p className="text-sm text-gray-400">
+											{user?.userName}
+										</p> */}
+									</div>
+								</div>
+								<div>
+									{readingTime && (
+										<div>
+											<p className="text-sm font-semibold text-gray-600">
+												Time:{" "}
+												{readingTime.estimatedTime}{" "}
+												minutes
+											</p>
+										</div>
+									)}
+								</div>
+							</div>
+						</div>
+						<div className="p-2 text-start">
+							<PostContents1 content={blog.name}></PostContents1>
 						</div>
 					</div>
 				</div>

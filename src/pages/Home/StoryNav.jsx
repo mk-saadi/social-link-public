@@ -200,14 +200,14 @@ const StoryNav = ({ dominantColor }) => {
 		setUploaderImage(uploaderImage);
 		setUploaderUserName(userName);
 		setStoryBody(storyBody);
-		setSecondsLeft(10);
+		setSecondsLeft(30);
 		setOpen(true);
 		setModalId((prevId) => prevId + 1); // Update modalId to trigger useEffect
 	};
 
 	// const handleOpen = () => {
 	// 	// Reset the timer when opening the modal
-	// 	setSecondsLeft(10);
+	// 	setSecondsLeft(30);
 	// 	setOpen(true);
 	// 	setModalId((prevId) => prevId + 1); // Update modalId to trigger useEffect
 	// };
@@ -219,7 +219,7 @@ const StoryNav = ({ dominantColor }) => {
 		if (open) {
 			timeoutId = setTimeout(() => {
 				setOpen(false);
-			}, 10000);
+			}, 30000);
 
 			intervalId = setInterval(() => {
 				setSecondsLeft((prevSecondsLeft) => prevSecondsLeft - 1);

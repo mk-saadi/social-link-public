@@ -3,7 +3,7 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const PostContent = ({ content }) => {
+const PostContents1 = ({ content }) => {
 	const [showFullContent, setShowFullContent] = useState(false);
 
 	const toggleContentDisplay = () => {
@@ -40,4 +40,4 @@ const PostContent = ({ content }) => {
 	);
 };
 
-export default PostContent;
+export default PostContents1;

@@ -13,6 +13,7 @@ import ViewPost from "../pages/Home/ViewPost";
 import AllUsers from "../pages/allUsers/AllUsers";
 import AllBlogs from "../pages/blogs/AllBlogs";
 import Blog from "../pages/blogs/Blogs";
+import CreateBlog from "../pages/blogs/CreateBlog";
 
 const router = createBrowserRouter([
 	{
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
 			{
 				path: "/allBlogs",
 				element: <AllBlogs />,
+			},
+			{
+				path: "/CreateBlogs",
+				element: <CreateBlog />,
 			},
 			{
 				path: "/blog/:title",
