@@ -262,6 +262,12 @@ const Admin = () => {
 						{user?.name}
 					</p>
 					<p className="text-gray-400 ">@{user?.userName}</p>
+					<Link
+						to="/"
+						className="text-gray-600 bg-[#e5e7eb] p-2 mx-2 mb-2 cursor-pointer font-semibold duration-300 rounded-md shadow-md flex justify-center items-center mt-10"
+					>
+						Home
+					</Link>
 				</div>
 			</div>
 
@@ -294,7 +300,7 @@ const Admin = () => {
 							{...a11yProps(1)}
 						/>
 						<Tab
-							label="Item Three"
+							label="Stats"
 							{...a11yProps(2)}
 						/>
 					</Tabs>

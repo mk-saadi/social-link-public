@@ -36,8 +36,6 @@ const StoryNav = ({ dominantColor }) => {
 	const [currentUser, setCurrentUser] = useState();
 	const [story, setStory] = useState([]);
 
-	console.log(story);
-
 	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
 
 	useEffect(() => {
@@ -71,8 +69,6 @@ const StoryNav = ({ dominantColor }) => {
 
 		fetchData();
 	}, [userId]);
-
-	console.log("userInfos", story);
 
 	const followingUserIds = userInfos.map((ins) => ins._id);
 
@@ -321,7 +317,10 @@ const StoryNav = ({ dominantColor }) => {
 							</div>
 							<div className="flex justify-end">
 								<input
-									className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300"
+									style={{
+										backgroundColor: dominantColor,
+									}}
+									className=" text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300"
 									type="submit"
 									value="Submit"
 								/>

@@ -120,7 +120,7 @@ const CreateBlog = () => {
 	}, [userId]);
 
 	return (
-		<div>
+		<div className="min-h-screen overflow-hidden">
 			{toastType && (
 				<Toast
 					type={toastType}
@@ -129,12 +129,15 @@ const CreateBlog = () => {
 				/>
 			)}
 
-			<div className="h-screen mt-16">
+			<div className="mt-[70px] mx-16 mb-10">
 				<form
-					className="bg-white rounded-lg shadow-md "
+					className="bg-white rounded-lg shadow-md  flex flex-col p-4 gap-4"
 					onSubmit={handleBlog}
 				>
 					{/* <hr className="bg-gradient-to-r from-[#6A67FF] to-[#2a295f] border-0 h-[3px] drop-shadow-md shadow-md rounded-3xl" /> */}
+					<p className="text-gray-600 font-semibold">
+						Create blog, {user?.name}?
+					</p>
 					<hr className="bg-gray-400 border-0 h-[1px]" />
 
 					<div className="text-gray-600">
@@ -144,20 +147,20 @@ const CreateBlog = () => {
 							type="text"
 							required
 							name="title"
-							className="border border-gray-400 py-3 px-4 rounded-md focus:outline-0 bg-[#e5e7eb]"
+							className="py-3 px-4 rounded-md focus:outline-0 bg-[#e5e7eb] w-full border-0 mb-4"
 							placeholder="blog title"
 						/>
 						<textarea
 							type="text"
 							required
-							placeholder="create a new Blog..."
+							placeholder="type blog... (you can use markdown)"
 							onChange={handleChange}
-							className="bg-[#e5e7eb] text-lg border-none textarea textarea-bordered w-full focus:h-[350px] duration-200 placeholder:text-lg focus:outline-none rounded-none"
+							className="bg-[#e5e7eb] text-lg border-none textarea textarea-bordered w-full h-[150px] focus:h-[350px] duration-200 placeholder:text-lg focus:outline-none rounded-md focus:shadow-inner shadow-gray-500 storyModal"
 							name="name"
 						></textarea>
 					</div>
 					<select
-						className="w-full max-w-xs select select-bordered bg-[#e5e7eb]  text-gray-600 font-semibold"
+						className="w-full max-w-xs select select-bordered bg-[#e5e7eb]  text-gray-600 font-semibold rounded-md"
 						name="category"
 						onChange={handleChange}
 						required
@@ -198,7 +201,7 @@ const CreateBlog = () => {
 							className="w-full max-w-xs bg-transparent rounded file-input file-input-ghost focus:bg-transparent focus:outline-none"
 						/>
 
-						<div className="h-auto object-cover max-h-[250px] overflow-y-auto w-full rounded-md shadow-md my-2 storyModal">
+						<div className="h-auto object-cover max-h-[280px] overflow-y-auto max-w-screen-md rounded-md shadow-md my-2 storyModal">
 							{imagePreview && (
 								<img
 									id="preview-image"
@@ -208,14 +211,9 @@ const CreateBlog = () => {
 							)}
 						</div>
 						<div className="flex items-center justify-between px-5 pb-3">
-							{/* <Link
-										to="/allBlogs"
-										className="text-blue-500"
-									>
-										See All
-									</Link> */}
 							<input
-								className="px-3 py-2 font-semibold text-white duration-300 bg-gray-600 cursor-pointer btn hover:bg-gray-400 "
+								className="p-2 m-2 font-semibold text-center text-white rounded-md shadow-md cursor-pointer"
+								style={{ backgroundColor: dominantColor }}
 								type="submit"
 								value="Create Blog"
 							/>

@@ -11,9 +11,15 @@ import FriendCom from "./FriendCom";
 import { MdDelete } from "react-icons/md";
 import { CiMenuKebab } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
-import { FaComment, FaShare } from "react-icons/fa";
+import { FaAddressBook, FaComment, FaShare, FaThumbsUp } from "react-icons/fa";
 import PostContent from "../../hook/PostContent";
-import { BsArrowThroughHeartFill, BsJournalBookmarkFill } from "react-icons/bs";
+import {
+	BsArrowThroughHeartFill,
+	BsCalendarDateFill,
+	BsJournalBookmarkFill,
+	BsPostageHeartFill,
+	BsEyeFill,
+} from "react-icons/bs";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { BiEdit, BiSolidErrorCircle } from "react-icons/bi";
 import { MdReport } from "react-icons/md";
@@ -63,7 +69,9 @@ const ProfilePage = () => {
 	const [following, setFollowing] = useState([]);
 	const [followingState, setFollowingState] = useState({});
 	const [indeedFollow, setIndeedFollow] = useState([]);
+	const [hiddenUser, setHideUsers] = useState([]);
 	const [dominantColor, setDominantColor] = useState("");
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	const [posts, setPosts] = useState([]);
 
@@ -91,6 +99,9 @@ const ProfilePage = () => {
 	const profileUserId = user._id;
 
 	const sameUser = profileUserId === userId;
+
+	const currentUser = users.find((us) => us._id === userId);
+	const currentUserName = currentUser?.userName;
 
 	// >> tabs functions below
 	const [activeTab, setActiveTab] = useState("post");
@@ -205,6 +216,43 @@ const ProfilePage = () => {
 		}
 	};
 
+	// >> user hide api
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/hide")
+			.then((res) => {
+				const hideUser = res.data.find(
+					(re) => re.hiderUser === currentUserName
+				);
+
+				const isUserHidden =
+					hideUser?.hidingUsers.includes(user?.userName) || false;
+				setHideUsers(isUserHidden);
+			});
+	}, [currentUserName, user]);
+
+	const handleUnHide = (unHideUser) => {
+		showToast("loading", `Please wait!`);
+
+		axios
+			.delete(`https://social-link-server-liard.vercel.app/hide`, {
+				data: { hiderUser: currentUserName, unHideUser: unHideUser },
+			})
+			.then((response) => {
+				if (response.data.success) {
+					showToast(
+						"success",
+						`Success, you will see ${user?.name}'s post in your newsfeed`
+					);
+					setHideUsers(false);
+				}
+			})
+			.catch((err) => {
+				console.log(err.message);
+				showToast("error", "un-hide unsuccessful!");
+			});
+	};
+
 	useEffect(() => {
 		const imageUrl = user?.image;
 		if (imageUrl) {
@@ -270,6 +318,13 @@ const ProfilePage = () => {
 
 	return (
 		<section className="min-h-screen mx-auto overflow-x-hidden">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
 			<div
 				className="fixed top-0 w-full"
 				style={{ zIndex: "999" }}
@@ -382,6 +437,16 @@ const ProfilePage = () => {
 									>
 										<TextsmsIcon /> Message
 									</button>
+									{hiddenUser && (
+										<button
+											className="flex items-center justify-center gap-2 py-1 text-lg font-semibold text-gray-600 normal-case bg-white border-0 rounded-md shadow-md lg:px-4"
+											onClick={() =>
+												handleUnHide(user.userName)
+											}
+										>
+											<BsEyeFill /> Un-hide?
+										</button>
+									)}
 								</div>
 							</div>
 						</div>
@@ -727,6 +792,37 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 			});
 	};
 
+	const [clickedButtons, setClickedButtons] = useState({});
+	const [aPostLikeTrigger, setAPostLikeTrigger] = useState(false);
+
+	const handleLikePost = (postId) => {
+		console.log(postId);
+
+		axios
+			.patch(
+				`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
+				{
+					user: {
+						userName: matchedUser?.userName,
+					},
+				}
+			)
+			.then(() => {
+				// Update the like count in the state
+				setClickedButtons((prevState) => ({
+					...prevState,
+					[postId]: true,
+				}));
+				// Update the like count in the state
+				setAPostLikeTrigger(!aPostLikeTrigger);
+
+				console.log("successful");
+			})
+			.catch((error) => {
+				console.error("Error incrementing likes:", error);
+			});
+	};
+
 	return (
 		<div className="min-h-screen content-panel">
 			{toastType && (
@@ -1048,35 +1144,37 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 							className="flex items-center justify-around h-full"
 							style={{ color: dominantColor }}
 						>
-							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
-								<button
-									className="flex items-center justify-center gap-2 text-sm"
-									onClick={(postId) => {
-										fetch(
-											`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
-											{
-												method: "PATCH",
-												headers: {
-													"Content-Type":
-														"application/json",
-												},
-												body: JSON.stringify({
-													postId: po?._id,
-													likedId: userId,
-												}),
-											}
-										)
-											.then((res) => res.json())
-											.then((data) => {
-												// setLike(false);
-												// console.log(data);
-											});
-									}}
-								>
-									<AiFillHeart className="text-xl cursor-pointer" />{" "}
-									Like
-									<p>{po?.likes}</p>
-								</button>
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb]">
+								<div className="max-w-full">
+									<button
+										className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm"
+										onClick={() => {
+											handleLikePost(po?._id);
+										}}
+										style={
+											(po?.likedBy &&
+												po?.likedBy.includes(
+													matchedUser?.userName
+												)) ||
+											clickedButtons[po?._id] > 0
+												? {
+														// backgroundImage:
+														// 	"radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%)",
+														color: "yellowgreen",
+														// backgroundColor: "red",
+														// boxShadow:
+														// 	"0 8px 15px -3px #b8b63d, 0 5px 8px -2px rgba(0, 0, 0, 0.1)",
+												  }
+												: {}
+										}
+									>
+										<FaThumbsUp className="text-xl cursor-pointer" />{" "}
+										Like
+										<span className="pl-1">
+											{po?.likes}
+										</span>
+									</button>
+								</div>
 							</div>
 							<button
 								className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2  text-sm"
@@ -1088,7 +1186,7 @@ const PostContents = ({ profileUserId, dominantColor, setPosts }) => {
 								<FaComment className="text-xl cursor-pointer" />{" "}
 								Comment
 							</button>
-							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-3 text-sm">
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm">
 								<FaShare className="text-xl cursor-pointer" />{" "}
 								Share
 							</div>
@@ -1258,6 +1356,67 @@ const AboutContent = ({ userName, dominantColor, profileUserId, userId }) => {
 
 	console.log(about);
 
+	const [isEditing, setIsEditing] = useState(false);
+
+	const handleEdit = () => {
+		setIsEditing(!isEditing);
+	};
+
+	const id = about?._id;
+
+	const handleAboutEdit = (event) => {
+		// Handle form submission
+		event.preventDefault();
+
+		showToast("loading", "Please wait!");
+
+		const form = event.target;
+
+		const bio = form.bio.value;
+		const address = form.address.value;
+		const birthday = form.birthday.value;
+		const facebook = form.facebook.value;
+		const github = form.github.value;
+		const twitter = form.twitter.value;
+		const linkedIn = form.linkedIn.value;
+		const website = form.website.value;
+		const discord = form.discord.value;
+		const quote = form.quote.value;
+
+		const aboutEdit = {
+			bio: bio,
+			address: address,
+			birthday: birthday,
+			facebook: facebook,
+			github: github,
+			twitter: twitter,
+			linkedIn: linkedIn,
+			website: website,
+			discord: discord,
+			relation: relation,
+			quote: quote,
+		};
+
+		try {
+			axios
+				.put(
+					`https://social-link-server-liard.vercel.app/about/${id}`,
+					aboutEdit
+				)
+				.then((res) => {
+					showToast("success", "Bio updated!");
+					setIsEditing(false);
+					setAbout(res.data);
+
+					// window.location.reload(true);
+				});
+		} catch (err) {
+			console.log(err.message);
+			showToast("error", "Failed to update!");
+		}
+		// Add logic for handling form data
+	};
+
 	return (
 		<div className="min-h-screen mx-4 content-panel">
 			{toastType && (
@@ -1268,119 +1427,278 @@ const AboutContent = ({ userName, dominantColor, profileUserId, userId }) => {
 				/>
 			)}
 
-			<div>
-				{about && (
-					<div className="mt-2 font-semibold text-gray-600">
-						<p className="text-xl font-bold">{about?.quote}</p>
-						<div className="mt-3 mb-4">
-							<PostContents1 content={about?.bio} />
-						</div>
-						<p className="my-1">
-							Is{" "}
-							<span className="capitalize">
-								{about?.relation}
-							</span>
-						</p>
-						<p className="my-1">
-							Lives in -{" "}
-							<span className="capitalize">{about?.address}</span>
-						</p>
-						<p className="my-1">
-							Birthday -{" "}
-							<span className="capitalize">
-								{about?.birthday}
-							</span>
-						</p>
+			{sameUser && (
+				<button onClick={handleEdit}>
+					{isEditing ? "Cancel" : "Edit"}
+				</button>
+			)}
 
-						<div className="grid w-full grid-cols-2 mt-5">
-							{about?.facebook && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
+			{isEditing && sameUser ? (
+				// Show form when editing
+				<div className="p-3 bg-white">
+					<form onSubmit={handleAboutEdit}>
+						<div className="flex flex-col gap-3">
+							<p className="font-semibold text-gray-400">
+								Tell us something about yourself
+							</p>
+							<textarea
+								name="bio"
+								id=""
+								cols="30"
+								rows="5"
+								required
+								defaultValue={about?.bio}
+								placeholder="bio ( you can use markdown language here )"
+								className="bg-[#e5e7eb] outline-none p-2 textarea shadow-md text-gray-600"
+							></textarea>
+							<input
+								type="text"
+								name="quote"
+								defaultValue={about?.quote}
+								placeholder="add a quote"
+								className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+							/>
+							<div className="grid items-center justify-center grid-cols-2 gap-8">
+								<input
+									type="text"
+									name="address"
+									defaultValue={about?.address}
+									placeholder="your address"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+
+								<input
+									type="date"
+									name="birthday"
+									defaultValue={about?.birthday}
+									placeholder="your birthday"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md cursor-pointer"
+								/>
+							</div>
+							<div className="flex items-center justify-start gap-12">
+								<InputLabel id="demo-simple-select-autowidth-label">
+									Relationship status
+								</InputLabel>
+								<Select
+									labelId="demo-simple-select-autowidth-label"
+									id="demo-simple-select-autowidth"
+									value={relation}
+									defaultValue={about?.relation}
+									onChange={handleChange}
+									autoWidth
+									label="Relation"
 								>
-									<FaSquareFacebook />
-									<a
-										href={about?.facebook}
-										className="capitalize hover:underline"
-									>
-										facebook
-									</a>
-								</p>
-							)}
-							{about?.github && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
-								>
-									<FaSquareGithub />
-									<a
-										href={about?.github}
-										className="capitalize hover:underline"
-									>
-										github
-									</a>
-								</p>
-							)}
-							{about?.twitter && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
-								>
-									<FaXTwitter />
-									<a
-										href={about?.twitter}
-										className="capitalize hover:underline"
-									>
-										twitter
-									</a>
-								</p>
-							)}
-							{about?.linkedIn && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
-								>
-									<BsLinkedin />
-									<a
-										href={about?.linkedIn}
-										className="capitalize hover:underline"
-									>
-										linked
-									</a>
-								</p>
-							)}
-							{about?.discord && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
-								>
-									<FaDiscord />
-									<a
-										href={about?.discord}
-										className="capitalize hover:underline"
-									>
-										discord
-									</a>
-								</p>
-							)}
-							{about?.website && (
-								<p
-									className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
-									style={{ backgroundColor: dominantColor }}
-								>
-									<TbWorld />
-									<a
-										href={about?.website}
-										className="capitalize hover:underline"
-									>
-										website
-									</a>
-								</p>
-							)}
+									<MenuItem value="">
+										<em>None</em>
+									</MenuItem>
+									<MenuItem value="single">Single</MenuItem>
+									<MenuItem value="married">Married</MenuItem>
+									<MenuItem value="in a relationship">
+										In a relationship
+									</MenuItem>
+									<MenuItem value="engaged">Engaged</MenuItem>
+									<MenuItem value="it's complicated">
+										It's complicated
+									</MenuItem>
+								</Select>
+							</div>
+							<p className="font-semibold text-gray-400">
+								Your social media links.
+							</p>
+							<div className="grid w-full grid-cols-2 gap-3">
+								<input
+									type="url"
+									name="facebook"
+									defaultValue={about?.facebook}
+									placeholder="your facebook profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="twitter"
+									defaultValue={about?.twitter}
+									placeholder="your twitter profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="discord"
+									defaultValue={about?.discord}
+									placeholder="your discord profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="linkedIn"
+									defaultValue={about?.linkedIn}
+									placeholder="your linkedIn profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="github"
+									defaultValue={about?.github}
+									placeholder="your github profile url"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+								<input
+									type="url"
+									name="website"
+									defaultValue={about?.website}
+									placeholder="your website"
+									className="bg-[#e5e7eb] text-base text-gray-600 border-none input input-bordered w-full h-[50px] focus:outline-none rounded-md shadow-md"
+								/>
+							</div>
 						</div>
+						<div className="flex justify-end w-full mt-4">
+							<input
+								type="submit"
+								value="submit"
+								className="px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md cursor-pointer"
+								style={{
+									backgroundColor: dominantColor,
+								}}
+							/>
+						</div>
+					</form>
+				</div>
+			) : (
+				// Show content when not editing
+				<>
+					<div>
+						{about && (
+							<div className="mt-2 font-semibold text-gray-600">
+								<p className="text-xl font-bold">
+									{about?.quote}
+								</p>
+								<div className="mt-3 mb-8">
+									<PostContents1 content={about?.bio} />
+								</div>
+								<p className="flex items-center justify-start gap-2 my-2">
+									<BsPostageHeartFill className="text-xl" />
+									Is{" "}
+									<span className="capitalize">
+										{about?.relation}
+									</span>
+								</p>
+								<p className="flex items-center justify-start gap-2 my-2">
+									<FaAddressBook className="text-xl" />
+									Lives in -{" "}
+									<span className="capitalize">
+										{about?.address}
+									</span>
+								</p>
+								<p className="flex items-center justify-start gap-2 my-2">
+									<BsCalendarDateFill className="text-xl" />
+									Birthday -{" "}
+									<span className="capitalize">
+										{about?.birthday}
+									</span>
+								</p>
+
+								<div className="grid w-full grid-cols-2 mt-5">
+									{about?.facebook && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<FaSquareFacebook />
+											<a
+												href={about?.facebook}
+												className="capitalize hover:underline"
+											>
+												facebook
+											</a>
+										</p>
+									)}
+									{about?.github && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<FaSquareGithub />
+											<a
+												href={about?.github}
+												className="capitalize hover:underline"
+											>
+												github
+											</a>
+										</p>
+									)}
+									{about?.twitter && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<FaXTwitter />
+											<a
+												href={about?.twitter}
+												className="capitalize hover:underline"
+											>
+												twitter
+											</a>
+										</p>
+									)}
+									{about?.linkedIn && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<BsLinkedin />
+											<a
+												href={about?.linkedIn}
+												className="capitalize hover:underline"
+											>
+												linkedIn
+											</a>
+										</p>
+									)}
+									{about?.discord && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<FaDiscord />
+											<a
+												href={about?.discord}
+												className="capitalize hover:underline"
+											>
+												discord
+											</a>
+										</p>
+									)}
+									{about?.website && (
+										<p
+											className="flex items-center justify-center gap-3 px-4 py-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											<TbWorld />
+											<a
+												href={about?.website}
+												className="capitalize hover:underline"
+											>
+												website
+											</a>
+										</p>
+									)}
+								</div>
+							</div>
+						)}
 					</div>
-				)}
-			</div>
+				</>
+			)}
 
 			{sameUser && isAboutAvailableNot && (
 				<div className="p-3 bg-white">

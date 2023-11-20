@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ActiveLink from "../../hook/ActiveLink";
 import { DominantColorContext } from "../../hook/DominantColorProvider";
-// import DominantColorContext from "../../hook/DominantColorProvider";
+import { RiAdminFill } from "react-icons/ri";
 
 const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 	const [users, setUsers] = useState([]);
@@ -351,12 +351,22 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 							</div>
 
 							{role ? (
-								<ActiveLink to={"/admin"}>
-									<li className="flex items-center justify-start gap-3">
-										<AccountCircleIcon className="bg-transparent" />{" "}
-										Admin
-									</li>
-								</ActiveLink>
+								<>
+									<ActiveLink to={"/admin"}>
+										<li className="flex items-center justify-start gap-3">
+											<RiAdminFill className="bg-transparent text-2xl" />{" "}
+											Admin
+										</li>
+									</ActiveLink>
+									<ActiveLink
+										to={`/profilePage/${matchedUser?.userName}`}
+									>
+										<li className="flex items-center justify-start gap-3">
+											<AccountCircleIcon className="bg-transparent" />{" "}
+											Profile
+										</li>
+									</ActiveLink>
+								</>
 							) : (
 								<ActiveLink
 									to={`/profilePage/${matchedUser?.userName}`}
@@ -368,12 +378,18 @@ const LeftNav = ({ followingCount, postCount, handleDominantColor }) => {
 								</ActiveLink>
 							)}
 
-							<p to={"/settings"}>
+							{/* <p to={"/settings"}>
 								<li className="flex items-center justify-start gap-3">
 									<SettingsIcon className="bg-transparent" />{" "}
 									Settings
 								</li>
-							</p>
+							</p> */}
+							<Link to="/createBlogs">
+								<li className="flex items-center justify-start gap-3 cursor-pointer">
+									<SettingsIcon className="bg-transparent" />{" "}
+									Create blog
+								</li>
+							</Link>
 							<p
 								onClick={handleLogout}
 								className="cursor-pointer"

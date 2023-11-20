@@ -10,11 +10,11 @@ import useToast from "../../hook/useToast";
 const AllUsers = () => {
 	const [users, setUsers] = useState([]);
 	const userId = localStorage.getItem("social_id");
-	const [followingState, setFollowingState] = useState({});
 	const [exclude, setExclude] = useState([]);
 	const [include, setInclude] = useState([]);
 	const [followers, setFollowers] = useState([]);
 	// const [isLoading, setIsLoading] = useState(true);
+	const [followingState, setFollowingState] = useState({});
 	const [indeedFollow, setIndeedFollow] = useState([]);
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
 	const { dominantColor } = useContext(DominantColorContext);
@@ -96,11 +96,11 @@ const AllUsers = () => {
 				const followerDetails = users.filter((user) =>
 					followerId.includes(user._id)
 				);
-				console.log("followerDetails", followerDetails);
 				setFollowers(followerDetails);
 
 				const doesFollow = data.find((re) => re?.followerId === userId);
 				setIndeedFollow(doesFollow.followingIds);
+				// console.log("followerDetails", followerDetails);
 			});
 	}, [userId, users]);
 

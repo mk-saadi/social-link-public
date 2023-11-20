@@ -33,7 +33,7 @@ const FriendCom = ({ profileUserId, dominantColor }) => {
 
 				const followingUserDetails = users
 					.reverse()
-					.filter((user) => followingIds.includes(user._id));
+					.filter((user) => followingIds.includes(user?._id));
 
 				setInclude(followingUserDetails);
 			});
@@ -52,7 +52,7 @@ const FriendCom = ({ profileUserId, dominantColor }) => {
 		<>
 			<div className="bg-white shadow-md drop-shadow rounded-md w-full  min-w-[311px]">
 				<p className="p-2 text-xl font-semibold text-gray-600 ">
-					Following {include.length}
+					Following {include?.length}
 				</p>
 				<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px]" />
 

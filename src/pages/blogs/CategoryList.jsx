@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const CategoryList = ({ blogs, onCategorySelect }) => {
+const CategoryList = ({ blogs, onCategorySelect, dominantColor }) => {
 	const categoryNames = Array.from(new Set(blogs.map((bl) => bl.category)));
 	const [selectedCategory, setSelectedCategory] = useState(categoryNames[0]);
 
@@ -20,28 +20,25 @@ const CategoryList = ({ blogs, onCategorySelect }) => {
 	}, [selectedCategory, categoryNames]);
 
 	return (
-		<div className="grid grid-cols-2 gap-2 mx-4 mt-16 mb-6 md:grid-cols-5 md:gap-4 md:mr-40 justify-left md:ml-24 sm:mx-20">
+		<div className="flex flex-row gap-2 lg:gap-3 overflow-x-auto storyModal">
 			{categoryNames.map((category) => (
 				<button
 					key={category}
-					className={`btn text-white btn-xs text-xs sm:text-sm btn-sm rounded-sm no-animation whitespace-nowrap ${
-						selectedCategory === category
-							? "btn-accent text-white z-50"
-							: "btn-info"
-					}`}
+					className="flex items-center justify-center p-2 font-semibold rounded-md shadow-md text-xs lg:text-base"
+					style={{
+						backgroundColor:
+							selectedCategory === category
+								? dominantColor
+								: "#fff",
+						color:
+							selectedCategory === category
+								? "#fff"
+								: dominantColor,
+					}}
 					onClick={() => handleCategoryClick(category)}
 				>
 					{category}
 				</button>
-				// <button
-				//     key={category}
-				//     className={`btn text-white btn-xs text-xs sm:text-sm md:btn-md rounded-sm no-animation ${
-				//         selectedCategory === category ? "btn-accent text-white" : "btn-info"
-				//     }`}
-				//     onClick={() => handleCategoryClick(category)}
-				// >
-				//     {category}
-				// </button>
 			))}
 		</div>
 	);

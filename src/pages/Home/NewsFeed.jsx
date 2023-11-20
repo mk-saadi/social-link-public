@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { CiMenuKebab } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
-import { FaComment, FaShare } from "react-icons/fa";
+import { FaComment, FaShare, FaThumbsUp } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import PostContent from "../../hook/PostContent";
@@ -35,6 +35,7 @@ const style = {
 	// border: "2px solid #000",
 	// boxShadow: 24,
 	p: 4,
+	outline: 0,
 };
 const NewsFeed = ({ updatePostCount }) => {
 	// const [like, setLike] = useState(true);
@@ -42,6 +43,8 @@ const NewsFeed = ({ updatePostCount }) => {
 	const [show, setShow] = useState(false);
 	const [showId, setShowId] = useState(false);
 	const [posts, setPosts] = useState([]);
+	const [hideUsers, setHideUsers] = useState([]);
+	const [blockedUsers, setBlockedUsers] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [include, setInclude] = useState([]);
 	const [recom, setRecom] = useState("");
@@ -62,16 +65,47 @@ const NewsFeed = ({ updatePostCount }) => {
 		opacity: 0.2,
 	};
 
-	const [uploaderName, setUploaderName] = useState("");
-
-	const handleOpen = (uploaderName) => {
-		setOpen(true);
-		setUploaderName(uploaderName);
-	};
-
 	const userId = localStorage.getItem("social_id"); // CURRENT USER
 
 	const matchedUser = users.find((user) => user?._id === userId);
+
+	const [uploaderName, setUploaderName] = useState("");
+	const [uploaderUserName, setUploaderUserName] = useState("");
+
+	const handleOpenBlock = (data) => {
+		const { uploaderName, userName } = data;
+		setOpen(true);
+		setUploaderName(uploaderName);
+		setUploaderUserName(userName);
+	};
+
+	const handleBlock = (event, uploaderUserName) => {
+		event.preventDefault();
+
+		showToast("loading", "Please wait!");
+		const blockData = {
+			blockerName: matchedUser?.userName,
+			blockedNames: uploaderUserName,
+		};
+
+		try {
+			axios
+				.post(
+					"https://social-link-server-liard.vercel.app/block",
+					blockData
+				)
+				.then((res) => {
+					const updatedPosts = posts.filter(
+						(post) => post?.userName !== uploaderUserName
+					);
+
+					setPosts(updatedPosts);
+					showToast("success", "Blocking successful!");
+				});
+		} catch (error) {
+			showToast("error", "Blocking unsuccessful!");
+		}
+	};
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -134,6 +168,34 @@ const NewsFeed = ({ updatePostCount }) => {
 	// 		});
 	// };
 
+	useEffect(() => {
+		axios
+			.get("https://social-link-server-liard.vercel.app/posts")
+			.then((res) => res.data)
+			.then((data) => {
+				const postsWithTimeDifference = data.map((post) => ({
+					...post,
+					timeDifference: getTimeDifference(post.createdAt),
+				}));
+
+				const reversedPosts = postsWithTimeDifference.reverse();
+				setPosts(reversedPosts);
+				// if (reversedPosts.length > posts.length) {
+				// 	setNewPostsAvailable(true);
+				// 	setFetchedPosts(reversedPosts); // Store fetched posts in a new state variable
+
+				// 	// If posts state is empty (i.e., page has just loaded), set it directly
+				// 	// setShowToast(true); // Set the alert/toast flag to show on new posts
+				// 	if (posts.length === 0) {
+				// 		setPosts(reversedPosts);
+				// 	}
+				// }
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}, []);
+
 	// useEffect(() => {
 	// 	// Fetch posts immediately when the page loads
 	// 	fetchPosts();
@@ -153,37 +215,37 @@ const NewsFeed = ({ updatePostCount }) => {
 	// };
 
 	// >> main fetch function
-	useEffect(() => {
-		const interval = setInterval(() => {
-			axios
-				.get("https://social-link-server-liard.vercel.app/posts")
-				.then((res) => res.data)
-				.then((data) => {
-					const postsWithTimeDifference = data.map((post) => ({
-						...post,
-						timeDifference: getTimeDifference(post.createdAt),
-					}));
+	// useEffect(() => {
+	// 	const interval = setInterval(() => {
+	// 		axios
+	// 			.get("https://social-link-server-liard.vercel.app/posts")
+	// 			.then((res) => res.data)
+	// 			.then((data) => {
+	// 				const postsWithTimeDifference = data.map((post) => ({
+	// 					...post,
+	// 					timeDifference: getTimeDifference(post.createdAt),
+	// 				}));
 
-					const reversedPosts = postsWithTimeDifference.reverse();
+	// 				const reversedPosts = postsWithTimeDifference.reverse();
 
-					if (reversedPosts.length > posts.length) {
-						setNewPostsAvailable(true);
-						setPosts(reversedPosts);
-					}
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		}, 5000);
+	// 				if (reversedPosts.length > posts.length) {
+	// 					setNewPostsAvailable(true);
+	// 					setPosts(reversedPosts);
+	// 				}
+	// 			})
+	// 			.catch((err) => {
+	// 				console.error(err);
+	// 			});
+	// 	}, 5000);
 
-		return () => clearInterval(interval);
-	}, [posts]);
+	// 	return () => clearInterval(interval);
+	// }, [posts]);
 
-	const handleButtonClick = () => {
-		// setNewPostsAvailable(false);
-		setNewPostsAvailable(false); // Close the notification
-		window.scrollTo(0, 0); // Scroll to the top of the page
-	};
+	// const handleButtonClick = () => {
+	// 	// setNewPostsAvailable(false);
+	// 	setNewPostsAvailable(false); // Close the notification
+	// 	window.scrollTo(0, 0); // Scroll to the top of the page
+	// };
 
 	useEffect(() => {
 		axios("https://social-link-server-liard.vercel.app/comments").then(
@@ -243,11 +305,14 @@ const NewsFeed = ({ updatePostCount }) => {
 			});
 	};
 
-	const filteredPosts = posts.filter((post) => {
-		return include?.concat(userId).includes(post.uploaderId);
-	});
+	const filteredPosts = posts
+		.filter((po) => !hideUsers?.includes(po?.userName[0]))
+		.filter((po) => !blockedUsers?.includes(po?.userName[0]))
+		.filter((post) => {
+			return include?.concat(userId).includes(post.uploaderId);
+		});
 
-	// for post
+	// >> for post
 	function getTimeDifference(timestamp) {
 		const now = new Date();
 		const createdTime = new Date(timestamp);
@@ -269,7 +334,7 @@ const NewsFeed = ({ updatePostCount }) => {
 		}
 	}
 
-	// for comment
+	// >> for comment
 	function getTimeDifferenceCom(timestamp) {
 		const now = new Date();
 		const createdTime = new Date(timestamp);
@@ -307,18 +372,19 @@ const NewsFeed = ({ updatePostCount }) => {
 	// 	};
 	// }, []);
 
-	useEffect(() => {
-		if (newPostsAvailable) {
-			// Set a timeout to hide the toast after 4 seconds
-			const timeoutId = setTimeout(() => {
-				setNewPostsAvailable(false);
-			}, 4000);
+	// useEffect(() => {
+	// 	if (newPostsAvailable) {
+	// 		// Set a timeout to hide the toast after 4 seconds
+	// 		const timeoutId = setTimeout(() => {
+	// 			setNewPostsAvailable(false);
+	// 		}, 4000);
 
-			// Clear the timeout when the component unmounts or the dependencies change
-			return () => clearTimeout(timeoutId);
-		}
-	}, [newPostsAvailable]);
+	// 		// Clear the timeout when the component unmounts or the dependencies change
+	// 		return () => clearTimeout(timeoutId);
+	// 	}
+	// }, [newPostsAvailable]);
 
+	// >> report user function
 	const handleReport = (event, postId, userName, name, image) => {
 		event.preventDefault();
 
@@ -336,7 +402,7 @@ const NewsFeed = ({ updatePostCount }) => {
 			postImage: image,
 		};
 
-		if (report === "" || null) {
+		if (report === "" || null || undefined) {
 			return showToast("error", "Please try again!");
 		}
 
@@ -363,6 +429,91 @@ const NewsFeed = ({ updatePostCount }) => {
 		showToast("success", "Post saved!");
 	};
 
+	// >> like post functions
+	const [clickedButtons, setClickedButtons] = useState({});
+	const [aPostLikeTrigger, setAPostLikeTrigger] = useState(false);
+
+	const handleLikePost = (postId) => {
+		axios
+			.patch(
+				`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
+				{
+					user: {
+						userName: matchedUser?.userName,
+					},
+				}
+			)
+			.then(() => {
+				// Update the like count in the state
+				setClickedButtons((prevState) => ({
+					...prevState,
+					[postId]: true,
+				}));
+				// Update the like count in the state
+				setAPostLikeTrigger(!aPostLikeTrigger);
+			})
+			.catch((error) => {
+				console.error("Error incrementing likes:", error);
+			});
+	};
+
+	// >> hide users functions
+	const handleHide = async (userName) => {
+		showToast("loading", "Please wait!");
+		const hideData = {
+			hiderUser: matchedUser?.userName,
+			hidingUsers: [userName],
+		};
+
+		try {
+			const response = await axios.post(
+				"https://social-link-server-liard.vercel.app/hide",
+				hideData
+			);
+			if (response.data.success) {
+				showToast("success", "All post from this user will be hidden!");
+
+				setPosts(posts.filter((po) => po?.userName[0] !== userName));
+			}
+		} catch (error) {
+			showToast("error", "Failed! Please try again");
+		}
+	};
+
+	useEffect(() => {
+		try {
+			axios
+				.get("https://social-link-server-liard.vercel.app/hide")
+				.then((res) => {
+					const hideUser = res.data.find(
+						(re) => re?.hiderUser === matchedUser?.userName
+					);
+
+					const hdUsers = hideUser?.hidingUsers;
+					setHideUsers(hdUsers);
+				});
+		} catch (error) {
+			console.log(error.message);
+		}
+	}, [matchedUser]);
+
+	useEffect(() => {
+		try {
+			axios
+				.get("https://social-link-server-liard.vercel.app/block")
+				.then((res) => {
+					const hideUser = res.data.find(
+						(re) => re?.blockerName === matchedUser?.userName
+					);
+
+					const hdUsers = hideUser?.blockedNames;
+					setBlockedUsers(hdUsers);
+				});
+		} catch (error) {
+			console.log(error.message);
+		}
+	}, [matchedUser]);
+
 	return (
 		<div className="relative">
 			{toastType && (
@@ -372,11 +523,11 @@ const NewsFeed = ({ updatePostCount }) => {
 					onHide={hideToast}
 				/>
 			)}
-			<div className="mx-4 mb-20 md:mx-8">
+			<div className="mx-4 mb-4 md:mx-8">
 				<StoryNav dominantColor={dominantColor} />
 			</div>
 
-			{newPostsAvailable && (
+			{/* {newPostsAvailable && (
 				<div
 					className="fixed top-16 lg:top-28 text-rose-400"
 					style={{ zIndex: "99999999" }}
@@ -395,9 +546,9 @@ const NewsFeed = ({ updatePostCount }) => {
 						</div>
 					</div>
 				</div>
-			)}
+			)} */}
 
-			<div className="mx-4 my-4 mt-12 md:mx-8">
+			<div className="mx-4 my-4 md:mx-8">
 				<MakePost
 					updatePostCount={updatePostCount}
 					dominantColor={dominantColor}
@@ -406,7 +557,7 @@ const NewsFeed = ({ updatePostCount }) => {
 
 			{filteredPosts.map((po) => (
 				<div key={po._id}>
-					<div className="pt-4 mx-4 my-4 bg-white rounded-lg shadow-md drop-shadow md:mx-8">
+					<div className="pt-4 mx-4 mt-4 mb-8 bg-white rounded-lg shadow-md drop-shadow md:mx-8">
 						{/* top bar */}
 						<div className="flex items-center justify-between mx-4">
 							<div className="flex items-center justify-center bg-transparent">
@@ -432,7 +583,7 @@ const NewsFeed = ({ updatePostCount }) => {
 							</div>
 
 							{/* <CiMenuKebab className="ml-2 text-2xl font-semibold text-gray-600 bg-transparent cursor-pointer lg:text-3xl" /> */}
-							<details className="dropdown dropdown-end">
+							<details className="dropdown dropdown-left">
 								<summary
 									// onClick={toggleDropdown}
 									className="ml-1 text-xl btn btn-circle btn-ghost"
@@ -440,12 +591,12 @@ const NewsFeed = ({ updatePostCount }) => {
 									<CiMenuKebab />
 								</summary>
 
-								<div className="p-2 shadow-lg drop-shadow-lg menu dropdown-content z-[1] bg-white rounded-md w-80 text-gray-600 font-semibold">
+								<div className="shadow-lg drop-shadow-lg menu dropdown-content bg-white rounded-md w-80 text-gray-600 font-semibold p-0 z">
 									<li
 										onClick={() =>
 											saveHandle(
 												po._id,
-												matchedUser.userName
+												matchedUser?.userName
 											)
 										}
 									>
@@ -454,59 +605,70 @@ const NewsFeed = ({ updatePostCount }) => {
 											Save Post
 										</p>
 									</li>
-									<li>
-										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb] whitespace-nowrap">
-											<BiEdit className="text-2xl " />
-											Request edit to the post
-										</p>
-									</li>
-									<li>
-										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
-											<ImEyeBlocked className="text-2xl " />
-											Hide all post from{" "}
-											{po?.uploaderName}
-										</p>
-									</li>
-									<li
-										onClick={() =>
-											handleUnfollow(po.uploaderId)
-										}
-									>
-										<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
-											<RiUserUnfollowFill className="text-2xl " />
-											Unfollow {po?.uploaderName}
-										</p>
-									</li>
-									<li>
-										<button
-											// href="#post-modal-block"
-											className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]"
-											// htmlFor="my_modal_7"
-											// htmlFor={`modal_${po._id}`}
-											// onClick={() => openModal(po._id)}
+									{po?.userName[0] !==
+										matchedUser?.userName && (
+										<li
 											onClick={() =>
-												handleOpen(po.uploaderName)
+												handleHide(po?.userName[0])
 											}
 										>
-											<SiAdblock className="text-2xl " />
-											Block {po?.uploaderName}
-										</button>
-									</li>
-									<li>
-										<label
-											className="flex items-center gap-4 rounded-md hover:[#e5e7eb]"
-											// htmlFor="my_modal_6"
-											htmlFor={`modal_${po._id}`}
+											<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
+												<ImEyeBlocked className="text-2xl" />
+												Hide all posts from{" "}
+												{po?.uploaderName}
+											</p>
+										</li>
+									)}
+
+									{po?.userName[0] !==
+										matchedUser?.userName && (
+										<li
+											onClick={() =>
+												handleUnfollow(po.userName[0])
+											}
 										>
-											<MdReport className="text-2xl " />{" "}
-											Report to admin
-										</label>
-									</li>
+											<p className="flex items-center gap-4 my-1 rounded-md hover: hover:bg-[#e5e7eb]">
+												<RiUserUnfollowFill className="text-2xl " />
+												Unfollow {po?.uploaderName}
+											</p>
+										</li>
+									)}
+									{po?.userName[0] !==
+										matchedUser?.userName && (
+										<li>
+											<button
+												className="flex items-center gap-4 my-1 rounded-md hover:bg-[#e5e7eb]"
+												onClick={() =>
+													handleOpenBlock({
+														uploaderName:
+															po?.uploaderName,
+														userName: po?.userName,
+													})
+												}
+											>
+												<SiAdblock className="text-2xl " />
+												Block {po?.uploaderName}
+											</button>
+										</li>
+									)}
+									{po?.userName[0] !==
+										matchedUser?.userName && (
+										<li>
+											<label
+												className="flex items-center gap-4 rounded-md hover:[#e5e7eb]"
+												// htmlFor="my_modal_6"
+												htmlFor={`modal_${po._id}`}
+											>
+												<MdReport className="text-2xl " />{" "}
+												Report to admin
+											</label>
+										</li>
+									)}
 								</div>
 							</details>
 						</div>
 
-						{/* block user */}
+						{/* block user modal */}
 						<Modal
 							aria-labelledby="transition-modal-title"
 							aria-describedby="transition-modal-description"
@@ -516,59 +678,48 @@ const NewsFeed = ({ updatePostCount }) => {
 							slots={{ backdrop: Backdrop }}
 							slotProps={{
 								backdrop: {
-									style: customBackdropStyle, // Apply the custom backdrop style
+									style: customBackdropStyle,
 									timeout: 500,
 								},
 							}}
 						>
 							<Fade in={open}>
 								<Box sx={style}>
-									<Typography
-										id="transition-modal-title"
-										variant="h6"
-										component="h2"
-									>
-										Text in a modal
+									<h3 className="text-xl font-bold text-gray-600">
+										Block!
+									</h3>
+									<Typography id="transition-modal-description">
+										<p className="mt-4 mb-8 font-semibold text-gray-600">
+											Are you sure you want to block{" "}
+											{uploaderName}?
+										</p>
 									</Typography>
-									<Typography
-										id="transition-modal-description"
-										sx={{ mt: 2 }}
-									>
-										Are you sure that you want to block{" "}
-										{uploaderName}
-									</Typography>
+									<div className="flex items-center justify-between text-base">
+										<button
+											// htmlFor="my_modal_6"
+											className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 rounded-md"
+											onClick={handleClose}
+										>
+											Go back
+										</button>
+										<button
+											onClick={(event) =>
+												handleBlock(
+													event,
+													uploaderUserName
+												)
+											}
+											className=" py-2 px-6 font-semibold normal-case border-0 rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
+										>
+											Block
+										</button>
+									</div>
 								</Box>
 							</Fade>
 						</Modal>
-
-						{/* <div
-							id="post-modal-block"
-							className="modal"
-						>
-							<div className="bg-white rounded-md modal-box">
-								<h3 className="text-xl font-bold text-gray-600">
-									Block!
-								</h3>
-								<p className="mt-4 mb-8 font-semibold text-gray-600">
-									Are you sure you want to block
-								</p>
-								<div className="flex items-center justify-between text-base">
-									<div className="modal-action">
-										<a
-											// htmlFor="my_modal_7"
-											// className="bg-[#6A67FF] text-white py-3 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 -mt-6 px-5"
-											href="#"
-											className="text-gray-600 bg-[#e5e7eb] py-2 px-6 cursor-pointer font-semibold duration-300 -mt-6 rounded-md modal__close "
-										>
-											Go back
-										</a>
-									</div>
-									<button className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300">
-										Block
-									</button>
-								</div>
-							</div>
-						</div> */}
 
 						{/* report post to admin modal */}
 						<input
@@ -582,10 +733,9 @@ const NewsFeed = ({ updatePostCount }) => {
 								<div className="relative bg-white rounded-md modal-box">
 									{/* body starts here */}
 									<h3 className="text-xl font-semibold text-gray-600">
-										Report post {po.uploaderName}
+										Report post of {po.uploaderName}
 									</h3>
 									<form
-										// onSubmit={handleReport}
 										onSubmit={(event) =>
 											handleReport(
 												event,
@@ -654,8 +804,12 @@ const NewsFeed = ({ updatePostCount }) => {
 										<div className="flex items-center justify-end">
 											<input
 												type="submit"
-												value="Submit"
-												className="bg-[#6A67FF] text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 text-base"
+												value="Report"
+												className=" text-white py-2 px-6 cursor-pointer font-bold rounded-md hover:bg-opacity-80 duration-300 text-base"
+												style={{
+													backgroundColor:
+														dominantColor,
+												}}
 											/>
 										</div>
 									</form>
@@ -696,38 +850,40 @@ const NewsFeed = ({ updatePostCount }) => {
 
 						{/* comment and like button */}
 						<div
-							className="flex items-center justify-around h-full"
+							className="flex items-center justify-around mb-4 py-2"
 							style={{ color: dominantColor }}
 						>
-							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
-								<button
-									className="flex items-center justify-center gap-2 text-sm"
-									onClick={(postId) => {
-										fetch(
-											`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
-											{
-												method: "PATCH",
-												headers: {
-													"Content-Type":
-														"application/json",
-												},
-												body: JSON.stringify({
-													postId: po?._id,
-													likedId: userId,
-												}),
-											}
-										)
-											.then((res) => res.json())
-											.then((data) => {
-												// setLike(false);
-												// console.log(data);
-											});
-									}}
-								>
-									<AiFillHeart className="text-xl cursor-pointer" />{" "}
-									Like
-									<p>{po?.likes}</p>
-								</button>
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb]">
+								<div className="max-w-full">
+									<button
+										className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm"
+										onClick={() => {
+											handleLikePost(po?._id);
+										}}
+										style={
+											(po?.likedBy &&
+												po?.likedBy.includes(
+													matchedUser?.userName
+												)) ||
+											clickedButtons[po?._id] > 0
+												? {
+														// backgroundImage:
+														// 	"radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%)",
+														color: "yellowgreen",
+														// backgroundColor: "red",
+														// boxShadow:
+														// 	"0 8px 15px -3px #b8b63d, 0 5px 8px -2px rgba(0, 0, 0, 0.1)",
+												  }
+												: {}
+										}
+									>
+										<FaThumbsUp className="text-xl cursor-pointer" />{" "}
+										Like
+										<span className="pl-1">
+											{po?.likes}
+										</span>
+									</button>
+								</div>
 							</div>
 							<button
 								className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2  text-sm"
@@ -739,7 +895,7 @@ const NewsFeed = ({ updatePostCount }) => {
 								<FaComment className="text-xl cursor-pointer" />{" "}
 								Comment
 							</button>
-							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-3 text-sm">
+							<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm">
 								<FaShare className="text-xl cursor-pointer" />{" "}
 								Share
 							</div>

@@ -42,7 +42,7 @@ const router = createBrowserRouter([
 				element: <AllBlogs />,
 			},
 			{
-				path: "/CreateBlogs",
+				path: "/createBlogs",
 				element: <CreateBlog />,
 			},
 			{

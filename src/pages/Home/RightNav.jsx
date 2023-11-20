@@ -53,15 +53,19 @@ const RightNav = ({ updateFollowingCount, postCount }) => {
 	};
 
 	useEffect(() => {
-		axios
-			.get("https://social-link-server-liard.vercel.app/follow")
-			.then((res) => {
-				const exclude = res.data.find(
-					(re) => re?.followerId === userId
-				);
-				const followingId = exclude?.followingIds;
-				setExclude(followingId);
-			});
+		try {
+			axios
+				.get("https://social-link-server-liard.vercel.app/follow")
+				.then((res) => {
+					const exclude = res.data.find(
+						(re) => re?.followerId === userId
+					);
+					const followingId = exclude?.followingIds;
+					setExclude(followingId);
+				});
+		} catch (error) {
+			console.log(error.message);
+		}
 	}, [userId]);
 
 	// if (isLoading) {
@@ -151,7 +155,7 @@ const RightNav = ({ updateFollowingCount, postCount }) => {
 													</div>
 												</div>
 												<div>
-													<p className="font-sans text-sm text-gray-600 hover:underline">
+													<p className="font-sans text-base text-gray-600 hover:underline">
 														{formatText(
 															user?.name,
 															14
@@ -207,15 +211,15 @@ const RightNav = ({ updateFollowingCount, postCount }) => {
 
 			{/* blog */}
 			{/* md:h-[200px] h-[230px] */}
-			<div className="bg-white rounded-md mt-5 w-full xl:w-[340px] ">
-				<p className="p-2 text-lg font-semibold text-gray-600">
+			<div className="bg-white rounded-md mt-5 w-full xl:w-[340px] max-w-[340px] shadow-md drop-shadow ">
+				<p className="pt-2 pl-2 text-lg font-semibold text-gray-600">
 					Latest blogs
 				</p>
 
-				<div className="relative px-4 py-2 ">
-					<div className="overflow-y-auto  md:h-[250px] h-[230px] storyModal">
+				<div className="relative px-4 py-1">
+					<div className="overflow-y-auto  md:h-[200px] h-[230px] storyModal">
 						{blogs
-							.slice(0, 4)
+							.slice(0, 5)
 							.reverse()
 							.map((bl) => (
 								<Link

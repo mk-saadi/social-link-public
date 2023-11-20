@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DominantColorContext } from "../../hook/DominantColorProvider";
 
@@ -8,7 +8,7 @@ import CategoryList from "./CategoryList";
 const AllBlogs = () => {
 	const [blogs, setBlogs] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState(null);
-	const [searchInput, setSearchInput] = useState("");
+	const { dominantColor } = useContext(DominantColorContext);
 
 	useEffect(() => {
 		fetch("https://social-link-server-liard.vercel.app/blogs")
@@ -23,55 +23,45 @@ const AllBlogs = () => {
 		setSelectedCategory(category);
 	};
 
-	const handleSearchInputChange = (event) => {
-		setSearchInput(event.target.value);
-	};
-
 	const filteredBlogs = selectedCategory
 		? blogs.filter((blog) => blog.category === selectedCategory)
 		: blogs;
 
-	const searchedBlogs = searchInput
-		? filteredBlogs.filter((blog) =>
-				blog.category.toLowerCase().includes(searchInput.toLowerCase())
-		  )
-		: filteredBlogs;
-
 	return (
-		<div className="min-h-screen mx-auto overflow-x-hidden xl:w-11/12 ">
-			{/* <div className="grid grid-cols-8">
-				<div className="hidden xl:col-span-2 xl:block"></div>
+		<div className="min-h-screen mx-auto overflow-x-hidden mb-6">
+			<div className="grid grid-cols-8  mx-2">
+				<div className="hidden lg:col-span-1 lg:block"></div>
 
-				<div className=" col-span-8 lg:col-span-5 xl:col-span-4 mt-[70px] ">
-
-					<p className="p-2 mt-5 text-xl font-semibold text-gray-600 ">
-						Total Blogs: {blogs?.length}
+				<div className="col-span-8 lg:col-span-6">
+					<p className="p-2 text-xl mt-[70px] font-semibold text-gray-600 ">
+						Read latest blogs
 					</p>
-					<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px] mb-5" />
-
-					<div className="grid gap-4 mx-4 md:grid-cols-2 md:mx-0">
-						{blogs?.map((blog) => (
+					<div className="grid grid-cols-2 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+						{blogs.map((blog) => (
 							<div key={blog?._id}>
 								<div className="relative bg-white border-t border-gray-200 rounded-md shadow-md drop-shadow">
-									<div className="min-h-[320px]">
+									<div className="">
 										<Link
 											className="w-full avatar"
 											to={`/blog/${blog.title}`}
 										>
-											<div className="object-cover w-full rounded-md shadow-md h-[200px] drop-shadow-sm">
+											<div className="object-cover w-full rounded-md shadow-md drop-shadow-sm">
 												<img
 													src={blog?.image}
 													alt="Blog Image"
 												/>
 											</div>
 										</Link>
-										<div className="p-2 text-start md:h-[200px] h-[230px]">
-											<h3 className="text-xl font-semibold">
-												{blog?.title}
+										<div className="min-h-[240px] p-2 text-start">
+											<h3 className="text-xl font-semibold text-gray-600">
+												{blog?.title.length > 25
+													? blog?.title.slice(0, 25) +
+													  "..."
+													: blog?.title}
 											</h3>
-											<p className="mt-3 text-gray-600">
-												{blog?.name.length > 150
-													? blog?.name.slice(0, 150) +
+											<p className="text-sm  text-gray-400 mt-3">
+												{blog?.name.length > 80
+													? blog?.name.slice(0, 80) +
 													  "..."
 													: blog?.name}
 											</p>
@@ -80,7 +70,10 @@ const AllBlogs = () => {
 									<div className="absolute bottom-0 grid w-full ">
 										<Link
 											to={`/blog/${blog.title}`}
-											className="p-2 m-2 font-semibold text-center text-white bg-gray-600 rounded-md shadow-md"
+											className="p-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+											style={{
+												backgroundColor: dominantColor,
+											}}
 										>
 											View Blog
 										</Link>
@@ -90,69 +83,74 @@ const AllBlogs = () => {
 						))}
 					</div>
 				</div>
-			</div> */}
-
-			<div className="mt-20">
-				<p>Search by category</p>
-				<input
-					type="text"
-					value={searchInput}
-					onChange={handleSearchInputChange}
-					placeholder="Type to search by category"
-					className="p-2 mt-2 border rounded"
-				/>
+				<div className="hidden lg:col-span-1 lg:block"></div>
 			</div>
-
 			<div>
-				<h3 className="pl-4 mt-20 ml-4 -mb-12 text-xl font-bold border-l-2 md:text-2xl sm:ml-20 text-info border-sky-400">
-					Blog category
-				</h3>
+				<div className="grid grid-cols-8 mx-2">
+					<div className="hidden xl:col-span-2 xl:block"></div>
 
-				<CategoryList
-					blogs={blogs}
-					selectedCategory={selectedCategory}
-					onCategorySelect={handleCategorySelect}
-				/>
-
-				<div className="grid grid-cols-2 gap-4 mx-4 mt-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:mx-20 text-slate-400">
-					{filteredBlogs.map((blog) => (
-						<div key={blog?._id}>
-							<div className="relative bg-white border-t border-gray-200 rounded-md shadow-md drop-shadow">
-								<div className="min-h-[320px]">
-									<Link
-										className="w-full avatar"
-										to={`/blog/${blog.title}`}
-									>
-										<div className="object-cover w-full rounded-md shadow-md drop-shadow-sm">
-											<img
-												src={blog?.image}
-												alt="Blog Image"
-											/>
+					<div className="col-span-8 lg:col-span-5 xl:col-span-4">
+						<p className="p-2 text-xl mt-[70px] font-semibold text-gray-600 ">
+							Blogs by category
+						</p>
+						<CategoryList
+							blogs={blogs}
+							selectedCategory={selectedCategory}
+							onCategorySelect={handleCategorySelect}
+							dominantColor={dominantColor}
+						/>
+						<div className="grid grid-cols-2 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3">
+							{filteredBlogs.map((blog) => (
+								<div key={blog?._id}>
+									<div className="relative bg-white border-t border-gray-200 rounded-md shadow-md drop-shadow">
+										<div className="">
+											<Link
+												className="w-full avatar"
+												to={`/blog/${blog.title}`}
+											>
+												<div className="object-cover w-full rounded-md shadow-md drop-shadow-sm">
+													<img
+														src={blog?.image}
+														alt="Blog Image"
+													/>
+												</div>
+											</Link>
+											<div className="min-h-[240px] p-2 text-start">
+												<h3 className="text-xl font-semibold text-gray-600">
+													{blog?.title.length > 25
+														? blog?.title.slice(
+																0,
+																25
+														  ) + "..."
+														: blog?.title}
+												</h3>
+												<p className="text-sm  text-gray-400 mt-3">
+													{blog?.name.length > 80
+														? blog?.name.slice(
+																0,
+																80
+														  ) + "..."
+														: blog?.name}
+												</p>
+											</div>
 										</div>
-									</Link>
-									<div className="p-2 text-start">
-										<h3 className="text-xl font-semibold">
-											{blog?.title}
-										</h3>
-										<p className="mt-3 text-gray-600">
-											{blog?.name.length > 40
-												? blog?.name.slice(0, 40) +
-												  "..."
-												: blog?.name}
-										</p>
+										<div className="absolute bottom-0 grid w-full ">
+											<Link
+												to={`/blog/${blog.title}`}
+												className="p-2 m-2 font-semibold text-center text-white rounded-md shadow-md"
+												style={{
+													backgroundColor:
+														dominantColor,
+												}}
+											>
+												View Blog
+											</Link>
+										</div>
 									</div>
 								</div>
-								<div className="absolute bottom-0 grid w-full ">
-									<Link
-										to={`/blog/${blog.title}`}
-										className="p-2 m-2 font-semibold text-center text-white bg-gray-600 rounded-md shadow-md"
-									>
-										View Blog
-									</Link>
-								</div>
-							</div>
+							))}
 						</div>
-					))}
+					</div>
 				</div>
 			</div>
 		</div>

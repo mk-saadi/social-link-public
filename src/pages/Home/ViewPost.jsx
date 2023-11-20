@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import { BsJournalBookmarkFill, BsArrowThroughHeartFill } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 import { Link, useParams } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
-import { FaComment, FaShare } from "react-icons/fa";
+import { FaComment, FaShare, FaThumbsUp } from "react-icons/fa";
 import PostContent from "../../hook/PostContent";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { MdReport } from "react-icons/md";
@@ -15,6 +15,7 @@ import { ImBlocked, ImEyeBlocked } from "react-icons/im";
 import Toast from "../../hook/Toast";
 import useToast from "../../hook/useToast";
 import TopNavbar from "../../component/shared/TopNavbar";
+import { DominantColorContext } from "../../hook/DominantColorProvider";
 
 const ViewPost = () => {
 	const { id } = useParams();
@@ -28,6 +29,7 @@ const ViewPost = () => {
 	const [showId, setShowId] = useState(false);
 	const [recom, setRecom] = useState("");
 	const [comments, setComments] = useState([]);
+	const { dominantColor } = useContext(DominantColorContext);
 
 	const matchedUser = users.find((user) => user?._id === userId);
 
@@ -187,6 +189,37 @@ const ViewPost = () => {
 			return "now";
 		}
 	}
+
+	const [clickedButtons, setClickedButtons] = useState({});
+	const [aPostLikeTrigger, setAPostLikeTrigger] = useState(false);
+
+	const handleLikePost = (postId) => {
+		console.log(postId);
+
+		axios
+			.patch(
+				`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
+				{
+					user: {
+						userName: matchedUser?.userName,
+					},
+				}
+			)
+			.then(() => {
+				// Update the like count in the state
+				setClickedButtons((prevState) => ({
+					...prevState,
+					[postId]: true,
+				}));
+				// Update the like count in the state
+				setAPostLikeTrigger(!aPostLikeTrigger);
+
+				console.log("successful");
+			})
+			.catch((error) => {
+				console.error("Error incrementing likes:", error);
+			});
+	};
 
 	return (
 		<div className="min-h-screen ">
@@ -474,50 +507,52 @@ const ViewPost = () => {
 					<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px]" />
 
 					{/* comment and like button */}
-					<div className="flex items-center justify-around h-full">
-						<div className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
-							<button
-								className="flex items-center justify-center gap-2"
-								onClick={(postId) => {
-									fetch(
-										`https://social-link-server-liard.vercel.app/posts/like/${postId}`,
-										{
-											method: "PATCH",
-											headers: {
-												"Content-Type":
-													"application/json",
-											},
-											body: JSON.stringify({
-												postId: po?._id,
-												likedId: userId,
-											}),
-										}
-									)
-										.then((res) => res.json())
-										.then((data) => {
-											// setLike(false);
-											// console.log(data);
-										});
-								}}
-							>
-								<AiFillHeart className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-slate-500" />{" "}
-								Like
-								<p>{po?.likes}</p>
-							</button>
+					<div
+						className="flex items-center justify-around h-full"
+						style={{ color: dominantColor }}
+					>
+						<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb]">
+							<div className="max-w-full">
+								<button
+									className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm"
+									onClick={() => {
+										handleLikePost(po?._id);
+									}}
+									style={
+										(po?.likedBy &&
+											po?.likedBy.includes(
+												matchedUser?.userName
+											)) ||
+										clickedButtons[po?._id] > 0
+											? {
+													// backgroundImage:
+													// 	"radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%)",
+													color: "yellowgreen",
+													// backgroundColor: "red",
+													// boxShadow:
+													// 	"0 8px 15px -3px #b8b63d, 0 5px 8px -2px rgba(0, 0, 0, 0.1)",
+											  }
+											: {}
+									}
+								>
+									<FaThumbsUp className="text-xl cursor-pointer" />{" "}
+									Like
+									<span className="pl-1">{po?.likes}</span>
+								</button>
+							</div>
 						</div>
 						<button
-							className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 "
+							className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2  text-sm"
 							onClick={() => {
 								setShow(!show);
 								setShowId(po?._id);
 							}}
 						>
-							<FaComment className="text-2xl cursor-pointer xl:text-3xl lg:text-lg text-slate-500" />{" "}
+							<FaComment className="text-xl cursor-pointer" />{" "}
 							Comment
 						</button>
-						<div className="flex items-center justify-center w-full duration-300  text-slate-500 gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 ">
-							<FaShare className="text-2xl cursor-pointer xl:text-2xl lg:text-lg" />{" "}
-							Share
+						<div className="flex items-center justify-center w-full duration-300   gap-2 cursor-pointer hover:bg-[#e5e7eb] py-2 text-sm">
+							<FaShare className="text-xl cursor-pointer" /> Share
 						</div>
 					</div>
 

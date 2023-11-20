@@ -1,4 +1,4 @@
-const PhotoList = ({ posts }) => {
+const PhotoList = ({ posts, dominantColor }) => {
 	const image = posts.filter((po) => po.image !== null).map((po) => po.image);
 
 	return (
@@ -7,12 +7,17 @@ const PhotoList = ({ posts }) => {
 				Photos {image.length}
 			</p>
 			<hr className="bg-gray-400 bg-opacity-70 border-0 h-[1px] mb-2" />
-			<div className="xl:max-h-[500px] storyModal overflow-y-auto flex flex-col">
+			<div className="xl:max-h-[500px] storyModal overflow-y-auto flex flex-col gap-5">
 				{posts?.map((post, index) => (
-					<div key={index}>
+					<div
+						key={index}
+						// style={{
+						// 	border: "2px solid",
+						// 	borderColor: dominantColor,
+						// }}
+					>
 						<img
 							src={post?.image}
-							className=""
 							alt=""
 						/>
 					</div>

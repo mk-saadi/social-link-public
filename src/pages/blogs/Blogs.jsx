@@ -1,24 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PostContents1 from "../../hook/PostContents1";
+import Toast from "../../hook/Toast";
+import useToast from "../../hook/useToast";
 
 const Blog = () => {
 	const [blog, setBlog] = useState([]);
 	const { title } = useParams();
 	const [user, setUser] = useState([]);
-
-	// useEffect(() => {
-	// 	fetch(`https://social-link-server-liard.vercel.app/blogs/${title}`)
-	// 		.then((res) => {
-	// 			if (!res.ok) {
-	// 				throw new Error(`HTTP error! Status: ${res.status}`);
-	// 			}
-	// 			return res.json();
-	// 		})
-	// 		.then((data) => setBlog(data))
-	// 		.catch((error) => console.error("Error fetching data:", error));
-	// }, [title]);
+	const [users, setUsers] = useState([]);
+	const [followers, setFollowers] = useState([]);
+	const userId = localStorage.getItem("social_id");
+	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	useEffect(() => {
 		const fetchBlog = async () => {
@@ -35,18 +29,23 @@ const Blog = () => {
 		fetchBlog();
 	}, [title]);
 
-	const blogUserName = blog.userName;
+	const blogUserName = blog?.userName;
 
 	useEffect(() => {
-		axios("https://social-link-server-liard.vercel.app/users").then(
-			(res) => {
-				const data = res.data;
-				const filterUser = data.find(
-					(da) => da.userName === blogUserName
-				);
-				setUser(filterUser);
-			}
-		);
+		try {
+			axios("https://social-link-server-liard.vercel.app/users").then(
+				(res) => {
+					const data = res.data;
+					const filterUser = data.find(
+						(da) => da.userName === blogUserName
+					);
+					setUser(filterUser);
+					setUsers(data);
+				}
+			);
+		} catch (error) {
+			console.log(error.message);
+		}
 	}, [blogUserName]);
 
 	const [readingTime, setReadingTime] = useState(null);
@@ -70,9 +69,39 @@ const Blog = () => {
 		};
 	};
 
+	useEffect(() => {
+		try {
+			axios
+				.get("https://social-link-server-liard.vercel.app/follow")
+				.then((res) => {
+					const data = res.data;
+
+					const followers = data.filter((item) =>
+						item?.followingIds?.includes(user?._id)
+					);
+
+					const followerId = followers.map((foll) => foll.followerId);
+
+					const followerDetails = users.filter((user) =>
+						followerId.includes(user?._id)
+					);
+					setFollowers(followerDetails);
+				});
+		} catch (error) {
+			console.log(error);
+		}
+	}, [users, user]);
+
 	return (
 		<div className="min-h-screen">
-			<div className="mt-[70px] bg-white mx-auto max-w-3xl p-5 rounded-md">
+			{toastType && (
+				<Toast
+					type={toastType}
+					message={toastMessage}
+					onHide={hideToast}
+				/>
+			)}
+			<div className="mt-[70px] bg-white mx-auto max-w-3xl p-5 rounded-md my-5">
 				<div className="rounded-md">
 					<div>
 						<div className="relative">
@@ -109,18 +138,19 @@ const Blog = () => {
 										>
 											{user?.name}
 										</Link>
-										{/* <p className="text-sm text-gray-400">
-											{user?.userName}
-										</p> */}
+										<div className="flex justify-start items-center gap-3">
+											<p className="text-sm text-gray-400">
+												Followers {followers?.length}
+											</p>
+										</div>
 									</div>
 								</div>
 								<div>
 									{readingTime && (
 										<div>
 											<p className="text-sm font-semibold text-gray-600">
-												Time:{" "}
-												{readingTime.estimatedTime}{" "}
-												minutes
+												Reading time:{" "}
+												{readingTime.estimatedTime}m
 											</p>
 										</div>
 									)}

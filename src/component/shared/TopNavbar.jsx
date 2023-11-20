@@ -75,8 +75,15 @@ const TopNavbar = () => {
 	const [users, setUsers] = useState([]);
 	const [searchResults, setSearchResults] = useState([]);
 	const { dominantColor } = useContext(DominantColorContext);
+	const [blockedUsers, setBlockedUsers] = useState([]);
 
 	const userId = localStorage.getItem("social_id");
+
+	const matchedUser = users.find((user) => user?._id === userId);
+
+	// const filteredPosts = searchResults.filter(
+	// 	(po) => !blockedUsers?.includes(po?.userName)
+	// );
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
@@ -144,72 +151,22 @@ const TopNavbar = () => {
 		setSearchResults([]);
 	};
 
-	// console.log("user image", user.image);
+	useEffect(() => {
+		try {
+			axios
+				.get("https://social-link-server-liard.vercel.app/block")
+				.then((res) => {
+					const hideUser = res.data.find(
+						(re) => re?.blockerName === matchedUser?.userName
+					);
 
-	// const [dominantColor, setDominantColor] = useState("");
-
-	// useEffect(() => {
-	// 	const imageUrl = user.map((us) => us.image);
-	// 	if (imageUrl) {
-	// 		const img = new Image();
-	// 		img.crossOrigin = "Anonymous";
-	// 		img.src = imageUrl;
-
-	// 		img.onload = function () {
-	// 			const canvas = document.createElement("canvas");
-	// 			const ctx = canvas.getContext("2d");
-
-	// 			canvas.width = img.width;
-	// 			canvas.height = img.height;
-	// 			ctx.drawImage(img, 0, 0, img.width, img.height);
-
-	// 			const imageData = ctx.getImageData(
-	// 				0,
-	// 				0,
-	// 				canvas.width,
-	// 				canvas.height
-	// 			).data;
-
-	// 			// Count colors in an object
-	// 			const brightnessThreshold = 220; // Adjust this value to change the brightness threshold
-
-	// 			const colorCount = {};
-	// 			for (let i = 0; i < imageData.length; i += 4) {
-	// 				const hexColor = `#${(
-	// 					(1 << 24) +
-	// 					(imageData[i] << 16) +
-	// 					(imageData[i + 1] << 8) +
-	// 					imageData[i + 2]
-	// 				)
-	// 					.toString(16)
-	// 					.slice(1)}`;
-
-	// 				// Calculate the brightness of the color
-	// 				const colorRed = imageData[i];
-	// 				const colorGreen = imageData[i + 1];
-	// 				const colorBlue = imageData[i + 2];
-	// 				const brightness = (colorRed + colorGreen + colorBlue) / 3;
-
-	// 				// Skip light colors and white color
-	// 				if (brightness > brightnessThreshold) {
-	// 					continue;
-	// 				}
-
-	// 				if (colorCount[hexColor]) {
-	// 					colorCount[hexColor] += 1;
-	// 				} else {
-	// 					colorCount[hexColor] = 1;
-	// 				}
-	// 			}
-
-	// 			const dominantColorHex = Object.keys(colorCount).reduce(
-	// 				(a, b) => (colorCount[a] > colorCount[b] ? a : b)
-	// 			);
-
-	// 			setDominantColor(dominantColorHex);
-	// 		};
-	// 	}
-	// }, [user]);
+					const hdUsers = hideUser?.blockedNames;
+					setBlockedUsers(hdUsers);
+				});
+		} catch (error) {
+			console.log(error.message);
+		}
+	}, [matchedUser]);
 
 	return (
 		<div className="flex py-1 bg-white shadow-md px-7">
