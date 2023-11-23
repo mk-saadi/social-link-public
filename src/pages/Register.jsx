@@ -12,7 +12,7 @@ const SignUp = () => {
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
 	// const imgbbApiKey = "35693cbbb9e1a46748a3b83e16106023";
-	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
+	const imgbbApiKey = import.meta.env.VITE_Image_Upload_token;
 	console.log(imgbbApiKey);
 
 	const [passwordShow, setPasswordShow] = useState(false);

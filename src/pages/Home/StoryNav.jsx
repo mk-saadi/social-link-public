@@ -36,7 +36,7 @@ const StoryNav = ({ dominantColor }) => {
 	const [currentUser, setCurrentUser] = useState();
 	const [story, setStory] = useState([]);
 
-	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
+	const imgbbApiKey = import.meta.env.VITE_Image_Upload_token;
 
 	useEffect(() => {
 		const fetchData = async () => {

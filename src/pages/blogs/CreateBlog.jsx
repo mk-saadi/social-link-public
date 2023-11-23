@@ -9,7 +9,7 @@ const CreateBlog = () => {
 	const { dominantColor } = useContext(DominantColorContext);
 	const { toastType, toastMessage, showToast, hideToast } = useToast();
 
-	const imgbbApiKey = "5617d55658537c83fee4ef9a7cffb921";
+	const imgbbApiKey = import.meta.env.VITE_Image_Upload_token;
 
 	const [imagePreview, setImagePreview] = useState(null);
 	const [user, setUser] = useState([]);
